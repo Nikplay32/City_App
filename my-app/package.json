@@ -9,7 +9,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+<<<<<<< HEAD
     "styled-components": "^6.1.8",
+=======
+>>>>>>> 4f42373b8395087eb28c2f64c73812156bdac8b6
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -35,6 +38,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< HEAD
   },
   "devDependencies": {
     "@types/node": "^20.12.5",
@@ -42,5 +46,7 @@
     "@types/react-dom": "^18.2.24",
     "@types/styled-components": "^5.1.34",
     "typescript": "^5.4.4"
+=======
+>>>>>>> 4f42373b8395087eb28c2f64c73812156bdac8b6
   }
 }
