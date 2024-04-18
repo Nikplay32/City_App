@@ -1,48 +1,116 @@
-// Navbar.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import Button from '../atoms/Button'
 
-// Define styled components for your navbar elements
-const NavbarWrapper = styled.nav`
-  background-color: #333;
-  color: #fff;
-  padding: 10px 20px;
+const NavbarContainer = styled.nav`
+  background: rgb(255,255,255);
+  background: linear-gradient(90deg, rgba(255,255,255,1) 18%, rgba(5,145,42,1) 50%, rgba(24,105,186,1) 100%);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const NavList = styled.ul`
-  list-style-type: none;
+const Logo = styled.a`
+  text-decoration: none;
+  color: #27a829;
+  background-image: -webkit-linear-gradient(0deg, #008502 42%, #35b48b 5%, #011114 32%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  font-weight: bold;
+`;
+
+const Menu = styled.ul`
+  display: flex;
+  list-style: none;
   margin: 0;
   padding: 0;
 `;
 
-const NavItem = styled.li`
-  display: inline;
-  margin-right: 10px;
-`;
+const MenuItem = styled.li`
+  margin-right: 1.5rem;
+  position: relative;
 
-const NavLink = styled.a`
-  color: #fff;
-  text-decoration: none;
+  &:last-child {
+    margin-right: 0;
+  }
 
-  &:hover {
-    text-decoration: underline;
+  &::after {
+    content: "|";
+    position: absolute;
+    color: white;
+    top: 50%;
+    right: -0.75rem;
+    transform: translateY(-50%);
+  }
+
+  &:last-child::after {
+    display: none;
   }
 `;
 
-// Define your Navbar component
+const NavLink = styled.a`
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s;
+`;
+
+const BurgerMenuButton = styled.button`
+  display: block;
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
 const Navbar: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <NavbarWrapper>
-      <NavList>
-        <NavItem>
-          <NavLink href="/">Home</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/about">About</NavLink>
-        </NavItem>
-        {/* Add more navigation items as needed */}
-      </NavList>
-    </NavbarWrapper>
+    <NavbarContainer>
+      <Logo href="#">CITYSPIRIT</Logo>
+      <BurgerMenuButton onClick={toggleMenu}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          width="24"
+          height="24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          />
+        </svg>
+      </BurgerMenuButton>
+      <Menu className={isMenuOpen ? 'open' : ''}>
+        <MenuItem>
+          <NavLink href="#">Home</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="#">About Us</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="#">Services</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="#">Pricing</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="#">Contact</NavLink>
+        </MenuItem>
+      </Menu>
+      <Button>Get Started</Button>
+    </NavbarContainer>
   );
 };
 
