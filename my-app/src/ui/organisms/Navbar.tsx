@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Button from '../atoms/Button'
 
 const NavbarContainer = styled.nav`
-  background: rgb(255,255,255);
-  background: linear-gradient(90deg, rgba(255,255,255,1) 18%, rgba(5,145,42,1) 50%, rgba(24,105,186,1) 100%);
+  background: rgb(15,128,86);
+  background: linear-gradient(90deg, rgba(15,128,86,1) 35%, rgba(1,50,32,1) 100%);
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -15,7 +15,7 @@ const NavbarContainer = styled.nav`
 const Logo = styled.a`
   text-decoration: none;
   color: #27a829;
-  background-image: -webkit-linear-gradient(0deg, #008502 42%, #35b48b 5%, #011114 32%);
+  background-image: -webkit-linear-gradient(0deg, #ffffff 42%, #35b48b 5%, #011114 32%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
