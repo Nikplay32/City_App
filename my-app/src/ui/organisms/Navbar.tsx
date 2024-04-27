@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../atoms/Button'
+import { useNavigate } from 'react-router-dom';
 
 const NavbarContainer = styled.nav`
   background: rgb(15,128,86);
@@ -67,9 +68,13 @@ const BurgerMenuButton = styled.button`
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const navigate = useNavigate();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleGetStartedClick = () => {
+    navigate('/authorization');
   };
 
   return (
@@ -109,7 +114,7 @@ const Navbar: React.FC = () => {
           <NavLink href="#">Contact</NavLink>
         </MenuItem>
       </Menu>
-      <Button>Get Started</Button>
+      <Button onClick={handleGetStartedClick}>Get Started</Button>
     </NavbarContainer>
   );
 };
