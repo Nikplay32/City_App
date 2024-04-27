@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MainPage from './ui/pages/MainPage'; // Assuming MainPage is the correct component
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MainPage from './ui/pages/MainPage'; 
+import Autorization from './ui/pages/Autorization';
 
 ReactDOM.render(
   <React.StrictMode>
-    <MainPage />
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/authorization" element={<Autorization />} />
+      </Routes>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
