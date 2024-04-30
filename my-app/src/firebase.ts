@@ -1,8 +1,7 @@
-// firebase.ts
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAF68o80xRCE7zhnUOl__xtfpgafbdJN_0",
   authDomain: "myapp-project-123.firebaseapp.com",
@@ -14,7 +13,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export const getFirebaseAuth = () => {
   return getAuth(app);
 };
+
+export { db };

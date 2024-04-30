@@ -15,18 +15,6 @@ const ContentWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 10rem;
-  animation: slideIn 1s forwards; 
-`;
-
-const slideIn = keyframes`
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 `;
 
 const Title = styled.div`
@@ -34,7 +22,6 @@ const Title = styled.div`
   font-size: 48px;
   font-weight: 800;
   margin-bottom: 0.2rem; 
-  animation: ${slideIn} 1s ease forwards;
 `;
 
 const Description = styled.div`
@@ -42,7 +29,6 @@ const Description = styled.div`
   font-size: 36px;
   font-weight: 400;
   margin-bottom: 2rem;
-  animation: ${slideIn} 1.5s ease forwards;
 `;
 
 const Icon = styled.img`
@@ -52,14 +38,12 @@ const Icon = styled.img`
 
 const TextContainer = styled.div`
   max-width: 800px;
-  animation: ${slideIn} 2s ease forwards; 
 `;
 
 const Text = styled.div`
   color: white;
   font-weight: 200;
-  margin-bottom: 2rem;
-  animation: ${slideIn} 2s ease forwards; 
+  margin-bottom: 2rem; 
 `;
 
 interface HeroProps {

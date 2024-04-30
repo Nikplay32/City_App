@@ -1,5 +1,3 @@
-// components/AboutUs/index.tsx
-
 import React from 'react';
 import styled from 'styled-components';
 

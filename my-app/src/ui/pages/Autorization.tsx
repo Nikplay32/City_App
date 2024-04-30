@@ -3,11 +3,14 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirebaseAuth } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import GlobalStyles from '../atoms/GlobalStyles';
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
+  background: linear-gradient(45deg, #fff 50%, green 50%);
 `;
 
 const FormContainer = styled.div`
@@ -23,11 +26,11 @@ const FormContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #333;
+  color: ${props => props.color || '#ffffff'};
 `;
 
 const Paragraph = styled.p`
-  color: #666;
+  color: ${props => props.color || '#ffffff'};
   margin-bottom: 20px;
 `;
 
@@ -72,6 +75,7 @@ const Authentication = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isRegister, setIsRegister] = useState(false);
+  const navigate = useNavigate();
 
   const auth = getFirebaseAuth();
 
@@ -83,6 +87,7 @@ const Authentication = () => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         console.log('User registered');
+        setIsRegister(false);
       } catch (error) {
         console.error('Error registering user:', error);
       }
@@ -90,6 +95,7 @@ const Authentication = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        navigate('/rental');
         console.log('User logged in');
       } catch (error) {
         console.error('Error logging in:', error);
@@ -99,9 +105,10 @@ const Authentication = () => {
 
   return (
     <>
+      <GlobalStyles />
       <Container>
         <BackButton to="/">Back to Home</BackButton>
-        <FormContainer color={isRegister ? 'lightgray' : 'white'}>
+        <FormContainer color={isRegister ? 'white' : 'black'}>
           <Title>{isRegister ? 'Register' : 'Log in'}</Title>
           <Paragraph>Welcome back! Please log in to your account.</Paragraph>
           <Form onSubmit={handleSubmit}>
@@ -128,9 +135,9 @@ const Authentication = () => {
             <Button type="submit">{isRegister ? 'Register' : 'Log in'}</Button>
           </Form>
         </FormContainer>
-        <FormContainer color={isRegister ? 'white' : 'lightgray'}>
-          <Title>{isRegister ? 'Welcome Back!' : 'Join Us'}</Title>
-          <Paragraph>{isRegister ? 'Already have an account?' : 'Not with us yet?'}</Paragraph>
+        <FormContainer color={isRegister ? 'black' : 'white'}>
+        <Title color={isRegister ? 'black' : 'black'}>{isRegister ? 'Register' : 'Log in'}</Title>
+          <Paragraph color={isRegister ? 'black' : 'black'}>{isRegister ? 'Already have an account?' : 'Not with us yet?'}</Paragraph>
           <Button onClick={() => setIsRegister(!isRegister)}>
             {isRegister ? 'Log in' : 'Register'}
           </Button>
