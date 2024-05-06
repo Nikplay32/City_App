@@ -20,8 +20,9 @@ const Content = styled.div`
 
 const MainPage: React.FC = () => {
   return (
+    <>
+    <Global />
     <Container>
-      <Global />
       <Navbar />
       <Content>
         <Hero 
@@ -35,6 +36,7 @@ const MainPage: React.FC = () => {
       </Content>
       <Footer />
     </Container>
+    </>
   );
 }
 

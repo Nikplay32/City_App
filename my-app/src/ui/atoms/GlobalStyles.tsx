@@ -12,8 +12,7 @@ const GlobalStyles = createGlobalStyle`
 
   /* Add your global styles here */
   body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif /* Example font */
-    /* Add other body styles */
+    font-family: 'Nunito', sans-serif;    /* Add other body styles */
   }
 
   /* Add more global styles as needed */
