@@ -1,0 +1,15 @@
+export const toastMessages = {
+    userRegistered: "User registered successfully",
+    errorRegisteringUser: "Error registering user",
+    userLoggedIn: "User logged in successfully",
+    errorLoggingIn: "Error logging in",
+    emailAlreadyInUse: "The email address is already in use by another account.",
+    invalidEmail: "The email address is not valid.",
+    operationNotAllowed: "Email/password accounts are not enabled. Enable email/password in the Firebase Console, under the Auth tab.",
+    weakPassword: "The password is not strong enough.",
+    userDisabled: "The user corresponding to the given email has been disabled.",
+    userNotFound: "There is no user corresponding to the given email.",
+    wrongPassword: "The password is invalid for the given email.",
+    emailEmpty: "Email and password cannot be empty",
+    requiresRecentLogin: "This operation is sensitive and requires recent authentication. Log in again before retrying this request",
+};

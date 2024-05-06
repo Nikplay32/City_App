@@ -1,20 +1,18 @@
-// firebase.ts
-import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
-// TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAF68o80xRCE7zhnUOl__xtfpgafbdJN_0",
-  authDomain: "myapp-project-123.firebaseapp.com",
-  databaseURL: "https://myapp-project-123.firebaseio.com",
-  projectId: "myapp-project-123",
-  storageBucket: "myapp-project-123.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcd1234"
+  authDomain: "city-app-fec40.firebaseapp.com",
+  projectId: "city-app-fec40",
+  storageBucket: "city-app-fec40.appspot.com",
+  messagingSenderId: "5105736897",
+  appId: "1:5105736897:web:3de92292e180973f4c0840",
+  measurementId: "G-X613BL5QNK"
 };
 
 const app = initializeApp(firebaseConfig);
-
-export const getFirebaseAuth = () => {
-  return getAuth(app);
-};
+const auth = getAuth(app);
+const db = getFirestore(app);
+export { db, auth };
