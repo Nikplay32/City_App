@@ -1,5 +1,7 @@
 import React, { useState, useEffect  } from 'react';
 import styled from 'styled-components';
+import Select from 'react-select';
+import { components, OptionProps } from 'react-select';
 import { collection, addDoc, where, getDocs, query } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
 import 'firebase/firestore';
@@ -8,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
 
 const Form = styled.form`
   display: flex;
@@ -30,22 +33,65 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+interface Product {
+    title: string;
+    images: string[];
+    description: string;
+    price: number;
+    shortDescription: string;
+    category: string;
+}
+
+const Option: React.FC<OptionProps<any, false>> = ({ children, ...props }) => (
+  <components.Option {...props}>
+    <div>{children}</div>
+    <div>{props.data.description}</div>
+    <div>{props.data.price}</div>
+  </components.Option>
+);
+
+const mileageOptions = [
+  {
+    value: 'unlimited',
+    label: 'Unlimited kilometers',
+    description: 'All kilometers are included in the price',
+    price: '+ $3.89 / day',
+  },
+  {
+    value: '400_km',
+    label: '400 km',
+    description: '+$0.16 / for every additional km',
+  },
+  // Add more options as needed
+];
+
+const secondOptionOptions = [
+  { value: 'best_price', label: 'Best price', description: 'Pay now, cancel and rebook for a fee' },
+  { value: 'stay_flexible', label: 'Stay flexible', description: 'Pay at pick-up, free cancellation and rebooking anytime' },
+  // Add more options as needed
+];
+
 const PaymentForm: React.FC = () => {
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
+    const [mileage, setMileage] = useState(mileageOptions[Math.floor(Math.random() * mileageOptions.length)]);
+    const [secondOption, setSecondOption] = useState(secondOptionOptions[Math.floor(Math.random() * secondOptionOptions.length)]); 
     const [cvv, setCvv] = useState('');
     const [password, setPassword] = useState('');
     const subscriptionPrice = 9.99;
     const navigate = useNavigate();
     const [isPaid, setIsPaid] = useState(false);
+    const [product, setProduct] = useState<Product | null>(null);
+    const productId = localStorage.getItem('selectedProduct');
+    console.log('Product ID:', productId);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (user) {
-            // Fetch the user's payment status
-            const paymentsQuery = query(collection(db, 'payments'), where('userId', '==', user.uid));
-            const paymentsSnapshot = await getDocs(paymentsQuery);
-            paymentsSnapshot.forEach((doc) => {
+            // Fetch the user's reservation status
+            const reservationsQuery = query(collection(db, 'reservations'), where('userId', '==', user.uid));
+            const reservationsSnapshot = await getDocs(reservationsQuery);
+            reservationsSnapshot.forEach((doc) => {
               if (doc.data().status === 'success') {
                 setIsPaid(true);
               }
@@ -57,6 +103,27 @@ const PaymentForm: React.FC = () => {
       
         return () => unsubscribe();
       }, [navigate]);
+
+      useEffect(() => {
+        const fetchProduct = async () => {
+          if (productId) {
+            const productDoc = doc(db, 'products', productId);
+            const productData = await getDoc(productDoc);
+      
+            if (productData.exists()) {
+              setProduct({
+                ...productData.data(),
+                images: productData.data().images || [], // Use an empty array as a fallback
+              } as Product);
+              console.log('Product data:', productData.data());
+            } else {
+              console.log('No such document!');
+            }
+          }
+        };
+      
+        fetchProduct();
+      }, [productId]);
 
     const handleSubmit = async (event: React.FormEvent) => {
       event.preventDefault();
@@ -88,31 +155,32 @@ const PaymentForm: React.FC = () => {
         );
         reauthenticateWithCredential(auth.currentUser, credential)
           .then(async () => {
-            // Password is correct, proceed with payment
-  
-            // Simulate a payment
-            const paymentStatus = Math.random() > 0.5 ? 'success' : 'failure';
-  
             if (auth.currentUser) {
-                // Store the payment status in your database
-                const paymentsRef = collection(db, 'payments');
-                await addDoc(paymentsRef, {
+                const existingReservationQuery = query(
+                    collection(db, 'reservations'),
+                    where('userId', '==', auth.currentUser.uid),
+                    where('productId', '==', productId)
+                  );
+                  const existingReservationSnapshot = await getDocs(existingReservationQuery);
+                  if (!existingReservationSnapshot.empty) {
+                    toast.error('You have already rented this product.');
+                    return;
+                  }
+
+                const reservationsRef = collection(db, 'reservations');
+                await addDoc(reservationsRef, {
                   userId: auth.currentUser.uid,
-                  status: paymentStatus,
-                  amount: subscriptionPrice, // Store the subscription price
+                  productId: productId,
+                  mileage: mileage.value,
+                  secondOption: secondOption.value,
+                  reservationTime: Timestamp.now(),
                 });
-          
-                // Show a toast notification based on the payment status
-                if (paymentStatus === 'success') {
-                  toast.success('Payment successful!');
-                } else {
-                  toast.error('Payment failed. Please try again.');
-                }
+      
                 navigate('/profile');
               } else {
-                toast.error('You must be signed in to make a payment.');
+                toast.error('You must be signed in to make a reservation.');
               }
-          })
+        })  
           .catch(() => {
             // Password is incorrect, show a toast
             toast.error('Incorrect password. Please try again.');
@@ -143,6 +211,22 @@ const PaymentForm: React.FC = () => {
           value={cvv}
           onChange={(e) => setCvv(e.target.value)}
           placeholder="CVV"
+        />
+        <Select
+          options={mileageOptions}
+          components={{
+            Option: Option,
+          }}
+          value={mileage}
+          onChange={(selectedOption) => setMileage(selectedOption)}
+        />
+        <Select
+          options={secondOptionOptions}
+          components={{
+            Option: Option,
+          }}
+          value={secondOption}
+          onChange={(selectedOption) => setSecondOption(selectedOption)}
         />
         <Input
           type="password"

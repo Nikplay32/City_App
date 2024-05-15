@@ -4,8 +4,7 @@ import Button from '../atoms/Button'
 import { useNavigate } from 'react-router-dom';
 
 const NavbarContainer = styled.nav`
-  background: rgb(15,128,86);
-  background: linear-gradient(90deg, rgba(15,128,86,1) 35%, rgba(1,50,32,1) 100%);
+  background-color: black;
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -15,8 +14,8 @@ const NavbarContainer = styled.nav`
 
 const Logo = styled.a`
   text-decoration: none;
-  color: #27a829;
-  background-image: -webkit-linear-gradient(0deg, #ffffff 42%, #35b48b 5%, #011114 32%);
+  color: #000000;
+  background-image: -webkit-linear-gradient(0deg, #ffffff 42%, #35b48b 5%, #09d8ff 32%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -57,6 +56,10 @@ const NavLink = styled.a`
   text-decoration: none;
   color: white;
   transition: color 0.3s;
+  display: inline-block;
+  &:hover {
+    color: #0056b3;
+  }
 `;
 
 const BurgerMenuButton = styled.button`
@@ -99,19 +102,19 @@ const Navbar: React.FC = () => {
       </BurgerMenuButton>
       <Menu className={isMenuOpen ? 'open' : ''}>
         <MenuItem>
-          <NavLink href="#">Home</NavLink>
+          <NavLink href="/">Home</NavLink>
         </MenuItem>
         <MenuItem>
-          <NavLink href="#">About Us</NavLink>
+          <NavLink href="/products">Products</NavLink>
         </MenuItem>
         <MenuItem>
-          <NavLink href="#">Services</NavLink>
+          <NavLink href="/activities">Activities</NavLink>
         </MenuItem>
         <MenuItem>
-          <NavLink href="#">Pricing</NavLink>
+          <NavLink href="/Map">Map</NavLink>
         </MenuItem>
         <MenuItem>
-          <NavLink href="#">Contact</NavLink>
+          <NavLink href="/subs">Subscription</NavLink>
         </MenuItem>
       </Menu>
       <Button onClick={handleGetStartedClick}>Get Started</Button>
