@@ -9,9 +9,36 @@ import GlobalStyles from '../atoms/GlobalStyles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toastMessages } from '../toastmessages';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { deleteDoc, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+
+const Reservation = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+`;
 
 const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const ReservationsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,6 +137,7 @@ const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [reservations, setReservations] = useState<any[]>([]);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [planStatus, setPlanStatus] = useState('Not Upgraded');
 
@@ -122,7 +150,7 @@ const Profile = () => {
       if (user) {
         setEmail(user.email || '');
         setIsEmailVerified(user.emailVerified);
-    
+  
         // Fetch the user's payment status
         const paymentsQuery = query(collection(db, 'payments'), where('userId', '==', user.uid));
         const paymentsSnapshot = await getDocs(paymentsQuery);
@@ -131,12 +159,32 @@ const Profile = () => {
             setPlanStatus('Upgraded');
           }
         });
+  
+        // Fetch the user's reservations
+        const reservationsQuery = query(collection(db, 'reservations'), where('userId', '==', user.uid));
+        const reservationsSnapshot = await getDocs(reservationsQuery);
+        const reservationsData = await Promise.all(reservationsSnapshot.docs.map(async docSnapshot => {
+          const reservation = docSnapshot.data();
+          // Fetch the product data for this reservation
+          const productDocRef = doc(db, 'products', reservation.productId);
+          const productSnapshot = await getDoc(productDocRef);
+          const productData = productSnapshot.data();
+          // Check if the product data is undefined
+          if (!productData) {
+            console.error(`Product with ID ${reservation.productId} not found.`);
+            return null;
+          }
+          // Return the reservation data and the associated product data
+          return { id: docSnapshot.id, ...reservation, product: productData };
+        }));
+        // Filter out any null values
+        setReservations(reservationsData.filter(reservation => reservation !== null));
       } else {
         navigate('/authorization');
       }
       setIsUserLoading(false);
     });
-    
+  
     return () => unsubscribe();
   }, [navigate]);
 
@@ -220,53 +268,91 @@ const Profile = () => {
     }
   };
 
+  const handleCancelReservation = async (reservationId: string) => {
+    try {
+      await deleteDoc(doc(db, 'reservations', reservationId));
+      toast.success('Reservation cancelled successfully.');
+      // Remove the cancelled reservation from the reservations state
+      setReservations(reservations.filter(reservation => reservation.id !== reservationId));
+    } catch (error) {
+      console.error('Error cancelling reservation', error);
+      toast.error('Failed to cancel reservation. Please try again later.');
+    }
+  };
+
   return (
     
     <>
     <ToastContainer />
       <GlobalStyles></GlobalStyles>
       <Navbar />
-      <ProfileContainer>
-        <Title>Profile</Title>
-        <Image src="https://source.unsplash.com/random" alt="Random Unsplash" />
-        {isUserLoading ? (
-          <p>Loading user data...</p>
-        ) : isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-        <Email>Email: {email} <VerificationStatus isVerified={isEmailVerified}>{isEmailVerified ? "(Verified)" : "(Not Verified)"}</VerificationStatus></Email>
-        <p>Plan: {planStatus}</p>
-        <Button onClick={() => setIsModalOpen(true)}>Change Email</Button>
-        <Button onClick={handleUpgradePlan}>Upgrade Plan</Button>
-        </>
-        )}
-        <ModalContainer isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-          <h2>Change Email</h2>
-          <ModalForm onSubmit={handleChangeEmail}>
-            <ModalInput
-              type="email"
-              value={email}
-              readOnly
-              placeholder="Current email"
-            />
-            <ModalInput
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-            />
-            <ModalInput
-              type="email"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="New email"
-            />
-            <ModalButton type="submit">Change Email</ModalButton>
-          </ModalForm>
-        </ModalContainer>
-        <Button onClick={handleSignOut}>Sign Out</Button>
-      </ProfileContainer>
+      <MainContainer>
+        <ProfileContainer>
+          <Title>Profile</Title>
+          <Image src="https://source.unsplash.com/random" alt="Random Unsplash" />
+          {isUserLoading ? (
+            <p>Loading user data...</p>
+          ) : isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+          <Email>Email: {email} <VerificationStatus isVerified={isEmailVerified}>{isEmailVerified ? "(Verified)" : "(Not Verified)"}</VerificationStatus></Email>
+          <p>Plan: {planStatus}</p>
+          <Button onClick={() => setIsModalOpen(true)}>Change Email</Button>
+          <Button onClick={handleUpgradePlan}>Upgrade Plan</Button>
+          </>
+          )}
+          <ModalContainer isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+            <h2>Change Email</h2>
+            <ModalForm onSubmit={handleChangeEmail}>
+              <ModalInput
+                type="email"
+                value={email}
+                readOnly
+                placeholder="Current email"
+              />
+              <ModalInput
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+              />
+              <ModalInput
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="New email"
+              />
+              <ModalButton type="submit">Change Email</ModalButton>
+            </ModalForm>
+          </ModalContainer>
+          <Button onClick={handleSignOut}>Sign Out</Button>
+        </ProfileContainer>
+        <ReservationsContainer>
+        <Title>Your reservations</Title>
+        {reservations.map((reservation, index) => {
+        // Calculate the time difference in minutes
+        let timeDifference = Infinity; // Initialize to Infinity
+        if (reservation.reservationTime) {
+          const reservationTime = reservation.reservationTime.toDate(); // Convert Firestore Timestamp to JavaScript Date
+          const currentTime = new Date();
+          timeDifference = (currentTime.getTime() - reservationTime.getTime()) / (1000 * 60);
+        }
+
+        return (
+          <Reservation key={index}>
+            <p>Product Name: {reservation.product.title}</p>
+            <p>Price: ${reservation.product.price}</p>
+            <p>Mileage: {reservation.mileage}</p>
+            <p>ID: {reservation.productId}</p>
+            <p>Reservation Time: {reservation.reservationTime ? reservation.reservationTime.toDate().toLocaleString() : 'N/A'}</p>
+            <p>Second Option: {reservation.secondOption}</p>
+            {timeDifference < 5 && <Button onClick={() => handleCancelReservation(reservation.id)}>Cancel Reservation</Button>}
+          </Reservation>
+        );
+        })}
+        </ReservationsContainer>
+      </MainContainer>
     </>
   );
 }
