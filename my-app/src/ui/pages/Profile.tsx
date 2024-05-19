@@ -5,37 +5,80 @@ import { signOut, onAuthStateChanged, sendEmailVerification, reauthenticateWithC
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import Navbar from '../organisms/Navbar';
+import Footer from '../organisms/Footer';
 import GlobalStyles from '../atoms/GlobalStyles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toastMessages } from '../toastmessages';
 import { deleteDoc, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #141e30, #243b55);
+  color: #fff;
+`;
+
+const ProfileContainer = styled.div`
+  max-width: 800px;
+  width: 90%;
+  margin-top: 40px;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 30px;
+`;
+
+const Image = styled.img`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 30px;
+  border: 5px solid #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const Button = styled.button`
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff6b6b;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #ff8f8f;
+  }
+`;
+
+const Subtitle = styled.h2`
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+`;
+
 const Reservation = styled.div`
   margin-top: 20px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-`;
-
-const MainContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-`;
-
-const ProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const ReservationsContainer = styled.div`
@@ -52,34 +95,6 @@ const ReservationsContainer = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const Title = styled.h1`
-  margin-bottom: 20px;
-`;
-
-const Image = styled.img`
-  width: 100%;
-  max-width: 300px;
-  height: 300px;
-  margin-bottom: 20px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-const Button = styled.button`
-  margin-top: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007BFF;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
 
 const Email = styled.p`
   margin-bottom: 20px;
@@ -290,6 +305,7 @@ const Profile = () => {
         <ProfileContainer>
           <Title>Profile</Title>
           <Image src="https://source.unsplash.com/random" alt="Random Unsplash" />
+          <Subtitle>Contact Information</Subtitle>
           {isUserLoading ? (
             <p>Loading user data...</p>
           ) : isLoading ? (
@@ -353,6 +369,7 @@ const Profile = () => {
         })}
         </ReservationsContainer>
       </MainContainer>
+      <Footer></Footer>
     </>
   );
 }

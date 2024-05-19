@@ -119,7 +119,6 @@ const markers: [number, number][] = Array.from({ length: numMarkers }, (): [numb
         </MapContainer>
         </StyledMap>
       </StyledMapContainer>
-      <Footer/>
     </PageContainer>
   );
 }

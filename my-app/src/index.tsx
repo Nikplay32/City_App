@@ -4,13 +4,21 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './ui/pages/MainPage'; 
 import Autorization from './ui/pages/Autorization';
 import Profile from './ui/pages/Profile';
-import Payment from './ui/pages/Payment';
+import Payment from './ui/pages/Payments/Payment';
 import Subscription from './ui/pages/Subscriptions';
-import Reservation from './ui/pages/Reservation'
+import Reservation from './ui/pages/Payments/Reservation'
 import Products from './ui/pages/Products';
 import ProductOverview from './ui/pages/ProductOverview';
 import Activities from './ui/pages/Activities'
 import ActivityOverview from './ui/pages/ActivityOverview';
+import Dashboard from './ui/pages/Dashboard';
+import AdminRoute from './ui/pages/AdminRoute';
+import MapPage from './ui/pages/MapPage'
+import Transport from './ui/pages/Transport';
+import SuccessPayment from './ui/pages/Payments/SuccessPayment'
+import FailedPayment from './ui/pages/Payments/FailedPayment'
+import SightDetailPage from './ui/pages/Sight';
+import SightsPage from './ui/pages/SightsPage';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -26,6 +34,17 @@ ReactDOM.render(
         <Route path="/product/:id" element={<ProductOverview/>} />
         <Route path="/activities" element={<Activities/>} />
         <Route path="/activity/:id" element={<ActivityOverview/>} />
+        <Route path="/map" element={<MapPage/>} />
+        <Route path="/transport" element={<Transport/>}/>
+        <Route path="/success" element={<SuccessPayment/>}/>
+        <Route path="/failed" element={<FailedPayment/>}/>
+        <Route path="/sight" element={<SightsPage></SightsPage>} />
+        <Route path="/sight/:id" element={<SightDetailPage name={''} description={''} image={''}/>} />
+        <Route path="/admin" element={
+        <AdminRoute>
+          <Dashboard />
+        </AdminRoute>
+        } />
       </Routes>
     </Router>
   </React.StrictMode>,

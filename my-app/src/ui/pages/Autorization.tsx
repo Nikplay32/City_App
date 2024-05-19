@@ -15,6 +15,7 @@ import { toastMessages } from "../toastmessages";
 import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { getDocs } from "firebase/firestore";
 Modal.setAppElement('#root');
 
 const Container = styled.div`
@@ -194,12 +195,17 @@ const Authentication = () => {
         );
         const user = userCredential.user;
         if (user) {
-          if (user) {
-            await sendEmailVerification(user);
-            toast.success("Verification email sent. Please check your inbox.");
-            await setDoc(doc(collection(db, "users")), { uid: user.uid, username: username, isVerified: user.emailVerified });
-            console.log('Username:', username);
-          }
+          await sendEmailVerification(user);
+          toast.success("Verification email sent. Please check your inbox.");
+  
+          // Check if there are any users in the database
+          const usersCollection = collection(db, "users");
+          const userSnapshot = await getDocs(usersCollection);
+          const isAdmin = userSnapshot.empty; // This will be true if there are no users
+  
+          await setDoc(doc(usersCollection, user.uid), { uid: user.uid, username: username, isVerified: user.emailVerified, isAdmin });
+          console.log('Username:', username);
+          console.log('isAdmin', isAdmin)
         }
         toast.success(toastMessages.userRegistered);
       } catch (error: any) {
