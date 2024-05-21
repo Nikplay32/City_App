@@ -11,6 +11,7 @@ export const handleEdit = async (activeTable: string, newData: DataType, updateF
     }
     return acc;
   }, {} as Record<string, any>);
+  
   await updateDoc(ref, updateData);
   updateFunction(newData);
 };

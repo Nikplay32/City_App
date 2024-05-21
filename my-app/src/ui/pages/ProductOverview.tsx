@@ -11,6 +11,7 @@ import Footer from '../organisms/Footer'
 import Select from 'react-select';
 import { components, OptionProps } from 'react-select';
 import Map from '../organisms/Map'
+import { toast, ToastContainer } from 'react-toastify';
 
 const Option = (props: OptionProps<any, false>) => {
     const { data, isSelected, isFocused } = props;
@@ -205,6 +206,7 @@ const ProductOverview: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(1);
   const navigate = useNavigate();
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -239,13 +241,17 @@ const ProductOverview: React.FC = () => {
   };
 
   const handleAddToCart = () => {
-    if (id) {
-      // Add the product to the cart here
-      localStorage.setItem('selectedProduct', id);
-      // Navigate to the payment page
-      navigate('/reservation');
+    if (isSubscribed) {
+      if (id) {
+        // Add the product to the cart here
+        localStorage.setItem('selectedProduct', id);
+        // Navigate to the payment page
+        navigate('/reservation');
+      } else {
+        console.error('Product ID is undefined');
+      }
     } else {
-      console.error('Product ID is undefined');
+      toast.error('Only subscribed users can rent premium class products. Please subscribe to continue.');
     }
   };
 
@@ -255,6 +261,7 @@ const ProductOverview: React.FC = () => {
 
   return (
     <>
+    <ToastContainer></ToastContainer>
       <GlobalStyles/>
       <Navbar/>
       <ProductContainer>
@@ -287,7 +294,7 @@ const ProductOverview: React.FC = () => {
         }}
         />
         </PriceDetails>
-        <AddToCartButton onClick={handleAddToCart}>Add To Cart</AddToCartButton>
+        <AddToCartButton onClick={handleAddToCart}>Rent now</AddToCartButton>
         </InfoContainer>
       </ProductContainer>
       <TechData>

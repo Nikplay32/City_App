@@ -7,8 +7,9 @@ export class Product {
     shortDescription: string;
     specification: string[];
     title: string;
+    subscribers_only: string;
   
-    constructor(id: string, category: string, description: string, images: string[], price: string, shortDescription: string, specification: string[], title: string) {
+    constructor(id: string, category: string, description: string, images: string[], price: string, shortDescription: string, specification: string[], title: string, subscribers_only: string) {
       this.id = id;
       this.category = category;
       this.description = description;
@@ -17,5 +18,6 @@ export class Product {
       this.shortDescription = shortDescription;
       this.specification = specification;
       this.title = title;
+      this.subscribers_only = subscribers_only;
     }
 }

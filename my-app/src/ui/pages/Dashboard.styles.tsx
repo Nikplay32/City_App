@@ -8,10 +8,13 @@ export const StyledModal = styled(Modal)`
   left: 50%;
   transform: translate(-50%, -50%);
   background: #000000;
-  padding: 100px;
+  padding: 60px;
   color: white;
   border-radius: 4px;
   outline: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr; // Adjust as needed
+  gap: 20px; // Adjust as needed
 `;
 
 export const StyledForm = styled.form`
@@ -339,4 +342,15 @@ export const SidebarSubmenuItem = styled.h1`
   &:hover {
     background-color: #2563EB;
   }
+`;
+
+export const StyledSelect = styled.select`
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  color: #333;
+  appearance: none;
+  background-color: #fff;
 `;

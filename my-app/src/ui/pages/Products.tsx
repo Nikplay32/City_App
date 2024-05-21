@@ -12,6 +12,7 @@ import { FaCogs } from 'react-icons/fa';
 import { TbAutomaticGearbox } from "react-icons/tb";
 import { keyframes } from 'styled-components';
 import { FaUserCheck } from "react-icons/fa6";
+import { toast, ToastContainer } from 'react-toastify';
 import {
   Container,
   movingGradient,
@@ -47,7 +48,7 @@ interface Product {
   price: number;
   category: string;
   specifications: string[];
-  subscribers_only: boolean;
+  subscribers_only: string;
 }
 
 const filterOptions = [
@@ -75,7 +76,8 @@ const Rental: React.FC = () => {
   const [filter, setFilter] = useState('All');
   const [sort, setSort] = useState('Lowest');
   const [nameSort, setNameSort] = useState('A-Z');
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -89,7 +91,7 @@ const Rental: React.FC = () => {
         price: doc.data().price,
         category: doc.data().category,
         specifications: doc.data().specification,
-        subscribers_only: doc.data().subscribers_only
+        subscribers_only: doc.data().subscribers_only ? 'true' : 'false'
       })) as Product[];
 
       setAllProducts(newProducts);
@@ -101,6 +103,7 @@ const Rental: React.FC = () => {
 
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
+      setIsLoading(true);
       const userId = auth.currentUser?.uid;
       if (userId) {
         const paymentsCol = collection(db, 'payments');
@@ -110,7 +113,8 @@ const Rental: React.FC = () => {
         if (userPayment) {
           console.log(`Found payment for user ${userId}:`, userPayment.data());
           if (userPayment.data().status === 'success') {
-            setIsSubscribed(true);
+            setIsSubscribed('true');
+            setIsLoading(false);
           } else {
             console.log(`Payment status for user ${userId} is not 'success':`, userPayment.data().status);
           }
@@ -120,6 +124,7 @@ const Rental: React.FC = () => {
       } else {
         console.log('No user is currently logged in');
       }
+      setIsLoading(false);
     };
 
     fetchSubscriptionStatus();
@@ -127,15 +132,24 @@ const Rental: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleAddToCart = (productId: string) => {
-    if (isSubscribed) {
-      // Set the selectedProduct in the local storage
-      localStorage.setItem('selectedProduct', productId);
-
-      // Navigate to the payment page
-      navigate('/reservation');
+  const handleAddToCart = async (productId: string) => {
+    const userId = auth.currentUser?.uid;
+    if (userId) {
+      const paymentsCol = collection(db, 'payments');
+      const paymentSnapshot = await getDocs(paymentsCol);
+      const userPayment = paymentSnapshot.docs.find(doc => doc.data().userId === userId);
+  
+      if (userPayment && userPayment.data().status === 'success') {
+        // Set the selectedProduct in the local storage
+        localStorage.setItem('selectedProduct', productId);
+  
+        // Navigate to the payment page
+        navigate('/reservation');
+      } else {
+        toast.error('Only subscribed users can rent premium class products. Please subscribe to continue.');
+      }
     } else {
-      alert('Only subscribed users can add products to the cart. Please subscribe to continue.');
+      toast.error('You must be logged in to rent products.');
     }
   };
 
@@ -199,6 +213,11 @@ const Rental: React.FC = () => {
 
   return (
     <>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+      <>
+      <ToastContainer />
       <GlobalStyles />
       <Navbar />
       <Container>
@@ -233,7 +252,7 @@ const Rental: React.FC = () => {
           {products.length > 0 ? (
             products.map((product, index) => (
               <ProductCard key={index}>
-                {product.subscribers_only && <SubscriptionRibbon>Subscription Only</SubscriptionRibbon>}
+                {product.subscribers_only === 'true' && <SubscriptionRibbon>Subscription Only</SubscriptionRibbon>}
                 <TextTitle>{product.title}</TextTitle>
                 <Specification>
                   {product.specifications.map((spec, index) => (
@@ -264,6 +283,8 @@ const Rental: React.FC = () => {
         </ProductList>
       </Container>
       <Footer />
+      </>
+      )}
     </>
   );
 };

@@ -29,6 +29,7 @@ const Dashboard: React.FC = () => {
   const [productCount, setProductCount] = useState(0);
   const [reservationCount, setReservationCount] = useState(0);
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [subscribersOnly, setSubscribersOnly] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -246,7 +247,7 @@ const Dashboard: React.FC = () => {
               setIsCreating(true);
               setSelectedData(
                 activeTable === 'users' ? new User('', '', false) :
-                activeTable === 'products' ? new Product('', '', '', [], '', '', [], '') :
+                activeTable === 'products' ? new Product('', '', '', [], '', '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
                 activeTable === 'activities' ? new Activity('', ['0', '0'], '', [], '', '') : // Add this line
                 null
@@ -256,7 +257,7 @@ const Dashboard: React.FC = () => {
             {selectedData && <GenericPopup 
               data={isCreating ? 
                 (activeTable === 'users' ? new User('', '', false) :
-                activeTable === 'products' ? new Product('', '', '', [], '', '', [], '') :
+                activeTable === 'products' ? new Product('', '', '', [], '', '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
                 activeTable === 'activities' ? new Activity('', ['0', '0'], '', [], '', '') :
                 new User('', '', false)) : 

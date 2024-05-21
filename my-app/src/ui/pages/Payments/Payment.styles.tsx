@@ -337,3 +337,15 @@ export const Form = styled.form`
     order: 2;
   }
 `;
+
+export const TicketContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+`;

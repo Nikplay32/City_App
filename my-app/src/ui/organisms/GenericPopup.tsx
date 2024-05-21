@@ -11,7 +11,7 @@ type TableData = User | Product | Reservation | Activity;
 const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => Promise<void>; onCancel: () => void; isCreating: boolean; isOpen: boolean }> = ({ data, onEdit, onCancel, isCreating, isOpen }) => {
   const [newData, setNewData] = useState(
     data instanceof User ? new User(data.id, data.username, data.isAdmin) :
-    data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title) :
+    data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
     data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
     data instanceof Activity ? new Activity(data.id, data.coordinates, data.date, data.images, data.price, data.title) :
     null
@@ -20,7 +20,7 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
   useEffect(() => {
     setNewData(
       data instanceof User ? new User(data.id, data.username, data.isAdmin) :
-      data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title) :
+      data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
       data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
       data instanceof Activity ? new Activity(data.id, data.coordinates, data.date, data.images, data.price, data.title) :
       null
@@ -42,7 +42,8 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
           name === 'price' ? value : prevData.price,
           name === 'shortDescription' ? value : prevData.shortDescription,
           name === 'specification' ? value.split('\n') : prevData.specification,
-          name === 'title' ? value : prevData.title
+          name === 'title' ? value : prevData.title,
+          name === 'subscribers_only' ? value : prevData.subscribers_only
         );
       } else if (prevData instanceof Reservation) {
         return new Reservation(

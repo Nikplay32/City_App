@@ -27,8 +27,8 @@ const tableConfigs: Record<string, TableConfigs> = {
     createInstance: (id: string, data: any) => new User(id, data.username, data.isAdmin),
   },
   products: {
-    fields: ['category', 'description', 'images', 'price', 'shortDescription', 'specification', 'title'],
-    createInstance: (id: string, data: any) => new Product(id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title),
+    fields: ['category', 'description', 'images', 'price', 'shortDescription', 'specification', 'title', 'subscribers_only'],
+    createInstance: (id: string, data: any) => new Product(id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only),
   },
   reservations: {
     fields: ['id', 'mileage', 'productId', 'reservationTime', 'secondOption', 'userId'],

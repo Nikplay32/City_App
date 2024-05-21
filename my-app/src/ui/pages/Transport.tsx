@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Navbar from '../organisms/Navbar';
 import GlobalStyles from '../atoms/GlobalStyles';
 import { ChangeEvent } from 'react';
+import { Container, Sidebar, MainContent, TimeTable, TimeCell, TransportNavItem, TransportNavbar } from '../pages/Transport.styles'
 
 const initialTimes = ['05:41', '06:06', '06:36', '07:06', '07:36', '08:06', '08:33', '08:57', '09:21', '09:44', '10:08', '10:33', '10:56', '11:21', '11:46', '12:10', '12:34', '12:58', '13:22', '13:46', '14:10', '14:34', '14:58', '15:22', '15:46', '16:10', '16:34', '16:58', '17:22', '17:52', '18:23', '18:51', '19:26', '20:00', '20:28', '20:58', '21:31', '22:16', '23:01'];
 
@@ -52,51 +53,6 @@ function generateTimes(initialTimes: string[]): string[] {
     return aHour - bHour || aMinute - bMinute;
   });
 }
-
-
-const Container = styled.div`
-  display: flex;
-`;
-
-const Sidebar = styled.div`
-  width: 20%;
-  border-right: 1px solid #ddd;
-  padding: 10px;
-`;
-
-const MainContent = styled.div`
-  width: 80%;
-  padding: 10px;
-`;
-
-const TimeTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const TimeCell = styled.td`
-  border: 1px solid #ddd;
-  padding: 8px;
-`;
-
-const TransportNavbar = styled.div`
-  display: flex;
-  justify-content: space-around;
-  background-color: #f8f8f8;
-  padding: 10px 0;
-`;
-
-const TransportNavItem = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 10px;
-  color: #333;
-  &:hover {
-    color: #007BFF;
-  }
-`;
 
 const Transport = () => {
 	const [selectedTransport, setSelectedTransport] = useState('Bus');
