@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { FaSearch, FaTimes } from 'react-icons/fa';
 import { keyframes } from 'styled-components';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 
 export const Container = styled.div`
     display: flex;
@@ -8,12 +8,18 @@ export const Container = styled.div`
     justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    background-color: white;
+    background-color: #ffffff;
 `;
 
 export const movingGradient = keyframes`
   0% { background-position: 0% 50%; }
   100% { background-position: 100% 50%; }
+`;
+
+export const FilterContainer = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+  gap: 1rem;
 `;
 
 export const HeroSection = styled.div`
@@ -23,13 +29,14 @@ export const HeroSection = styled.div`
   margin-bottom: 20px;
   width: 100%;
   border-bottom: 1px solid #000;
-  background: repeating-linear-gradient(45deg, black, #003cff 100px);
+  background: repeating-linear-gradient(45deg, black, #00ff2a 100px);
   background-size: 200% 200%;
   animation: ${movingGradient} 15s linear infinite;
 `;
 
 export const HeroImage = styled.img`
   width: 100%;
+  max-width: 500px;
   height: auto;
 
   @media only screen and (max-width: 600px) {
@@ -45,6 +52,7 @@ export const ProductList = styled.div`
     gap: 20px;
     width: 100%;
     padding: 20px;
+    margin-top: 30px;
 `;
 
 export const Title = styled.h1`
@@ -53,20 +61,11 @@ export const Title = styled.h1`
     color: #ffffff;
 `;
 
-export const Specification = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
-export const SpecificationItem = styled.div`
-    display: flex;
-    margin: 5px 10px;
-    padding: 5px;
-    background-color: #000000;
-    border-radius: 20px;
-    color: white;
-    font-size: 12px;
-    align-items: center;
+export const NotFoundMessage = styled.h2`
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
 `;
 
 export const SearchBarContainer = styled.div`
@@ -121,80 +120,53 @@ export const CloseIcon = styled(FaTimes)`
     color: #9c9c9c;
 `;
 
-export const NotFoundMessage = styled.h2`
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 50px;
-`;
-
 export const ProductCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  border: 4px solid #2684ff;
-  width: 300px;
+  align-items: flex-start;
   padding: 10px;
   margin: 10px;
-  background: rgb(0,0,0);
-  background: linear-gradient(0deg, rgba(0,0,0,1) 23%, #ffffff 60%);
+  background-color: white;
   color: black;
   position: relative;
+  border: 10px solid transparent;
   border-radius: 20px;
-
-  &:hover .overlay {
-    display: flex;
-  }
 `;
 
 export const TextTitle = styled.h2`
   font-size: 20px;
-  text-align: center;
+  text-align: left;
+  padding: 0px 50px 10px 10px;
+  color: #2c6602;
+`;
+
+export const StyledDate = styled.h4`
+  font-size: 15px;
+  text-align: left;
   padding: 10px;
   color: black;
-  font-weight: 800;;
-`;
-
-export const Description = styled.p`
-  color: #ffffff;
-  padding: 10px;
-`;
-
-export const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
 `;
 
 export const InfoButton = styled.button`
-  padding: 10px;
-  background-color: #2684ff;
+  margin: 0px 0px 10px 10px;
+  background-color: #e0f1f1;
   color: black;
   border: none;
+  border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 10px;
-  border-radius: 15px;
+  padding: 10px;
 `;
 
 export const Price = styled.p`
   font-size: 18px;
   padding: 10px;
-  color: #ffffff;
+  color: black;
 `;
 
 export const Button = styled.button`
   padding: 10px;
-  background-color: #2684ff;
-  border-radius: 15px;
+  background-color: white;
   color: black;
   border: none;
   cursor: pointer;
@@ -207,25 +179,13 @@ export const Image = styled.img`
   border-radius: 10px;
 `;
 
-export const FilterContainer = styled.div`
-  display: flex;
-  margin-bottom: 10px;
-  gap: 1rem;
-  z-index: 3;
-  @media (max-width: 768px){
-    flex-direction: column;
-  }
-`;
 
-export const SubscriptionRibbon = styled.div`
-  position: absolute;
-  top: 0;
-  right: -70px;
-  padding: 5px 10px;
-  background-color: #f00;
-  color: #fff;
-  font-weight: bold;
-  z-index: 2;
-  transform: rotate(45deg);
-  transform-origin: 40% 0;
-`;
+interface Activity {
+  id: string;
+  title: string;
+  images: string[];
+  date: string;
+  shortDescription: string;
+  description: string;
+  category: string;
+}

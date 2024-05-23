@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
 
   return (
     <NavbarContainer>
-      <Logo href="#">CITYSPIRIT</Logo>
+      <Logo href="/">CITYSPIRIT</Logo>
       <BurgerMenuButton onClick={toggleMenu}>
         <MdOutlineMenu size={24} color="black" />
       </BurgerMenuButton>
@@ -53,6 +53,9 @@ const Navbar: React.FC = () => {
         </MenuItem>
         <MenuItem>
           <NavLink href="/Map">Map</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="/transport">Timetable</NavLink>
         </MenuItem>
         <MenuItem>
           <NavLink href="/subs">Subscription</NavLink>

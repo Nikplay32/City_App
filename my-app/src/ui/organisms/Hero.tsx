@@ -6,60 +6,131 @@ const HeroContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000000;
-  padding: 50px 0;
-`;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  padding: 100px 20px;
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+  text-align: center;
 
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10rem;
-  animation: slideIn 1s forwards; 
+  @media (max-width: 768px) {
+    padding: 60px 20px;
+  }
 `;
 
 const slideIn = keyframes`
   from {
-    transform: translateX(100%);
+    transform: translateY(50px);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: translateY(0);
     opacity: 1;
   }
 `;
 
-const Title = styled.div`
-  color: white;
-  font-size: 48px;
-  font-weight: 800;
-  margin-bottom: 0.2rem; 
-  animation: ${slideIn} 1s ease forwards;
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 `;
 
-const Description = styled.div`
-  color: white;
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  animation: ${slideIn} 1s ease-out;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    align-items: center;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 64px;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  animation: ${fadeIn} 2s ease forwards;
+
+  @media (max-width: 768px) {
+    font-size: 48px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 36px;
+  }
+`;
+
+const Description = styled.h2`
   font-size: 36px;
   font-weight: 400;
   margin-bottom: 2rem;
-  animation: ${slideIn} 1.5s ease forwards;
+  animation: ${fadeIn} 2.5s ease forwards;
+
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
 `;
 
-const Icon = styled.img`
-  max-width: 24rem;
-  height: auto;
-`;
-
-const TextContainer = styled.div`
-  max-width: 800px;
-  animation: ${slideIn} 2s ease forwards; 
-`;
-
-const Text = styled.div`
-  color: white;
-  font-weight: 200;
+const Text = styled.p`
+  font-size: 20px;
+  font-weight: 300;
   margin-bottom: 2rem;
-  animation: ${slideIn} 2s ease forwards; 
+  animation: ${fadeIn} 3s ease forwards;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
+`;
+
+const BackgroundImage = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
+  opacity: 0.3;
+  z-index: 1;
+`;
+
+const HeroButton = styled(Button)`
+  background-color: #ff8c00;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 15px 30px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #ff6500;
+  }
+
+  @media (max-width: 768px) {
+    padding: 12px 24px;
+    font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
 `;
 
 interface HeroProps {
@@ -71,14 +142,12 @@ interface HeroProps {
 function Hero({ title, description, text }: HeroProps) {
   return (
     <HeroContainer>
+      <BackgroundImage />
       <ContentWrapper>
-        <Icon src={`${process.env.PUBLIC_URL}/city.jpg`} alt="Location Icon" />
-        <TextContainer>
-          <Title>{title}</Title>
-          <Description>{description}</Description>
-          <Text>{text}</Text>
-          <Button>Get Started!</Button>
-        </TextContainer>
+        <Title>{title}</Title>
+        <Description>{description}</Description>
+        <Text>{text}</Text>
+        <HeroButton>Get Started!</HeroButton>
       </ContentWrapper>
     </HeroContainer>
   );

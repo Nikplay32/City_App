@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, where, getDocs, query } from 'firebase/firestore';
+import { collection, addDoc, where, getDocs, query, doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase';
 import 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
@@ -145,6 +145,12 @@ const PaymentForm: React.FC = () => {
 
 						// Show a toast notification based on the payment status
 						if (paymentStatus === 'success') {
+							if (auth.currentUser) {
+								const userRef = doc(db, 'users', auth.currentUser.uid);
+								await updateDoc(userRef, {
+									isSubbed: true
+								});
+							}
 							toast.success('Payment successful!');
 							setIsPaid(true);
 							navigate('/success');

@@ -42,6 +42,7 @@ export const Menu = styled.ul<MenuProps>`
   @media (max-width: 768px) {
     flex-direction: column;
     justify-content: center;
+    z-index: 10000;
     position: fixed;
     top: 0;
     left: 0;
@@ -56,6 +57,8 @@ export const Menu = styled.ul<MenuProps>`
 export const MenuItem = styled.li`
   margin-right: 1.5rem;
   position: relative;
+  transition: color 0.3s; /* Add transition effect for hover */
+
   @media (max-width: 768px) {
     margin-right: 0;
     margin-bottom: 1rem;
@@ -80,6 +83,10 @@ export const MenuItem = styled.li`
   &:last-child::after {
     display: none;
   }
+
+  &:hover {
+    color: #0099ff; /* Change color on hover */
+  }
 `;
 
 export const CloseButton = styled.button`
@@ -96,7 +103,6 @@ export const CloseButton = styled.button`
 export const NavLink = styled.a`
   text-decoration: none;
   color: white;
-  transition: color 0.3s;
   display: inline-block;
 
   @media (max-width: 768px) {

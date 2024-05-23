@@ -20,6 +20,7 @@ import FailedPayment from './ui/pages/Payments/FailedPayment'
 import SightDetailPage from './ui/pages/Sight';
 import SightsPage from './ui/pages/SightsPage';
 import TicketForm from './ui/pages/TicketForm';
+import Restaurants from './ui/pages/Restaurants'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -41,6 +42,7 @@ ReactDOM.render(
         <Route path="/failed" element={<FailedPayment/>}/>
         <Route path="/sight" element={<SightsPage></SightsPage>} />
         <Route path="/tickets" element={<TicketForm></TicketForm>}/>
+        <Route path="/restaurants" element={<Restaurants/>}/>
         <Route path="/sight/:id" element={<SightDetailPage name={''} description={''} image={''}/>} />
         <Route path="/admin" element={
         <AdminRoute>

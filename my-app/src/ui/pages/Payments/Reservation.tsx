@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 import { components, OptionProps } from 'react-select';
-import { collection, addDoc, where, getDocs, query } from 'firebase/firestore';
+import { collection, addDoc, where, getDocs, query, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase';
 import 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,6 +20,7 @@ import { MdOutlinePassword } from "react-icons/md";
 import { AiFillLock } from 'react-icons/ai';
 import { handleSubmit } from '../../atoms/HandleSubmitForm';
 import Navbar from '../../organisms/Navbar';
+import { FaCoins } from 'react-icons/fa';
 import GlobalStyles from '../../atoms/GlobalStyles';
 import { secondOptionOptions, mileageOptions } from '../../data/RentalOptions';
 
@@ -75,6 +76,10 @@ const PaymentForm: React.FC = () => {
   const durationOptions = Array.from({ length: 7 }, (_, i) => ({ value: i + 1, label: `${i + 1} day(s)` }));
   const durationOptionsHours = Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: `${i + 1} hour(s)` }));
 
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+  const [pointsToUse, setPointsToUse] = useState(0);
+  
+  // Fetch the user's loyalty points in this useEffect hook
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -86,6 +91,13 @@ const PaymentForm: React.FC = () => {
             setIsPaid(true);
           }
         });
+
+        // Fetch the user's loyalty points
+        const userDoc = doc(db, 'users', user.uid);
+        const userData = await getDoc(userDoc);
+        if (userData.exists()) {
+          setLoyaltyPoints(userData.data().loyalty_points || 0);
+        }
       } else {
         navigate('/authorization');
       }
@@ -135,7 +147,7 @@ const PaymentForm: React.FC = () => {
     setExpiry(formattedValue);
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     if (auth.currentUser) {
       const docData = {
         userId: auth.currentUser.uid,
@@ -158,6 +170,26 @@ const PaymentForm: React.FC = () => {
       };
 
       handleSubmit(event, formValues, 'reservations', docData, callback);
+      const userDoc = doc(db, 'users', auth.currentUser.uid);
+      const userData = await getDoc(userDoc);
+
+      if (userData.exists() && userData.data().isSubbed) {
+        // Get the current loyalty points
+        const loyaltyPoints = userData.data().loyalty_points || 0;
+      
+        // Calculate the new loyalty points
+        let newLoyaltyPoints;
+        if (pointsToUse > 0) {
+          // If the user is using points, subtract the used points and add 10
+          newLoyaltyPoints = loyaltyPoints - pointsToUse + 10;
+        } else {
+          // If the user is not using points, just add 10
+          newLoyaltyPoints = loyaltyPoints + 10;
+        }
+      
+        // Update the user's loyalty points
+        await updateDoc(userDoc, { loyalty_points: newLoyaltyPoints });
+      }
     } else {
       toast.error('You must be signed in to make a reservation.');
     }
@@ -269,6 +301,18 @@ const PaymentForm: React.FC = () => {
             onChange={(value) => setPassword(value)}
             Icon={MdOutlinePassword}
           />
+          <InputField
+            type="number"
+            placeholder="Loyalty Points to Use"
+            value={pointsToUse.toString()}
+            onChange={(value) => {
+              const points = parseInt(value, 10);
+              if (points >= 0 && points <= loyaltyPoints) {
+                setPointsToUse(points);
+              }
+            }}
+            Icon={FaCoins}
+          />
           <Button type="submit" disabled={isPaid}>
             {isPaid ? 'Payment Successful' : `Pay ${subscriptionPrice}`}
           </Button>
@@ -281,16 +325,16 @@ const PaymentForm: React.FC = () => {
                 <img src={product.images[0]} alt={product.title} />
               )}
               <p>{product.description}</p>
-              <h3>Total Price:  
-              {product?.category === 'Cars' ? 
-                Math.round((product.price + (mileage?.priceAdjustment || 0) + (secondOption?.priceAdjustment || 0)) * duration * 100) / 100 + ` (${mileage.label} + ${secondOption.label})`
-                :
-                product?.category === 'Boards' ?
-                Math.round(product.price * duration * 100) / 100 + ` (per day)`
-                :
-                product.price
-              }
-            </h3>
+              <h3>Total Price:
+                {product?.category === 'Cars' ?
+                  Math.round((product.price + (mileage?.priceAdjustment || 0) + (secondOption?.priceAdjustment || 0)) * duration * 100) / 100 - pointsToUse + ` (${mileage.label} + ${secondOption.label})`
+                  :
+                  product?.category === 'Boards' ?
+                    Math.round(product.price * duration * 100) / 100 - pointsToUse + ` (per day)`
+                    :
+                    product.price - pointsToUse
+                }
+              </h3>
             </>
           )}
         </ProductInfo>

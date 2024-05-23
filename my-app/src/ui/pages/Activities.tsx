@@ -7,111 +7,24 @@ import { db } from '../../firebase'; // adjust the path as necessary
 import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #ffffff;
-`;
-
-const HeroSection = styled.div`
-  color: #ffffff;
-  padding: 50px;
-  text-align: center;
-  margin-bottom: 20px;
-  width: 100%;
-  height: 400px;
-  border-bottom: 1px solid #000;
-  background-image: url("https://media.gettyimages.com/id/629589560/photo/central-riga-latvia.jpg?s=612x612&w=0&k=20&c=XkwNZr0K6LvFfNKjeONr4943dTO2Mdw5WTt3Zm65N3c=");
-`;
-
-const ProductList = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    width: 100%;
-    padding: 20px;
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
-    margin-top: 30px;
-`;
-
-const Title = styled.h1`
-    font-size: 24px;
-    color: #333;
-`;
-
-const SearchBar = styled.input.attrs({ type: 'search' })`
-    width: 300px;
-    height: 30px;
-    margin-bottom: 20px;
-
-`;
-
-const ProductCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 10px;
-  margin: 10px;
-  background-color: white;
-  color: black;
-  position: relative;
-  border: 10px solid transparent;
-  border-radius: 20px;
-`;
-
-const TextTitle = styled.h2`
-  font-size: 20px;
-  text-align: left;
-  padding: 0px 50px 10px 10px;
-  color: #2c6602;
-`;
-
-const Date = styled.h4`
-  font-size: 15px;
-  text-align: left;
-  padding: 10px;
-  color: black;
-`;
-
-const InfoButton = styled.button`
-  margin: 0px 0px 10px 10px;
-  background-color: #e0f1f1;
-  color: black;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  padding: 10px;
-`;
-
-const Price = styled.p`
-  font-size: 18px;
-  padding: 10px;
-  color: black;
-`;
-
-const Button = styled.button`
-  padding: 10px;
-  background-color: white;
-  color: black;
-  border: none;
-  cursor: pointer;
-`;
-
-const Image = styled.img`
-  height: auto;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-`;
-
+import {
+  Container,
+  HeroSection,
+  HeroImage,
+  ProductList,
+  Title,
+  SearchBar,
+  ProductCard,
+  TextTitle,
+  StyledDate,
+  InfoButton,
+  NotFoundMessage,
+  Image,
+  SearchBarContainer,
+  SearchIcon,
+  CloseIcon,
+  FilterContainer
+} from './Activities.styles';
 
 interface Activity {
   id: string;
@@ -130,11 +43,18 @@ const filterOptions = [
   // Add more options as needed
 ];
 
+const sortOptions = [
+  { value: 'Earliest', label: 'Earliest' },
+  { value: 'Latest', label: 'Latest' },
+  // Add more options as needed
+];
+
 const Activities: React.FC = () => {
   const [allActivities, setAllActivities] = useState<Activity[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('All');
+  const [sort, setSort] = useState('Earliest');
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -161,7 +81,7 @@ const Activities: React.FC = () => {
   const handleAddToCart = (productId: string) => {
     // Set the selectedProduct in the local storage
     localStorage.setItem('selectedProduct', productId);
-  
+
     // Navigate to the payment page
     navigate('/reservation');
   };
@@ -174,6 +94,18 @@ const Activities: React.FC = () => {
   const handleFilterChange = (filter: string) => {
     setFilter(filter);
     filterActivities(searchTerm, filter);
+  };
+
+  const handleSortChange = (sort: string) => {
+    setSort(sort);
+    sortActivitiesByDate(sort);
+  };
+
+  const convertDate = (date: string) => {
+    const parts = date.split(' ');
+    const dayMonth = parts[1].split('.');
+    const year = parts[2];
+    return new Date(`${year}-${dayMonth[1]}-${dayMonth[0]}`);
   };
 
   const filterActivities = (term: string, filter: string) => {
@@ -193,33 +125,55 @@ const Activities: React.FC = () => {
     setActivities(filteredActivities);
   };
 
+  const sortActivitiesByDate = (sort: string) => {
+    let sortedActivities = [...activities];
+    if (sort === 'Earliest') {
+      sortedActivities.sort((a: Activity, b: Activity) => convertDate(a.date).getTime() - convertDate(b.date).getTime());
+    } else {
+      sortedActivities.sort((a: Activity, b: Activity) => convertDate(b.date).getTime() - convertDate(a.date).getTime());
+    }
+    setActivities(sortedActivities);
+  };
+
   return (
     <>
       <GlobalStyles />
       <Navbar />
       <Container>
         <HeroSection>
-          <h1>Welcome to Our Activities</h1>
-          <p>Find the best activities for your needs</p>
-          <p>Find the best activities for your needs</p>
-          <p>Find the best activities for your needs</p>
-          <p>Find the best activities for your needs</p>
+          <Title>Welcome to Activities</Title>
+          <HeroImage src="https://freepngimg.com/save/86758-building-city-2d-game-computer-video-graphics/2067x1001" width="600px" alt="" />
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
         </HeroSection>
-        <SearchBar placeholder="Search activities..." value={searchTerm} onChange={handleSearch} />
-        <Select
-          options={filterOptions}
-          defaultValue={filterOptions[0]}
-          onChange={(option) => option && handleFilterChange(option.value)}
-        />
+        <SearchBarContainer>
+          <SearchBar placeholder="Search products..." value={searchTerm} onChange={handleSearch} />
+          {searchTerm ? <CloseIcon size={20} onClick={() => setSearchTerm('')} /> : <SearchIcon size={20} />}
+        </SearchBarContainer>
+        <FilterContainer>
+          <Select
+            options={filterOptions}
+            defaultValue={filterOptions[0]}
+            onChange={(option) => option && handleFilterChange(option.value)}
+          />
+          <Select
+            options={sortOptions}
+            defaultValue={sortOptions[0]}
+            onChange={(option) => option && handleSortChange(option.value)}
+          />
+        </FilterContainer>
         <ProductList>
-          {activities.map((activity, index) => (
-            <ProductCard key={index}>
-              <Image src={activity.images[0]} alt={activity.title} />
-              <Date>{activity.date}</Date>
-              <TextTitle>{activity.title}</TextTitle>
-              <InfoButton onClick={() => navigate(`/activity/${activity.id}`)}>More info</InfoButton>
-            </ProductCard>
-          ))}
+          {activities.length > 0 ? (
+            activities.map((activity, index) => (
+              <ProductCard key={index}>
+                <Image src={activity.images[0]} alt={activity.title} />
+                <StyledDate>{activity.date}</StyledDate>
+                <TextTitle>{activity.title}</TextTitle>
+                <InfoButton onClick={() => navigate(`/activity/${activity.id}`)}>More info</InfoButton>
+              </ProductCard>
+            ))
+          ) : (
+            <NotFoundMessage>We don't have such activities to book yet.<br />Check back later and maybe we'll add them.<br />😊</NotFoundMessage>
+          )}
         </ProductList>
       </Container>
       <Footer />
