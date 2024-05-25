@@ -156,10 +156,10 @@ const Button = styled.button`
 
 const AboutUs: React.FC = () => {
   const imageUrls = [
-    'https://image.freepik.com/free-vector/abstract-geometric-background_1035-2477.jpg',
-    'https://image.freepik.com/free-vector/abstract-geometric-background_1035-2478.jpg',
-    'https://image.freepik.com/free-vector/abstract-geometric-background_1035-2479.jpg',
-    'https://image.freepik.com/free-vector/abstract-geometric-background_1035-2480.jpg',
+    'https://media.istockphoto.com/id/889402258/photo/these-seats-need-to-be-filled.jpg?s=612x612&w=0&k=20&c=4zBhSi2Ar7hpQqsZHUsA9uRmIHJK2qmOE__M7LjfGP8=',
+    'https://tourscanner.com/blog/wp-content/uploads/2023/03/things-to-do-in-Riga-Latvia.jpg',
+    'https://www.2foodtrippers.com/wp-content/uploads/2018/02/Kolonade-Dining-Room-Riga-Restaurants.jpg.webp',
+    'https://time.com/personal-finance/static/968cd62628d70e99030c6d7ec55b404f/57e17/rent-a-car.jpg',
   ];
 
   return (
@@ -180,9 +180,6 @@ const AboutUs: React.FC = () => {
           and enjoyable as possible. Join us on this journey and embrace the
           vibrant rhythm of city life.
         </Paragraph>
-        <ButtonWrapper>
-          <Button>Learn More</Button>
-        </ButtonWrapper>
       </TextContainer>
       <ImageContainer>
         {imageUrls.map((src, index) => (

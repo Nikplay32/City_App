@@ -8,10 +8,9 @@ import 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, Timestamp } from 'firebase/firestore';
-import { Button, Form, Reservation, ProductInfo } from './Payment.styles'
+import { Button, Form, Reservation, PointsExplanation, Highlight, ProductInfo, Description, Price, ProductDetailsContainer, ImageContainer, DetailsContainer } from './Payment.styles'
 import CardContainer from '../../organisms/CardContainer';
 import InputField from '../../atoms/InputField';
 import { RiIdCardLine } from 'react-icons/ri';
@@ -78,7 +77,7 @@ const PaymentForm: React.FC = () => {
 
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [pointsToUse, setPointsToUse] = useState(0);
-  
+
   // Fetch the user's loyalty points in this useEffect hook
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -148,13 +147,23 @@ const PaymentForm: React.FC = () => {
   };
 
   const onSubmit = async (event: React.FormEvent) => {
-    if (auth.currentUser) {
+    if (auth.currentUser && product) {
+      let totalPrice;
+      if (product.category === 'Cars') {
+        totalPrice = Math.round((product.price + (mileage?.priceAdjustment || 0) + (secondOption?.priceAdjustment || 0)) * duration * 100) / 100 - pointsToUse;
+      } else if (product.category === 'Boards') {
+        totalPrice = Math.round(product.price * duration * 100) / 100 - pointsToUse;
+      } else {
+        totalPrice = product.price - pointsToUse;
+      }
+  
       const docData = {
         userId: auth.currentUser.uid,
         productId: productId,
         mileage: mileage.value,
         secondOption: secondOption.value,
         reservationTime: Timestamp.now(),
+        totalPrice: totalPrice,
       };
 
       const formValues: FormValues = {
@@ -176,7 +185,7 @@ const PaymentForm: React.FC = () => {
       if (userData.exists() && userData.data().isSubbed) {
         // Get the current loyalty points
         const loyaltyPoints = userData.data().loyalty_points || 0;
-      
+
         // Calculate the new loyalty points
         let newLoyaltyPoints;
         if (pointsToUse > 0) {
@@ -186,7 +195,7 @@ const PaymentForm: React.FC = () => {
           // If the user is not using points, just add 10
           newLoyaltyPoints = loyaltyPoints + 10;
         }
-      
+
         // Update the user's loyalty points
         await updateDoc(userDoc, { loyalty_points: newLoyaltyPoints });
       }
@@ -301,6 +310,7 @@ const PaymentForm: React.FC = () => {
             onChange={(value) => setPassword(value)}
             Icon={MdOutlinePassword}
           />
+          <h2>Loyalty points</h2>
           <InputField
             type="number"
             placeholder="Loyalty Points to Use"
@@ -314,29 +324,45 @@ const PaymentForm: React.FC = () => {
             Icon={FaCoins}
           />
           <Button type="submit" disabled={isPaid}>
-            {isPaid ? 'Payment Successful' : `Pay ${subscriptionPrice}`}
+            {isPaid ? 'Payment Successful' : `Pay now`}
           </Button>
         </Form>
         <ProductInfo>
-          {product && (
-            <>
-              <h2>{product.title}</h2>
-              {product.images.length > 0 && (
-                <img src={product.images[0]} alt={product.title} />
-              )}
-              <p>{product.description}</p>
-              <h3>Total Price:
-                {product?.category === 'Cars' ?
-                  Math.round((product.price + (mileage?.priceAdjustment || 0) + (secondOption?.priceAdjustment || 0)) * duration * 100) / 100 - pointsToUse + ` (${mileage.label} + ${secondOption.label})`
-                  :
-                  product?.category === 'Boards' ?
-                    Math.round(product.price * duration * 100) / 100 - pointsToUse + ` (per day)`
-                    :
-                    product.price - pointsToUse
-                }
-              </h3>
-            </>
-          )}
+          <ProductDetailsContainer>
+            {product && (
+              <>
+                <h2>{product.title}</h2>
+                <ImageContainer>
+                  {product.images.length > 0 && (
+                    <img src={product.images[0]} alt={product.title} />
+                  )}
+                </ImageContainer>
+                <PointsExplanation>
+                  <h3>Loyalty Points:</h3>
+                  <p>
+                    Loyalty points are rewards earned by customers for their continuous business with us. You can accumulate these points over time and redeem them for discounts or special offers on future purchases. You can use these points now to reduce the total price of your reservation.
+                  </p>
+                  <h3>Current Balance:</h3>
+                  <p>
+                  <Highlight>Your current balance of loyalty points is {loyaltyPoints} €</Highlight>. You can choose to use these points to reduce the total price of your reservation.
+                  </p>
+                </PointsExplanation>
+                <DetailsContainer>
+                  <Description>{product.description}</Description>
+                  <Price>
+                    Total Price: <Highlight>{product?.category === 'Cars' ?
+                      (Math.round((product.price + (mileage?.priceAdjustment || 0) + (secondOption?.priceAdjustment || 0)) * duration * 100) / 100 - pointsToUse).toFixed(2) + '€' + ` (${mileage.label} + ${secondOption.label})`
+                      :
+                      product?.category === 'Boards' ?
+                        (Math.round(product.price * duration * 100) / 100 - pointsToUse).toFixed(2) + '€' + ` (per day)`
+                        :
+                        (product.price - pointsToUse).toFixed(2) + '€'
+                    }</Highlight>
+                  </Price>
+                </DetailsContainer>
+              </>
+            )}
+          </ProductDetailsContainer>
         </ProductInfo>
       </Reservation>
     </>

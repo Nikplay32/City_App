@@ -26,6 +26,7 @@ const Container = styled.div`
   display: flex;
   padding: 2rem;
   justify-content: space-between;
+  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
 `;
 
 const TicketForm: React.FC = () => {

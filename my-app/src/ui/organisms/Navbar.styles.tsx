@@ -39,7 +39,7 @@ export const Menu = styled.ul<MenuProps>`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1300px) {
     flex-direction: column;
     justify-content: center;
     z-index: 10000;
@@ -59,9 +59,15 @@ export const MenuItem = styled.li`
   position: relative;
   transition: color 0.3s; /* Add transition effect for hover */
 
-  @media (max-width: 768px) {
+  @media (max-width: 1300px) {
     margin-right: 0;
     margin-bottom: 1rem;
+    &::after{
+      content: "";
+    }
+    &:last-child::after {
+    display: block;
+  }
   }
 
   &:last-child {
@@ -95,7 +101,7 @@ export const CloseButton = styled.button`
   right: 1rem;
   background: none;
   border: none;
-  @media (min-width: 768px) {
+  @media (min-width: 1300px) {
     display: none;
   }
 `;
@@ -105,7 +111,7 @@ export const NavLink = styled.a`
   color: white;
   display: inline-block;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1300px) {
     display: block;
     text-align: center;
   }
@@ -117,7 +123,7 @@ export const NavLink = styled.a`
 
 export const BurgerMenuButton = styled.button`
   display: block;
-  @media (min-width: 768px) {
+  @media (min-width: 1300px) {
     display: none;
   }
 `;

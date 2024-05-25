@@ -1,6 +1,31 @@
 import styled from "styled-components";
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import { keyframes } from 'styled-components';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px;
+  padding-bottom: 30px;
+`;
+
+export const PageButton = styled.button`
+  border: none;
+  background: none;
+  font-size: 16px;
+  margin: 0 10px;
+  cursor: pointer;
+`;
+
+export const PageNumber = styled.span`
+  margin: 0 5px;
+  cursor: pointer;
+  &:hover {
+    color: #007bff;
+  }
+`;
 
 export const Container = styled.div`
     display: flex;
@@ -23,7 +48,7 @@ export const HeroSection = styled.div`
   margin-bottom: 20px;
   width: 100%;
   border-bottom: 1px solid #000;
-  background: repeating-linear-gradient(45deg, black, #003cff 100px);
+  background: repeating-linear-gradient(45deg, black, #683af4 100px);
   background-size: 200% 200%;
   animation: ${movingGradient} 15s linear infinite;
 `;
@@ -34,6 +59,34 @@ export const HeroImage = styled.img`
 
   @media only screen and (max-width: 600px) {
     width: -webkit-fill-available;
+  }
+`;
+
+export const AddToCartButton = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
+  border-radius: 15px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #388e3c;
+  }
+`;
+
+export const GoToProductButton = styled.button`
+  padding: 10px 20px;
+  background-color: #ffc107;
+  border-radius: 15px;
+  color: black;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #ff9800;
   }
 `;
 
@@ -121,14 +174,36 @@ export const CloseIcon = styled(FaTimes)`
     color: #9c9c9c;
 `;
 
-export const NotFoundMessage = styled.h2`
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 50px;
+export const NotFoundMessage = styled.div`
+  width: 100%;
+  text-align: center;
+  padding: 50px 0;
+  font-size: 1.2em;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+`;
+
+export const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
 `;
 
 export const ProductCard = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -137,48 +212,44 @@ export const ProductCard = styled.div`
   width: 300px;
   padding: 10px;
   margin: 10px;
-  background: rgb(0,0,0);
-  background: linear-gradient(0deg, rgba(0,0,0,1) 23%, #ffffff 60%);
-  color: black;
-  position: relative;
+  background: #fff;
+  color: #333;
   border-radius: 20px;
+  transition: all 0.3s ease;
 
-  &:hover .overlay {
-    display: flex;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    ${Overlay} {
+      display: flex;
+      opacity: 1;
+    }
   }
 `;
 
 export const TextTitle = styled.h2`
-  font-size: 20px;
+  font-size: 1.2rem;
   text-align: center;
   padding: 10px;
-  color: black;
-  font-weight: 800;;
+  color: #333;
+  font-weight: 700;
 `;
 
 export const Description = styled.p`
-  color: #ffffff;
+  color: #666;
   padding: 10px;
 `;
 
-export const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 export const InfoButton = styled.button`
-  padding: 10px;
+  padding: 10px 20px;
   background-color: #2684ff;
-  color: black;
+  color: white;
   border: none;
   cursor: pointer;
   margin-bottom: 10px;
@@ -186,9 +257,9 @@ export const InfoButton = styled.button`
 `;
 
 export const Price = styled.p`
-  font-size: 18px;
+  font-size: 1rem;
   padding: 10px;
-  color: #ffffff;
+  color: #333;
 `;
 
 export const Button = styled.button`

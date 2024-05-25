@@ -13,14 +13,20 @@ import { TbAutomaticGearbox } from "react-icons/tb";
 import { keyframes } from 'styled-components';
 import { FaUserCheck } from "react-icons/fa6";
 import { toast, ToastContainer } from 'react-toastify';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
 import {
   Container,
-  movingGradient,
   SubscriptionRibbon,
   HeroSection,
   HeroImage,
   ProductList,
   Title,
+  GoToProductButton,
+  PaginationContainer,
+  PageNumber,
+  PageButton,
+  AddToCartButton,
   Specification,
   SpecificationItem,
   SearchBarContainer,
@@ -55,7 +61,9 @@ const filterOptions = [
   { value: 'All', label: 'All' },
   { value: 'Cars', label: 'Cars' },
   { value: 'Scooters', label: 'Scooters' },
-  { value: 'Boards', label: 'Boards' }
+  { value: 'Boards', label: 'Boards' },
+  { value: 'SubscribersOnly', label: 'Subscribers Only' },
+  { value: 'Free', label: 'Free' },
   // Add more options as needed
 ];
 
@@ -78,6 +86,19 @@ const Rental: React.FC = () => {
   const [nameSort, setNameSort] = useState('A-Z');
   const [isSubscribed, setIsSubscribed] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const productsOnCurrentPage = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -134,12 +155,20 @@ const Rental: React.FC = () => {
 
   const handleAddToCart = async (productId: string) => {
     const userId = auth.currentUser?.uid;
+    const product = allProducts.find(product => product.id === productId);
+  
     if (userId) {
       const paymentsCol = collection(db, 'payments');
       const paymentSnapshot = await getDocs(paymentsCol);
       const userPayment = paymentSnapshot.docs.find(doc => doc.data().userId === userId);
   
-      if (userPayment && userPayment.data().status === 'success') {
+      if (product?.subscribers_only === 'true' && userPayment && userPayment.data().status === 'success') {
+        // Set the selectedProduct in the local storage
+        localStorage.setItem('selectedProduct', productId);
+  
+        // Navigate to the payment page
+        navigate('/reservation');
+      } else if (product?.subscribers_only === 'false') {
         // Set the selectedProduct in the local storage
         localStorage.setItem('selectedProduct', productId);
   
@@ -183,13 +212,42 @@ const Rental: React.FC = () => {
         product.price?.toString().includes(term)
       );
     }
-    if (filter !== 'All') {
+    if (filter === 'SubscribersOnly') {
+      // Only show products for subscribers if the user is subscribed
+      if (isSubscribed === 'true') {
+        filteredProducts = filteredProducts.filter(product =>
+          product.subscribers_only === 'true'
+        );
+      } else {
+        // If the user is not subscribed, do not filter by subscription status
+        // Include all products in this case
+        filteredProducts = allProducts;
+      }
+    } else if (filter === 'Free') {
+      // Include products that are not exclusively for subscribers
+      filteredProducts = filteredProducts.filter(product =>
+        product.subscribers_only === 'false'
+      );
+    } else if (filter !== 'All') {
+      // Include products based on selected category filter
       filteredProducts = filteredProducts.filter(product =>
         product.category === filter
       );
     }
+    
+    // Apply additional search term filtering if applicable
+    if (term) {
+      filteredProducts = filteredProducts.filter(product =>
+        product.title?.toLowerCase().includes(term.toLowerCase()) ||
+        product.shortDescription?.toLowerCase().includes(term.toLowerCase()) ||
+        product.description?.toLowerCase().includes(term.toLowerCase()) ||
+        product.price?.toString().includes(term)
+      );
+    }
+    
     setProducts(filteredProducts);
   };
+  
 
   const sortProducts = (sort: string) => {
     let sortedProducts = [...products];
@@ -216,74 +274,102 @@ const Rental: React.FC = () => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-      <>
-      <ToastContainer />
-      <GlobalStyles />
-      <Navbar />
-      <Container>
-        <HeroSection>
-          <Title>Welcome to Our Store</Title>
-          <HeroImage src="https://listcars.com/wp-content/uploads/2022/09/List-Cars-Multiple-Cars.png" width="600px" alt="" />
-          <p>Find the best products for your needs</p>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-        </HeroSection>
-        <SearchBarContainer>
-          <SearchBar placeholder="Search products..." value={searchTerm} onChange={handleSearch} />
-          {searchTerm ? <CloseIcon size={20} onClick={() => setSearchTerm('')} /> : <SearchIcon size={20} />}
-        </SearchBarContainer>
-        <FilterContainer>
-          <Select
-            options={filterOptions}
-            defaultValue={filterOptions[0]}
-            onChange={(option) => option && handleFilterChange(option.value)}
-          />
-          <Select
-            options={sortOptions}
-            defaultValue={sortOptions[0]}
-            onChange={(option) => option && handleSortChange(option.value)}
-          />
-          <Select
-            options={nameOptions}
-            defaultValue={nameOptions[0]}
-            onChange={(option) => option && handleNameSortChange(option.value)}
-          />
-        </FilterContainer>
-        <ProductList>
-          {products.length > 0 ? (
-            products.map((product, index) => (
-              <ProductCard key={index}>
-                {product.subscribers_only === 'true' && <SubscriptionRibbon>Subscription Only</SubscriptionRibbon>}
-                <TextTitle>{product.title}</TextTitle>
-                <Specification>
-                  {product.specifications.map((spec, index) => (
-                    <SpecificationItem key={index}>
-                      {index === 0 && (
-                        <>
-                          {spec === 'Manual' && <FaCogs style={{ fontSize: '20px', marginRight: '5px' }} />}
-                          {spec === 'Automatic' && <TbAutomaticGearbox style={{ fontSize: '20px', marginRight: '5px' }} />}
-                        </>
-                      )}
-                      {index === 1 && <FaUserCheck style={{ fontSize: '20px', marginRight: '5px' }} />}
-                      {spec}
-                    </SpecificationItem>
-                  ))}
-                </Specification>
-                <Image src={product.images[0]} alt={product.title} />
-                <Description>{product.shortDescription}</Description>
-                <Price>${product.price}/Day</Price>
-                <Overlay className="overlay">
-                  <InfoButton onClick={() => navigate(`/product/${product.id}`)}>Go to product info</InfoButton>
-                  <Button onClick={() => handleAddToCart(product.id)}>Add to cart</Button>
-                </Overlay>
-              </ProductCard>
-            ))
-          ) : (
-            <NotFoundMessage>We don't have such products.<br />Check back later and maybe we'll add them.<br />😊</NotFoundMessage>
-          )}
-        </ProductList>
-      </Container>
-      <Footer />
-      </>
+        <>
+          <ToastContainer />
+          <GlobalStyles />
+          <Navbar />
+          <Container>
+            <HeroSection>
+              <Title>Welcome to Our Store</Title>
+              <HeroImage src="https://listcars.com/wp-content/uploads/2022/09/List-Cars-Multiple-Cars.png" width="600px" alt="" />
+              <p>Find the best products for your needs</p>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
+            </HeroSection>
+            <SearchBarContainer>
+              <SearchBar placeholder="Search products..." value={searchTerm} onChange={handleSearch} />
+              {searchTerm ? <CloseIcon size={20} onClick={() => setSearchTerm('')} /> : <SearchIcon size={20} />}
+            </SearchBarContainer>
+            <FilterContainer>
+              <Select
+                options={filterOptions}
+                defaultValue={filterOptions[0]}
+                onChange={(option) => option && handleFilterChange(option.value)}
+                styles={{ control: (base) => ({ ...base, width: "250px" }) }}
+              />
+              <Select
+                options={sortOptions}
+                defaultValue={sortOptions[0]}
+                onChange={(option) => option && handleSortChange(option.value)}
+              />
+              <Select
+                options={nameOptions}
+                defaultValue={nameOptions[0]}
+                onChange={(option) => option && handleNameSortChange(option.value)}
+              />
+            </FilterContainer>
+            <ProductList>
+              {productsOnCurrentPage.length > 0 ? (
+                productsOnCurrentPage.map((product, index) => (
+                  <ProductCard key={index}>
+                    {product.subscribers_only === 'true' && <SubscriptionRibbon>Subscription Only</SubscriptionRibbon>}
+                    <TextTitle>{product.title}</TextTitle>
+                    <Specification>
+                      {product.specifications.map((spec, index) => (
+                        <SpecificationItem key={index}>
+                          {index === 0 && (
+                            <>
+                              {spec === 'Manual' && <FaCogs style={{ fontSize: '20px', marginRight: '5px' }} />}
+                              {spec === 'Automatic' && <TbAutomaticGearbox style={{ fontSize: '20px', marginRight: '5px' }} />}
+                            </>
+                          )}
+                          {index === 1 && <FaUserCheck style={{ fontSize: '20px', marginRight: '5px' }} />}
+                          {spec}
+                        </SpecificationItem>
+                      ))}
+                    </Specification>
+                    <Image src={product.images[0]} alt={product.title} />
+                    <Description>{product.shortDescription}</Description>
+                    <Price>{product.price}€/Day</Price>
+                    <Overlay className="overlay">
+                      <InfoButton onClick={() => navigate(`/product/${product.id}`)}>Go to product info</InfoButton>
+                      <AddToCartButton onClick={() => handleAddToCart(product.id)}>Add to cart</AddToCartButton>
+                    </Overlay>
+                  </ProductCard>
+                ))
+              ) : (
+                <NotFoundMessage>
+                  <h2>Oops!</h2>
+                  <p>We couldn't find any products that match your search.</p>
+                  <p>Please try again with different keywords.</p>
+                </NotFoundMessage>
+              )}
+            </ProductList>
+            <PaginationContainer>
+              <PageButton
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <FaChevronLeft />
+              </PageButton>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                <PageNumber
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  style={{ color: pageNumber === currentPage ? '#007bff' : 'black' }}
+                >
+                  {pageNumber}
+                </PageNumber>
+              ))}
+              <PageButton
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <FaChevronRight />
+              </PageButton>
+            </PaginationContainer>
+          </Container>
+          <Footer />
+        </>
       )}
     </>
   );

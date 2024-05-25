@@ -40,9 +40,9 @@ const tableConfigs: Record<string, TableConfigs> = {
       return new Reservation(id, data.mileage, data.productId, reservationTime, data.secondOption, data.userId);
     },
   },
-  activities: { // Step 3: Add a new entry for activities
-    fields: ['coordinates', 'date', 'images', 'price', 'title'],
-    createInstance: (id: string, data: any) => new Activity(id, data.coordinates, data.date, data.images, data.price, data.title),
+  activities: {
+    fields: ['category', 'coordinates', 'date', 'description', 'highlights', 'images', 'location', 'price', 'title', 'url'],
+    createInstance: (id: string, data: any) => new Activity(id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url),
   },
 };
 

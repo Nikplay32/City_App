@@ -177,6 +177,7 @@ export const Image = styled.img`
   max-height: 200px;
   object-fit: cover;
   border-radius: 10px;
+  width: 350px;
 `;
 
 

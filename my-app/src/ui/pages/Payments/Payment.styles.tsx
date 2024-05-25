@@ -261,6 +261,9 @@ export const Reservation = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 2rem;
+  background-image: url('/riga.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;   
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -272,34 +275,64 @@ export const ProductInfo = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: start;
   align-items: center;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
-  max-width: 50vw;
+  max-width: 100%;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
 
   img {
-    max-width: 600px;
+    max-width: 100%;
     height: auto;
     border-radius: 10px;
     object-fit: cover;
+    margin-bottom: 20px;
   }
 
   h2 {
-    font-size: 4rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     color: #333;
     margin-bottom: 10px;
+    text-align: center;
   }
 
   h3 {
-    font-size: 1%.5;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: #333;
     margin-top: 30px;
+    text-align: center;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+    padding: 0rem 1rem;
+    text-align: justify;
+    max-width: 800px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 768px) {
+    img {
+      max-width: 80%;
+    }
+  }
+`;
+
+export const PointsExplanation = styled.div`
+  margin-top: 30px;
+  text-align: center;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
   }
 
   p {
@@ -307,16 +340,55 @@ export const ProductInfo = styled.div`
     color: #666;
     line-height: 1.5;
     padding: 0rem 2rem;
-    text-align: justify;
-    text-transform: uppercase;
   }
+`;
 
-  @media (max-width: 768px) {
-    max-width: 100%;
-    img {
-      max-width: 200px;
-    }
-  }
+export const Highlight = styled.span`
+  color: #009e1d;
+`;
+
+// New styles for the product description and price
+export const Description = styled.p`
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+  padding: 0 20px;
+  text-align: justify;
+  margin-bottom: 20px;
+`;
+
+export const Price = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 20px;
+  text-align: center;
+  padding: 0 20px;
+`;
+
+// Container for the image and product details
+export const ProductDetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+// Container for the image
+export const ImageContainer = styled.div`
+  width: 100%;
+  max-width: 500px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden; /* Hide any overflowing content */
+`;
+
+// Container for the product details
+export const DetailsContainer = styled.div`
+  width: 100%;
+  padding: 20px;
+  background-color: #fff;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 `;
 
 export const Form = styled.form`

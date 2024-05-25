@@ -1,6 +1,8 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import Button from '../atoms/Button';
+import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const HeroContainer = styled.div`
   display: flex;
@@ -140,6 +142,16 @@ interface HeroProps {
 }
 
 function Hero({ title, description, text }: HeroProps) {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    if (currentUser.user) {
+      navigate('/profile');
+    } else {
+      navigate('/authorization');
+    }
+  };
   return (
     <HeroContainer>
       <BackgroundImage />
@@ -147,7 +159,9 @@ function Hero({ title, description, text }: HeroProps) {
         <Title>{title}</Title>
         <Description>{description}</Description>
         <Text>{text}</Text>
-        <HeroButton>Get Started!</HeroButton>
+        <HeroButton onClick={handleButtonClick}>
+          Get Started
+        </HeroButton>
       </ContentWrapper>
     </HeroContainer>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { SearchBar, StyledButton, StyledTitle, SearchBarContainer, Button, Logo, SidebarLink, MainContent, DashboardContainer, SidebarContainer, SidebarHeader, SidebarDivider, SidebarItem, SidebarSearch, SidebarSubmenu, SidebarSubmenuItem} from './Dashboard.styles';
+import { SearchBar, StyledButton, StyledTitle, StyledText, SearchBarContainer, Button, Logo, SidebarLink, MainContent, DashboardContainer, SidebarContainer, SidebarHeader, SidebarDivider, SidebarItem, SidebarSearch, SidebarSubmenu, SidebarSubmenuItem} from './Dashboard.styles';
 import Navbar from '../organisms/Navbar';
 import GlobalStyles from '../atoms/GlobalStyles';
 import { User } from '../atoms/User';
@@ -13,6 +13,13 @@ import GenericPopup from '../organisms/GenericPopup';
 import { DataType, TableConfig, tableConfigs } from '../../types/tableConfigs';
 import { handleEdit, handleCreate, handleDelete } from '../../helpers/crudOperations';
 import exportTableToPDF from './Test';
+import styled from "styled-components";
+
+const AdminNote = styled.p`
+  color: red;
+  padding-top: 1rem;
+  font-weight: bold;
+`;
 
 const Dashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -203,10 +210,12 @@ const Dashboard: React.FC = () => {
           />
         </SearchBarContainer>
         <SidebarDivider />
+        <StyledText>Links</StyledText>
         <SidebarLink href="/">Home</SidebarLink>
         <SidebarLink href="/products">Products</SidebarLink>
         <SidebarLink href="/activities">Activities</SidebarLink>
         <SidebarDivider />
+        <StyledText>Tables</StyledText>
         <SidebarLink onClick={() => setActiveTable('users')}>
           Users
         </SidebarLink>
@@ -247,19 +256,22 @@ const Dashboard: React.FC = () => {
               setIsCreating(true);
               setSelectedData(
                 activeTable === 'users' ? new User('', '', false) :
-                activeTable === 'products' ? new Product('', '', '', [], '', '', [], '', '') :
+                activeTable === 'products' ? new Product('', '', '', [], 0, '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
-                activeTable === 'activities' ? new Activity('', ['0', '0'], '', [], '', '') : // Add this line
+                activeTable === 'activities' ? new Activity('', '', ['0', '0'], '', '', [], [], '', 0, '', '') : // Add this line
                 null
               );
             }}>Create {activeTable.slice(0, -1)}</StyledButton>   
+            <AdminNote>
+            ADMIN NOTE - Please when adding new product firstly fill data and then add images and specification
+            </AdminNote>
             <GenericTable data={tableData} config={tableConfig} onDelete={handleDeleteRow} searchResults={searchResults} searchTerm={searchTerm} />
             {selectedData && <GenericPopup 
               data={isCreating ? 
                 (activeTable === 'users' ? new User('', '', false) :
-                activeTable === 'products' ? new Product('', '', '', [], '', '', [], '', '') :
+                activeTable === 'products' ? new Product('', '', '', [], 0, '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
-                activeTable === 'activities' ? new Activity('', ['0', '0'], '', [], '', '') :
+                activeTable === 'activities' ? new Activity('', '', ['0', '0'], '', '', [], [], '', 0, '', '') :
                 new User('', '', false)) : 
                 selectedData}
               onEdit={isCreating ? 

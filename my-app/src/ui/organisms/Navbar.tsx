@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import { MdOutlineMenu } from "react-icons/md";
 import useAuth from '../../hooks/useAuth';
-import { 
-  NavbarContainer, 
-  Logo, 
-  Menu, 
-  MenuItem, 
-  CloseButton, 
+import {
+  NavbarContainer,
+  Logo,
+  Menu,
+  MenuItem,
+  CloseButton,
   NavLink,
-  BurgerMenuButton 
+  BurgerMenuButton
 } from './Navbar.styles';
 
 const Navbar: React.FC = () => {
@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
       navigate('/authorization');
     }
   };
-  
+
 
   return (
     <NavbarContainer>
@@ -45,11 +45,24 @@ const Navbar: React.FC = () => {
         <MenuItem>
           <NavLink href="/">Home</NavLink>
         </MenuItem>
+        {currentUser.user && (
+          <MenuItem>
+            <NavLink href="/products">Products</NavLink>
+          </MenuItem>
+        )}
+        {currentUser.user && (
+          <MenuItem>
+            <NavLink href="/activities">Activities</NavLink>
+          </MenuItem>
+        )}
         <MenuItem>
-          <NavLink href="/products">Products</NavLink>
+          <NavLink href="/restaurants">Restaurants</NavLink>
         </MenuItem>
         <MenuItem>
-          <NavLink href="/activities">Activities</NavLink>
+          <NavLink href="/sight">Sights</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="/chat">Chat with agents</NavLink>
         </MenuItem>
         <MenuItem>
           <NavLink href="/Map">Map</NavLink>
@@ -60,6 +73,11 @@ const Navbar: React.FC = () => {
         <MenuItem>
           <NavLink href="/subs">Subscription</NavLink>
         </MenuItem>
+        {currentUser.isAdmin && (
+          <MenuItem>
+            <NavLink href="/admin">Dashboard</NavLink>
+          </MenuItem>
+        )}
       </Menu>
       <Button onClick={handleButtonClick}>
         {currentUser.user ? 'Profile' : 'Get Started'}

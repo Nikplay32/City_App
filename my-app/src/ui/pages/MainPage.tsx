@@ -8,7 +8,7 @@ import HowItWorks from '../organisms/HowSection';
 import Faq from '../organisms/FAQ';
 import Footer from '../organisms/Footer';
 import ContactSection from './Contact';
-
+import CityOptions from '../organisms/CityOptions';
 const faqData = [
   {
     question: 'What benefits do I get with a Pro subscription?',
@@ -91,6 +91,7 @@ useEffect(() => {
             headingSubtitle="Here are some of the most common questions our customers ask about our subscription plans."
             faqs={faqData}
           />
+          <CityOptions/>
         </Content>
         <ContactSection></ContactSection>
         <Footer />

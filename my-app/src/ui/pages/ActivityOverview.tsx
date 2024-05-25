@@ -103,6 +103,12 @@ const Highlight = styled.li`
   margin: 0.5rem 0;
 `;
 
+const Note = styled.p`
+  color: red;
+  padding-top: 1rem;
+  font-weight: bold;
+`;
+
 const ActivityOverview: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [activity, setActivity] = useState<Activity | null>(null);
@@ -237,6 +243,9 @@ const ActivityOverview: React.FC = () => {
             <Description>
               <p>{activity.description}</p>
             </Description>
+            <Note>
+            Please after purchase wait few seconds. PDF ticket/tickets will be downloaded
+            </Note>
             <HighlightsContainer>
               {activity.highlights.map((highlight, index) => (
                 <Highlight key={index}>{highlight}</Highlight>

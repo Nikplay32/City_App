@@ -15,12 +15,15 @@ import Dashboard from './ui/pages/Dashboard';
 import AdminRoute from './ui/pages/AdminRoute';
 import MapPage from './ui/pages/MapPage'
 import Transport from './ui/pages/Transport';
-import SuccessPayment from './ui/pages/Payments/SuccessPayment'
+import SuccessPayment from './ui/pages/Payments/SuccessPayment';
+import RentalSuccess from './ui/pages/Payments/SuccessRental'
 import FailedPayment from './ui/pages/Payments/FailedPayment'
-import SightDetailPage from './ui/pages/Sight';
+import SightOverview from './ui/pages/Sight';
 import SightsPage from './ui/pages/SightsPage';
 import TicketForm from './ui/pages/TicketForm';
 import Restaurants from './ui/pages/Restaurants'
+import RestaurantsOverview from './ui/pages/RestaurantsOverview'
+import ChatWithAgents from './ui/pages/ChatWithAgents'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -39,11 +42,14 @@ ReactDOM.render(
         <Route path="/map" element={<MapPage/>} />
         <Route path="/transport" element={<Transport/>}/>
         <Route path="/success" element={<SuccessPayment/>}/>
+        <Route path="/success_reservation" element={<RentalSuccess/>}/>
         <Route path="/failed" element={<FailedPayment/>}/>
         <Route path="/sight" element={<SightsPage></SightsPage>} />
         <Route path="/tickets" element={<TicketForm></TicketForm>}/>
         <Route path="/restaurants" element={<Restaurants/>}/>
-        <Route path="/sight/:id" element={<SightDetailPage name={''} description={''} image={''}/>} />
+        <Route path="/restaurant/:id" element={<RestaurantsOverview/>}/>
+        <Route path="/sight/:id" element={<SightOverview/>} />
+        <Route path="/chat" element={<ChatWithAgents/>} />
         <Route path="/admin" element={
         <AdminRoute>
           <Dashboard />

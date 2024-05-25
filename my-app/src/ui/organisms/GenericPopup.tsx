@@ -9,11 +9,11 @@ import { Activity } from '../atoms/Activities';
 type TableData = User | Product | Reservation | Activity;
 
 const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => Promise<void>; onCancel: () => void; isCreating: boolean; isOpen: boolean }> = ({ data, onEdit, onCancel, isCreating, isOpen }) => {
-  const [newData, setNewData] = useState(
+  const [newData, setNewData] = useState<TableData | null>(
     data instanceof User ? new User(data.id, data.username, data.isAdmin) :
     data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
     data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
-    data instanceof Activity ? new Activity(data.id, data.coordinates, data.date, data.images, data.price, data.title) :
+    data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
     null
   );
   
@@ -22,57 +22,106 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
       data instanceof User ? new User(data.id, data.username, data.isAdmin) :
       data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
       data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
-      data instanceof Activity ? new Activity(data.id, data.coordinates, data.date, data.images, data.price, data.title) :
+      data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
       null
     );
-    console.log('New data:', newData);
   }, [data]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setNewData(prevData => {
-      if (prevData instanceof User) {
-        return new User(prevData.id, name === 'username' ? value : prevData.username, prevData.isAdmin);
-      } else if (prevData instanceof Product) {
-        return new Product(
-          prevData.id,
-          name === 'category' ? value : prevData.category,
-          name === 'description' ? value : prevData.description,
-          name === 'images' ? value.split('\n') : prevData.images,
-          name === 'price' ? value : prevData.price,
-          name === 'shortDescription' ? value : prevData.shortDescription,
-          name === 'specification' ? value.split('\n') : prevData.specification,
-          name === 'title' ? value : prevData.title,
-          name === 'subscribers_only' ? value : prevData.subscribers_only
-        );
-      } else if (prevData instanceof Reservation) {
-        return new Reservation(
-          prevData.id,
-          name === 'mileage' ? value : prevData.mileage,
-          name === 'productId' ? value : prevData.productId,
-          name === 'reservationTime' ? new Date(value) : prevData.reservationTime,
-          name === 'secondOption' ? value : prevData.secondOption,
-          name === 'userId' ? value : prevData.userId
-        );
-      } else if (prevData instanceof Activity) {
-        return new Activity(
-          prevData.id,
-          name === 'coordinates' ? (value.match(/,/g)?.length === 1 ? value.split(',').map(str => str.trim()) as [string, string] : prevData.coordinates) : prevData.coordinates,
-          name === 'date' ? value : prevData.date,
-          name === 'images' ? value.split('\n') : prevData.images,
-          name === 'price' ? value : prevData.price,
-          name === 'title' ? value : prevData.title
-        );
+      if (!prevData) return null;
+  
+      // Check if name is in the format "propertyName[index]"
+      const arrayUpdateRegex = /(.+)\[(\d+)\]/;
+      const match = name.match(arrayUpdateRegex);
+      if (match) {
+        const [, propertyName, indexStr] = match;
+        const index = parseInt(indexStr, 10);
+        if (Array.isArray(prevData[propertyName as keyof typeof prevData])) {
+          // If it is, update the specific array element
+          const newDataCopy = { ...prevData };
+          (newDataCopy[propertyName as keyof typeof newDataCopy] as unknown as string[])[index] = value;
+          return newDataCopy as TableData;
+        }
       }
-      return prevData;
+  
+      // Existing code...
+      switch (prevData.constructor) {
+        case User:
+          return new User(
+            prevData.id,
+            name === 'username' ? value : (prevData as User).username,
+            (prevData as User).isAdmin
+          );
+        case Product:
+          if (name === 'images' || name === 'specification') {
+            const newValue = value.split('\n');
+            return { ...prevData, [name]: newValue };
+          } else {
+            return new Product(
+              prevData.id,
+              name === 'category' ? value : (prevData as Product).category,
+              name === 'description' ? value : (prevData as Product).description,
+              name === 'images' ? (Array.isArray(value) ? value : [value]) : (prevData as Product).images,
+              name === 'price' ? Number(value) : (prevData as Product).price, // Convert value to number
+              name === 'shortDescription' ? value : (prevData as Product).shortDescription,
+              name === 'specification' ? (Array.isArray(value) ? value : [value]) : (prevData as Product).specification,
+              name === 'title' ? value : (prevData as Product).title,
+              name === 'subscribers_only' ? value : (prevData as Product).subscribers_only
+            );
+          }
+        case Reservation:
+          return new Reservation(
+            prevData.id,
+            name === 'mileage' ? value : (prevData as Reservation).mileage,
+            name === 'productId' ? value : (prevData as Reservation).productId,
+            name === 'reservationTime' ? new Date(value) : (prevData as Reservation).reservationTime,
+            name === 'secondOption' ? value : (prevData as Reservation).secondOption,
+            name === 'userId' ? value : (prevData as Reservation).userId
+          );
+        case Activity:
+          if (name === 'images') {
+            const newValue = value.split('\n');
+            return { ...prevData, [name]: newValue };
+          } else {
+            return new Activity(
+              prevData.id,
+              name === 'category' ? value : (prevData as Activity).category,
+              name === 'coordinates' ? (value.match(/,/g)?.length === 1 ? [value.split(',')[0].trim(), value.split(',')[1].trim()] as [string, string] : (prevData as Activity).coordinates) : (prevData as Activity).coordinates,
+              name === 'date' ? value : (prevData as Activity).date,
+              name === 'description' ? value : (prevData as Activity).description,
+              name === 'highlights' ? value.split('\n') : (prevData as Activity).highlights,
+              name === 'images' ? value.split('\n') : (prevData as Activity).images,
+              name === 'location' ? value : (prevData as Activity).location,
+              name === 'price' ? (isNaN(parseFloat(value)) ? (prevData as Activity).price : parseFloat(value)) : (prevData as Activity).price,
+              name === 'title' ? value : (prevData as Activity).title,
+              name === 'url' ? value : (prevData as Activity).url
+            );
+          }
+        default:
+          return prevData;
+      }
     });
-    console.log('New data after input change:', newData);
   };
+
+  const handleAddElement = (event: React.MouseEvent, propertyName: string) => {
+  event.preventDefault();
+  setNewData(prevData => {
+    if (!prevData) return null;
+    
+    const newDataCopy = { ...prevData };
+    if (Array.isArray(newDataCopy[propertyName as keyof typeof newDataCopy])) {
+      (newDataCopy[propertyName as keyof typeof newDataCopy] as unknown as string[]).push('');
+    }
+    return newDataCopy as TableData;
+  });
+};
+
   const handleEdit = () => {
     if (newData) {
       onEdit(newData);
     }
-    console.log('Edited data:', newData);
   };
 
   return (
@@ -86,13 +135,21 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
         key !== 'id' || !isCreating ? (
           <StyledForm key={key}>
             <label>{key}</label>
-            {key === 'images' || key === 'specification' ? (
-              <StyledTextarea
-                name={key}
-                value={(newData as any)[key].join('\n')}
-                onChange={handleInputChange}
-              />
-            ) : (
+            {(key === 'images' || key === 'specification') && Array.isArray(newData[key as keyof typeof newData]) ? (
+    <div>
+        {(newData[key as keyof typeof newData] as unknown as string[]).map((item: string, index: number) => (
+            <div key={index}>
+                <StyledInput
+                    type="text"
+                    name={`${key}[${index}]`}
+                    value={item}
+                    onChange={handleInputChange}
+                />
+            </div>
+        ))}
+        <Button onClick={(event) => handleAddElement(event, key)}>Add Element</Button>
+    </div>
+) : (
               <StyledInput
                 type="text"
                 name={key}

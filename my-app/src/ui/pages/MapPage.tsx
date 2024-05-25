@@ -18,17 +18,52 @@ const FullScreenMapContainer = styled.div`
   height: 100%;
 `;
 
-type MarkerType = {
-    position: [number, number];
-    item: any; // this can be a product or an activity
-  };
+const Button = styled.button`
+  display: block; /* Add this line */
+  margin: auto; /* Add this line */
+  padding: 8px 16px;
+  background-color: #007bff; /* Change this to your desired button color */
+  color: #ffffff; /* Change this to your desired text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 
-  type ItemType = {
-    id: string;
-    type: string;
-    coordinates?: [number, number];
-  };
-  
+  &:hover {
+    background-color: #0056b3; /* Change this to your desired button hover color */
+  }
+`;
+
+const Price = styled.h3`
+  display: block;
+  margin: auto;
+  padding-bottom: 1rem;
+  text-align: center; // Add this line to center the text
+`;
+
+const Date = styled.h3`
+  display: block;
+  margin: auto;
+  text-align: center; // Add this line to center the text
+`;
+
+const Location = styled.h3`
+  display: block;
+  margin: auto;
+  text-align: center; // Add this line to center the text
+`;
+
+type MarkerType = {
+  position: [number, number];
+  item: any; // this can be a product or an activity
+};
+
+type ItemType = {
+  id: string;
+  type: string;
+  coordinates?: [number, number];
+};
+
 
 const FullScreenMap: React.FC = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -49,7 +84,7 @@ const FullScreenMap: React.FC = () => {
         type: 'product', // add a type property to distinguish products from activities
         ...doc.data()
       }));
-  
+
       const activitiesCol = collection(db, 'activities');
       const activitySnapshot = await getDocs(activitiesCol);
       const activities = activitySnapshot.docs.map(doc => ({
@@ -57,14 +92,14 @@ const FullScreenMap: React.FC = () => {
         type: 'activity', // add a type property to distinguish activities from products
         ...doc.data()
       }));
-  
+
       const items = [...products, ...activities]; // combine the products and activities
-  
+
       const minLat = 56.90;
       const maxLat = 56.99;
       const minLng = 24.10;
       const maxLng = 24.20;
-  
+
       const newMarkers: MarkerType[] = items.flatMap((item: ItemType): MarkerType[] => {
         if (item.type === 'product') {
           const numMarkers = Math.floor(Math.random() * 5) + 1;
@@ -83,10 +118,10 @@ const FullScreenMap: React.FC = () => {
           }
         }
       });
-      
+
       setMarkers(newMarkers);
     };
-  
+
     fetchItems();
   }, []);
 
@@ -100,28 +135,30 @@ const FullScreenMap: React.FC = () => {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
         {markers.map((marker, index) => {
-        let iconUrl = marker.item.type === 'product' ? marker.item.images[0] : marker.item.url; // use 'images' for products and 'url' for activities
-        iconUrl = iconUrl || 'https://cdn.icon-icons.com/icons2/1320/PNG/512/-location_86865.png';
-        const iconSize: L.PointTuple = marker.item.type === 'product' ? [40, 30] : [40, 40];// use different sizes for products and activities
-        const icon = L.icon({
+          let iconUrl = marker.item.type === 'product' ? marker.item.images[0] : marker.item.iconUrl;// use 'images' for products and 'url' for activities
+          iconUrl = iconUrl || 'https://static-00.iconduck.com/assets.00/map-marker-icon-342x512-gd1hf1rz.png';
+          const iconSize: L.PointTuple = marker.item.type === 'product' ? [40, 30] : [30, 40];// use different sizes for products and activities
+          const icon = L.icon({
             iconUrl: iconUrl, // use the first image of the item
             iconSize: iconSize, // adjust the size as necessary
             iconAnchor: [12, 41], // adjust the anchor as necessary
             popupAnchor: [0, -41] // adjust the anchor as necessary
-        });
+          });
 
-        return (
+          return (
             <Marker key={index} position={marker.position} icon={icon}>
-            <Popup>
+              <Popup>
                 <div>
-                <h3>{marker.item.title}</h3>
-                <img src={marker.item.images[0]} alt={marker.item.title} style={{ width: '100%', height: 'auto' }} />
-                <p>Price: {marker.item.price}</p>
-                <button onClick={() => window.location.href = `/${marker.item.type}/${marker.item.id}`}>Go to {marker.item.type}</button>
+                  <h2>{marker.item.title}</h2>
+                  <img src={marker.item.images[0]} alt={marker.item.title} style={{ width: '100%', height: 'auto' }} />
+                  {marker.item.type === 'product' && <Price>Price: {marker.item.price}€/Day</Price>}
+                  {marker.item.type === 'activity' && <Date>Date: {marker.item.date}</Date>}
+                  {marker.item.type === 'activity' && <Location>{marker.item.location}</Location>}
+                  <Button onClick={() => window.location.href = `/${marker.item.type}/${marker.item.id}`}>More info here</Button>
                 </div>
-            </Popup>
+              </Popup>
             </Marker>
-        );
+          );
         })}
       </MapContainer>
     </FullScreenMapContainer>

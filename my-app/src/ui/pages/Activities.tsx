@@ -6,6 +6,7 @@ import Footer from '../organisms/Footer';
 import { db } from '../../firebase'; // adjust the path as necessary
 import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Select from 'react-select';
 import {
   Container,
@@ -25,6 +26,12 @@ import {
   CloseIcon,
   FilterContainer
 } from './Activities.styles';
+
+import {
+  PaginationContainer,
+  PageNumber,
+  PageButton,
+} from './Products.styles';
 
 interface Activity {
   id: string;
@@ -55,6 +62,19 @@ const Activities: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('All');
   const [sort, setSort] = useState('Earliest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const totalPages = Math.ceil(allActivities.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const productsOnCurrentPage = activities.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -162,8 +182,8 @@ const Activities: React.FC = () => {
           />
         </FilterContainer>
         <ProductList>
-          {activities.length > 0 ? (
-            activities.map((activity, index) => (
+          {productsOnCurrentPage.length > 0 ? (
+            productsOnCurrentPage.map((activity, index) => (
               <ProductCard key={index}>
                 <Image src={activity.images[0]} alt={activity.title} />
                 <StyledDate>{activity.date}</StyledDate>
@@ -172,9 +192,36 @@ const Activities: React.FC = () => {
               </ProductCard>
             ))
           ) : (
-            <NotFoundMessage>We don't have such activities to book yet.<br />Check back later and maybe we'll add them.<br />😊</NotFoundMessage>
+            <NotFoundMessage>
+                  <h2>Oops!</h2>
+                  <p>We couldn't find any products that match your search.</p>
+                  <p>Please try again with different keywords.</p>
+                </NotFoundMessage>
           )}
         </ProductList>
+        <PaginationContainer>
+              <PageButton
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <FaChevronLeft />
+              </PageButton>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                <PageNumber
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  style={{ color: pageNumber === currentPage ? '#007bff' : 'black' }}
+                >
+                  {pageNumber}
+                </PageNumber>
+              ))}
+              <PageButton
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <FaChevronRight />
+              </PageButton>
+            </PaginationContainer>
       </Container>
       <Footer />
     </>

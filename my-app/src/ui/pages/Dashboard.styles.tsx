@@ -13,7 +13,7 @@ export const StyledModal = styled(Modal)`
   border-radius: 4px;
   outline: none;
   display: grid;
-  grid-template-columns: 1fr 1fr; // Adjust as needed
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr; // Adjust as needed
   gap: 20px; // Adjust as needed
 `;
 
@@ -25,17 +25,31 @@ export const StyledForm = styled.form`
 `;
 
 export const StyledInput = styled.input`
-  margin-bottom: 10px;
+  width: 100%;
   padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  font-size: 16px;
 `;
 
 export const StyledTextarea = styled.textarea`
+  width: 100%;
   padding: 10px;
-  margin: 5px 0;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  font-size: 16px;
+`;
+
+export const StyledSelect = styled.select`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  appearance: none; /* Remove default dropdown arrow */
 `;
 
 export const Table = styled.table`
@@ -62,6 +76,12 @@ export const StyledTitle = styled.div`
   margin-bottom: 20px;
 `;
 
+export const StyledText = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: white;
+`;
 
 export const StyledButton = styled.a`
   --color: ${props => props.color || "#1e9bff"};
@@ -150,7 +170,17 @@ export const TableRow = styled.tr`
 `;
 
 export const Button = styled.button`
-  /* Add your button styles here */
+  padding: 8px 16px;
+  background-color: #007bff; /* Change this to your desired button color */
+  color: #ffffff; /* Change this to your desired text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3; /* Change this to your desired button hover color */
+  }
 `;
 
 export const Popup = styled.div`
@@ -159,6 +189,7 @@ export const Popup = styled.div`
 
 export const DashboardContainer = styled.div`
   display: flex;
+  height: 200vh;
 `;
 
 export const SideNavbar = styled.nav`
@@ -265,7 +296,7 @@ export const SidebarLink = styled.a`
 `;
 
 export const SidebarContainer = styled.div`
-  height: 100vh;
+  height: auto;
   padding: 2rem;
   width: 300px;
   overflow-y: auto;
@@ -342,15 +373,4 @@ export const SidebarSubmenuItem = styled.h1`
   &:hover {
     background-color: #2563EB;
   }
-`;
-
-export const StyledSelect = styled.select`
-  width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  color: #333;
-  appearance: none;
-  background-color: #fff;
 `;

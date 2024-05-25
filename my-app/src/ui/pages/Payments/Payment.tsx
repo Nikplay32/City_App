@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, where, getDocs, query, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, where, getDocs, query, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../../firebase';
 import 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,6 +15,16 @@ import Select from 'react-select';
 import CardContainer from '../../organisms/CardContainer';
 import InputField from '../../atoms/InputField';
 import { Button, Expiry, VisaChip, NFCIcon, BankLogo, Form, InputContainer, InputIcon, Input, CardIssuerInfo, CardBrandLogo, CardholderAgreementInfo, CardHolder, CardNumber, Card, CardFace, CardChip, BankName, FrontFace, BackFace, MagneticStripe, MagneticStripeText, SecurityFeatures, SignatureStrip, CVV, CVVLabel } from './Payment.styles'
+import { styled } from 'styled-components';
+import GlobalStyles from '../../atoms/GlobalStyles';
+import Navbar from '../../organisms/Navbar';
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
+	height: 100vh;
+`;
 
 const options = [
 	{ value: 'month', label: 'Monthly Subscription - 9.99 $' },
@@ -23,7 +33,7 @@ const options = [
 
 const paymentMethods = [
 	{ value: 'visa', label: 'Visa', logo: 'https://cdn.icon-icons.com/icons2/3261/PNG/512/visa_logo_icon_206647.png', bankName: 'https://res.cloudinary.com/enefit/image/upload/f_auto,q_auto:best/v1645191224/lv/B2C/luminor-logo.png' },
-	{ value: 'mastercard', label: 'Mastercard', logo: 'https://nuvei.com/wp-content/uploads/2023/02/mastercard-1.png', bankName: 'https://www.swedbank.com/content/dam/swedbank/brand-manager/sketches/Our%20logotype_626px.png' },
+	{ value: 'mastercard', label: 'Mastercard', logo: 'https://brand.mastercard.com/content/dam/mccom/brandcenter/thumbnails/mcbc_debit-rev_84px.png', bankName: 'https://www.swedbank.com/content/dam/swedbank/brand-manager/sketches/Our%20logotype_626px.png' },
 	{ value: 'maestro', label: 'Maestro', logo: 'https://www.about-payments.com/logo/230/150/570', bankName: 'https://play-lh.googleusercontent.com/Dcbim9OFpfRG4j4wAqQvEiH-gmpYPR22FVAN7ilW4o_4TJYi0YRt-qfE3zFBg7FlMw=w600-h300-pc0xffffff-pd' },
 ];
 
@@ -37,6 +47,7 @@ const PaymentForm: React.FC = () => {
 	const [expiry, setExpiry] = useState('');
 	const [cardHolderName, setCardHolderName] = useState('');
 	const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
+	const [isSubscribed, setIsSubscribed] = useState(false);
 	const [subscriptionType, setSubscriptionType] = useState('month'); // 'month' or 'year'
 	const subscriptionPrice = subscriptionType === 'month' ? 9.99 : 99.99; // Adjust price based on subscription type
 
@@ -72,6 +83,34 @@ const PaymentForm: React.FC = () => {
 						setIsPaid(true);
 					}
 				});
+			} else {
+				navigate('/authorization');
+			}
+		});
+
+		return () => unsubscribe();
+	}, [navigate]);
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
+			if (user) {
+				// Fetch the user's payment status
+				const paymentsQuery = query(collection(db, 'payments'), where('userId', '==', user.uid));
+				const paymentsSnapshot = await getDocs(paymentsQuery);
+				paymentsSnapshot.forEach((doc) => {
+					if (doc.data().status === 'success') {
+						setIsPaid(true);
+					}
+				});
+
+				// Fetch the user's subscription status
+				const userRef = doc(db, 'users', user.uid);
+				const userSnapshot = await getDoc(userRef);
+				if (userSnapshot.exists()) {
+					setIsSubscribed(userSnapshot.data().isSubbed);
+				} else {
+					console.error('User document does not exist');
+				}
 			} else {
 				navigate('/authorization');
 			}
@@ -174,81 +213,91 @@ const PaymentForm: React.FC = () => {
 
 	return (
 		<>
-			<ToastContainer />
-			<Form onSubmit={handleSubmit}>
-				<CardContainer
-					paymentMethod={paymentMethod}
-					cardNumber={cardNumber}
-					cardHolderName={cardHolderName}
-					expiry={expiry}
-					cvv={cvv}
-				/>
-				<div style={{ paddingBottom: '20px' }}>
-					<Select
-						options={options}
-						value={options.find(option => option.value === subscriptionType)}
-						onChange={(selectedOption) => {
-							if (selectedOption) {
-								setSubscriptionType(selectedOption.value);
-							}
-						}}
-						required
-					/>
-				</div>
-				<Select
-					options={paymentMethods}
-					value={paymentMethods.find(option => option.value === paymentMethod.value)}
-					onChange={(selectedOption) => {
-						if (selectedOption) {
-							setPaymentMethod(selectedOption);
-						}
-					}}
-					required
-				/>
-				<InputField
-					type="text"
-					placeholder="Card Number"
-					value={cardNumber}
-					onChange={handleCardNumberChange}
-					Icon={RiIdCardLine}
-				/>
-				<InputField
-					type="text"
-					placeholder="Cardholder Name"
-					value={cardHolderName}
-					onChange={(value) => setCardHolderName(value)}
-					Icon={RiIdCardLine}
-				/>
-				<InputField
-					type="text"
-					placeholder="Expiry Date (MM/24)"
-					value={expiryDate}
-					onChange={handleExpiryDateChange}
-					Icon={IoMdCalendar}
-				/>
-				<InputField
-					type="text"
-					placeholder="CVV"
-					value={cvv}
-					onChange={(value) => {
-						const formattedValue = value.replace(/\D/g, '').slice(0, 3);
-						setCvv(formattedValue);
-					}}
-					Icon={AiFillLock}
-				/>
-				<InputField
-					type="password"
-					placeholder="Password"
-					value={password}
-					onChange={(value) => setPassword(value)}
-					Icon={MdOutlinePassword}
-				/>
-				<div style={{ display: 'flex', justifyContent: 'center' }}>
-					<Button type="submit" disabled={isPaid}>
-						{isPaid ? 'Payment Successful' : `Pay ${subscriptionPrice}`}
-					</Button>
-				</div>
-			</Form>
+			{isSubscribed ? (
+				navigate('/profile') // Redirect the user to some page
+			) : (
+				<><Navbar></Navbar>
+					<Container>
+						<GlobalStyles></GlobalStyles>
+
+						<ToastContainer />
+						<Form onSubmit={handleSubmit}>
+							<CardContainer
+								paymentMethod={paymentMethod}
+								cardNumber={cardNumber}
+								cardHolderName={cardHolderName}
+								expiry={expiry}
+								cvv={cvv}
+							/>
+							<div style={{ paddingBottom: '20px' }}>
+								<Select
+									options={options}
+									value={options.find(option => option.value === subscriptionType)}
+									onChange={(selectedOption) => {
+										if (selectedOption) {
+											setSubscriptionType(selectedOption.value);
+										}
+									}}
+									required
+								/>
+							</div>
+							<Select
+								options={paymentMethods}
+								value={paymentMethods.find(option => option.value === paymentMethod.value)}
+								onChange={(selectedOption) => {
+									if (selectedOption) {
+										setPaymentMethod(selectedOption);
+									}
+								}}
+								required
+							/>
+							<InputField
+								type="text"
+								placeholder="Card Number"
+								value={cardNumber}
+								onChange={handleCardNumberChange}
+								Icon={RiIdCardLine}
+							/>
+							<InputField
+								type="text"
+								placeholder="Cardholder Name"
+								value={cardHolderName}
+								onChange={(value) => setCardHolderName(value)}
+								Icon={RiIdCardLine}
+							/>
+							<InputField
+								type="text"
+								placeholder="Expiry Date (MM/24)"
+								value={expiryDate}
+								onChange={handleExpiryDateChange}
+								Icon={IoMdCalendar}
+							/>
+							<InputField
+								type="text"
+								placeholder="CVV"
+								value={cvv}
+								onChange={(value) => {
+									const formattedValue = value.replace(/\D/g, '').slice(0, 3);
+									setCvv(formattedValue);
+								}}
+								Icon={AiFillLock}
+							/>
+							<InputField
+								type="password"
+								placeholder="Password"
+								value={password}
+								onChange={(value) => setPassword(value)}
+								Icon={MdOutlinePassword}
+							/>
+							<div style={{ display: 'flex', justifyContent: 'center' }}>
+								<Button type="submit" disabled={isPaid}>
+									{isPaid ? 'Payment Successful' : `Pay ${subscriptionPrice}`}
+								</Button>
+							</div>
+						</Form>
+					</Container>
+				</>
+			)}
 		</>
 	);
 };

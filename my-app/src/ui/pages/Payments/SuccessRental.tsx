@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IoMdCloseCircleOutline } from 'react-icons/io'; // Use close icon for failure
+import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
+import { FaCar, FaGift } from 'react-icons/fa';
 import { Link } from 'react-router-dom'; // assuming you're using react-router for navigation
 import GlobalStyles from '../../atoms/GlobalStyles';
 
@@ -10,8 +11,11 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
+  background-color: #f8f9fa;
   text-align: center;
+  background-image: url('/riga.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;   
 `;
 
 const Card = styled.div`
@@ -25,7 +29,7 @@ const Card = styled.div`
 
 const Title = styled.h1`
   font-size: 24px;
-  color: #f44336; /* Red color for failure */
+  color: #4CAF50;
   margin-bottom: 16px;
 `;
 
@@ -35,13 +39,8 @@ const Message = styled.p`
   margin-bottom: 24px;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 const Button = styled(Link)`
-  background-color: #f44336; /* Red color for failure */
+  background-color: #4CAF50;
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -52,7 +51,7 @@ const Button = styled(Link)`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #d32f2f; /* Darker red on hover */
+    background-color: #45a049;
   }
 `;
 
@@ -64,32 +63,31 @@ const IconContainer = styled.div`
 
   svg {
     font-size: 48px;
-    color: red;
     margin-right: 10px;
   }
 `;
 
-const PaymentFailure: React.FC = () => {
+const RentalSuccess: React.FC = () => {
   return (
     <>
     <GlobalStyles></GlobalStyles>
     <Container>
       <Card>
         <IconContainer>
-          <IoMdCloseCircleOutline /> {/* Close icon for failure */}
+          <IoMdCheckmarkCircleOutline />
+          <FaCar />
+          <FaGift />
         </IconContainer>
-        <Title>Payment Failed</Title> {/* Message updated for failure */}
+        <Title>Reservation Successful!</Title>
         <Message>
-          We're sorry, but your payment was not successful. Please try again or contact support for assistance.
+          Congratulations! Your payment was successful. Your transport was rented.
+          Earn loyalty bonus points with each interaction in our system!
         </Message>
-        <ButtonContainer>
-        <Button to="/payment">Try Again</Button>
-        <Button to="/profile">To profile</Button>
-        </ButtonContainer> {/* Link to payment page for retry */}
+        <Button to="/profile">Go to Profile</Button>
       </Card>
     </Container>
     </>
   );
 };
 
-export default PaymentFailure;
+export default RentalSuccess;

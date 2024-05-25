@@ -206,6 +206,7 @@ const Authentication = () => {
           await setDoc(doc(usersCollection, user.uid), { uid: user.uid, username: username, isVerified: user.emailVerified, isAdmin });
           console.log('Username:', username);
           console.log('isAdmin', isAdmin)
+          setEmail(email);
         }
         toast.success(toastMessages.userRegistered);
       } catch (error: any) {

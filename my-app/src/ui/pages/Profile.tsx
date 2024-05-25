@@ -14,124 +14,122 @@ import { deleteDoc, collection, query, where, getDocs, getDoc, doc } from 'fireb
 
 const MainContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(to right, #141e30, #243b55);
-  color: #fff;
+  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
 `;
 
 const ProfileContainer = styled.div`
-  max-width: 800px;
-  width: 90%;
-  margin-top: 40px;
-  padding: 40px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  width: 45%; // adjust as needed
+  margin: 20px;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  text-align: center;
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 30px;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 `;
 
 const Image = styled.img`
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 30px;
-  border: 5px solid #fff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-const Button = styled.button`
-  padding: 12px 24px;
-  border: none;
-  border-radius: 5px;
-  background-color: #ff6b6b;
-  color: #fff;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #ff8f8f;
-  }
+  margin-bottom: 20px;
 `;
 
 const Subtitle = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
 `;
-
-const Reservation = styled.div`
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-`;
-
-const ReservationsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
 
 const Email = styled.p`
-  margin-bottom: 20px;
-  font-size: 18px;
-  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
 `;
 
 const ModalContainer = styled(Modal)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #000000;
-  padding: 50px;
-  color: white;
-  border-radius: 4px;
-  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ModalForm = styled.form`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
 `;
 
 const ModalInput = styled.input`
+  width: 100%;
   margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-radius: 5px;
 `;
 
 const ModalButton = styled.button`
   padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
-  color: white;
+  cursor: pointer;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const ReservationsContainer = styled.div`
+  width: 45%; // adjust as needed
+  margin-top: 40px;
+  margin: 20px;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  text-align: center;
+`;
+
+const Reservation = styled.div`
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ReservationInfo = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+const ReservationButton = styled.button`
+  padding: 10px 20px;
+  background-color: #ff5252;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 `;
 
@@ -155,6 +153,7 @@ const Profile = () => {
   const [reservations, setReservations] = useState<any[]>([]);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [planStatus, setPlanStatus] = useState('Not Upgraded');
+  const [loyaltyPoints, setLoyaltyPoints] = useState<number>(0);
 
   const handleUpgradePlan = () => {
     navigate('/subs');
@@ -165,7 +164,7 @@ const Profile = () => {
       if (user) {
         setEmail(user.email || '');
         setIsEmailVerified(user.emailVerified);
-  
+
         // Fetch the user's payment status
         const paymentsQuery = query(collection(db, 'payments'), where('userId', '==', user.uid));
         const paymentsSnapshot = await getDocs(paymentsQuery);
@@ -174,7 +173,7 @@ const Profile = () => {
             setPlanStatus('Upgraded');
           }
         });
-  
+
         // Fetch the user's reservations
         const reservationsQuery = query(collection(db, 'reservations'), where('userId', '==', user.uid));
         const reservationsSnapshot = await getDocs(reservationsQuery);
@@ -194,51 +193,60 @@ const Profile = () => {
         }));
         // Filter out any null values
         setReservations(reservationsData.filter(reservation => reservation !== null));
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          if (userData && userData.loyalty_points) {
+            // Update the loyalty points balance state
+            setLoyaltyPoints(userData.loyalty_points);
+          }
+        }
       } else {
         navigate('/authorization');
       }
       setIsUserLoading(false);
     });
-  
+
     return () => unsubscribe();
   }, [navigate]);
 
-    
+
   const handleChangeEmail = async (event: React.FormEvent) => {
     event.preventDefault();
-  
+
     if (!auth.currentUser) {
       toast.error(toastMessages.userNotFound);
       return;
     }
-  
+
     if (!password) {
       toast.error("Please enter your current password.");
       return;
     }
-  
+
     if (!newEmail) {
       toast.error("Please enter your new email.");
       return;
     }
-  
+
     try {
       // Re-authenticate the user
       setIsLoading(true);
       const credential = EmailAuthProvider.credential(email, password);
       await reauthenticateWithCredential(auth.currentUser, credential);
-  
+
       // Update the email in Firebase Authentication
       await updateEmail(auth.currentUser, newEmail);
-  
+
       // Send a verification email to the new email
       await sendEmailVerification(auth.currentUser);
       await reload(auth.currentUser);
       setIsEmailVerified(auth.currentUser.emailVerified);
-  
+
       // Close the modal
       setIsModalOpen(false);
-  
+
       // Show a success toast notification
       toast.success("Email updated successfully. Please verify your email now and relogin.");
       toast.success("Please verify your email now and relogin.");
@@ -246,7 +254,7 @@ const Profile = () => {
     } catch (error: any) {
       setIsLoading(false);
       console.error('Error updating email', error);
-  
+
       // Show an error toast notification based on the error code
       switch (error.code) {
         case 'auth/invalid-email':
@@ -272,7 +280,7 @@ const Profile = () => {
       }
     }
   };
-  
+
 
   const handleSignOut = async () => {
     try {
@@ -296,9 +304,9 @@ const Profile = () => {
   };
 
   return (
-    
+
     <>
-    <ToastContainer />
+      <ToastContainer />
       <GlobalStyles></GlobalStyles>
       <Navbar />
       <MainContainer>
@@ -312,11 +320,12 @@ const Profile = () => {
             <p>Loading...</p>
           ) : (
             <>
-          <Email>Email: {email} <VerificationStatus isVerified={isEmailVerified}>{isEmailVerified ? "(Verified)" : "(Not Verified)"}</VerificationStatus></Email>
-          <p>Plan: {planStatus}</p>
-          <Button onClick={() => setIsModalOpen(true)}>Change Email</Button>
-          <Button onClick={handleUpgradePlan}>Upgrade Plan</Button>
-          </>
+              <Email>Email: {email} <VerificationStatus isVerified={isEmailVerified}>{isEmailVerified ? "(Verified)" : "(Not Verified)"}</VerificationStatus></Email>
+              <p>Plan: {planStatus}</p>
+              <p>Loyalty Points: {loyaltyPoints}</p>
+              <Button onClick={() => setIsModalOpen(true)}>Change Email</Button>
+              <Button onClick={handleUpgradePlan}>Upgrade Plan</Button>
+            </>
           )}
           <ModalContainer isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
             <h2>Change Email</h2>
@@ -345,28 +354,29 @@ const Profile = () => {
           <Button onClick={handleSignOut}>Sign Out</Button>
         </ProfileContainer>
         <ReservationsContainer>
-        <Title>Your reservations</Title>
-        {reservations.map((reservation, index) => {
-        // Calculate the time difference in minutes
-        let timeDifference = Infinity; // Initialize to Infinity
-        if (reservation.reservationTime) {
-          const reservationTime = reservation.reservationTime.toDate(); // Convert Firestore Timestamp to JavaScript Date
-          const currentTime = new Date();
-          timeDifference = (currentTime.getTime() - reservationTime.getTime()) / (1000 * 60);
-        }
+          <Title>Your reservations</Title>
+          {reservations.map((reservation, index) => {
+            // Calculate the time difference in minutes
+            let timeDifference = Infinity; // Initialize to Infinity
+            if (reservation.reservationTime) {
+              const reservationTime = reservation.reservationTime.toDate(); // Convert Firestore Timestamp to JavaScript Date
+              const currentTime = new Date();
+              timeDifference = (currentTime.getTime() - reservationTime.getTime()) / (1000 * 60);
+            }
 
-        return (
-          <Reservation key={index}>
-            <p>Product Name: {reservation.product.title}</p>
-            <p>Price: ${reservation.product.price}</p>
-            <p>Mileage: {reservation.mileage}</p>
-            <p>ID: {reservation.productId}</p>
-            <p>Reservation Time: {reservation.reservationTime ? reservation.reservationTime.toDate().toLocaleString() : 'N/A'}</p>
-            <p>Second Option: {reservation.secondOption}</p>
-            {timeDifference < 5 && <Button onClick={() => handleCancelReservation(reservation.id)}>Cancel Reservation</Button>}
-          </Reservation>
-        );
-        })}
+            return (
+              <Reservation key={index}>
+                <p>Product Name: {reservation.product.title}</p>
+                <img src={reservation.product.images[0]} alt="" style={{ width: '350px', height: '250px' }} />
+                <p>Price: €{reservation.totalPrice}</p>
+                <p>Mileage: {reservation.mileage}</p>
+                <p>ID: {reservation.productId}</p>
+                <p>Reservation Time: {reservation.reservationTime ? reservation.reservationTime.toDate().toLocaleString() : 'N/A'}</p>
+                <p>Second Option: {reservation.secondOption}</p>
+                {timeDifference < 5 && <Button onClick={() => handleCancelReservation(reservation.id)}>Cancel Reservation</Button>}
+              </Reservation>
+            );
+          })}
         </ReservationsContainer>
       </MainContainer>
       <Footer></Footer>
