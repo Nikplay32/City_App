@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase';
+import { auth, db } from '../../../firebase';
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
@@ -8,19 +8,18 @@ import { jsPDF } from 'jspdf';
 import { ToastContainer, toast } from 'react-toastify';
 import styled from 'styled-components';
 import QRCode from 'qrcode.react';
-import InputField from '../atoms/InputField';
+import InputField from '../../atoms/InputField';
 import { RiIdCardLine } from 'react-icons/ri';
 import { IoMdCalendar } from 'react-icons/io';
 import { MdOutlinePassword } from "react-icons/md";
 import { AiFillLock } from 'react-icons/ai';
-import { Form, TicketContainer } from '../pages/Payments/Payment.styles'
-import Navbar from '../organisms/Navbar';
-import TicketGallery from '../organisms/TicketGallery';
-import GlobalStyles from '../atoms/GlobalStyles';
-import { Button } from './Products.styles';
-import { ticketOptions } from '../data/TicketOptions';
-import { downloadPDF } from '../pages/TicketGeneration'
-
+import { Form, TicketContainer } from '../Payments/Payment.styles'
+import Navbar from '../../organisms/Navbar';
+import TicketGallery from '../../organisms/TicketGallery';
+import GlobalStyles from '../../atoms/GlobalStyles';
+import { Button } from '../Products.styles';
+import { ticketOptions } from '../../data/TicketOptions';
+import { downloadPDF } from '../../utils/TicketGeneration'
 
 const Container = styled.div`
   display: flex;

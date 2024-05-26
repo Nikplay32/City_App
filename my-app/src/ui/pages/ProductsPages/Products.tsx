@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Navbar from '../organisms/Navbar';
-import GlobalStyles from '../atoms/GlobalStyles';
-import Footer from '../organisms/Footer';
-import { db, auth } from '../../firebase'; // adjust the path as necessary
+import Navbar from '../../organisms/Navbar';
+import GlobalStyles from '../../atoms/GlobalStyles';
+import Footer from '../../organisms/Footer';
+import { db, auth } from '../../../firebase'; // adjust the path as necessary
 import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
@@ -43,7 +43,7 @@ import {
   Button,
   Image,
   FilterContainer,
-} from './Products.styles';
+} from '../Products.styles';
 
 interface Product {
   id: string;
@@ -132,15 +132,14 @@ const Rental: React.FC = () => {
         const userPayment = paymentSnapshot.docs.find(doc => doc.data().userId === userId);
 
         if (userPayment) {
-          console.log(`Found payment for user ${userId}:`, userPayment.data());
           if (userPayment.data().status === 'success') {
             setIsSubscribed('true');
             setIsLoading(false);
           } else {
-            console.log(`Payment status for user ${userId} is not 'success':`, userPayment.data().status);
+            console.log(`ERROR`);
           }
         } else {
-          console.log(`No payment found for user ${userId}`);
+          console.log(`No payment found for user`);
         }
       } else {
         console.log('No user is currently logged in');

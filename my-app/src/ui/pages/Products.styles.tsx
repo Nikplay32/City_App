@@ -210,6 +210,7 @@ export const ProductCard = styled.div`
   align-items: center;
   border: 4px solid #2684ff;
   width: 300px;
+  height: 550px;
   padding: 10px;
   margin: 10px;
   background: #fff;

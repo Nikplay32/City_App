@@ -1,37 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { Popup, Button, StyledInput, StyledTextarea, StyledModal, StyledForm } from '../pages/Dashboard.styles';
+import { Popup, Button, StyledInput, StyledTextarea, StyledModal, StyledForm, ButtonSave, ButtonCancel } from '../pages/Dashboard/Dashboard.styles';
 import { User } from '../atoms/User';
 import { Product } from '../atoms/Product';
 import { Reservation } from '../atoms/Reservation';
 import Modal from 'react-modal';
 import { Activity } from '../atoms/Activities';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../../firebase";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type TableData = User | Product | Reservation | Activity;
 
 const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => Promise<void>; onCancel: () => void; isCreating: boolean; isOpen: boolean }> = ({ data, onEdit, onCancel, isCreating, isOpen }) => {
   const [newData, setNewData] = useState<TableData | null>(
-    data instanceof User ? new User(data.id, data.username, data.isAdmin) :
-    data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
-    data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
-    data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
-    null
+    data instanceof User ? new User(data.id, data.username, data.email,data.password, data.isAdmin) :
+      data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
+        data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
+          data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
+            null
   );
-  
+
   useEffect(() => {
     setNewData(
-      data instanceof User ? new User(data.id, data.username, data.isAdmin) :
-      data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
-      data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
-      data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
-      null
+      data instanceof User ? new User(data.id, data.username, data.email,data.password, data.isAdmin) :
+        data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
+          data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
+            data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
+              null
     );
   }, [data]);
+
+  const onEditUser = async (newData: User) => {
+    const auth = getAuth();
+    try {
+      // Create the user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, newData.email, newData.password);
+      const user = userCredential.user;
+  
+      // Add the user to Firestore
+      const docRef = doc(db, "users", user.uid);
+      await setDoc(docRef, {
+        username: newData.username,
+        email: newData.email,
+        isAdmin: newData.isAdmin,
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setNewData(prevData => {
       if (!prevData) return null;
-  
+
       // Check if name is in the format "propertyName[index]"
       const arrayUpdateRegex = /(.+)\[(\d+)\]/;
       const match = name.match(arrayUpdateRegex);
@@ -45,13 +69,15 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
           return newDataCopy as TableData;
         }
       }
-  
+
       // Existing code...
       switch (prevData.constructor) {
         case User:
           return new User(
             prevData.id,
             name === 'username' ? value : (prevData as User).username,
+            name === 'email' ? value : (prevData as User).email,
+            name === 'password' ? value : (prevData as User).password,
             (prevData as User).isAdmin
           );
         case Product:
@@ -106,26 +132,39 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
   };
 
   const handleAddElement = (event: React.MouseEvent, propertyName: string) => {
-  event.preventDefault();
-  setNewData(prevData => {
-    if (!prevData) return null;
-    
-    const newDataCopy = { ...prevData };
-    if (Array.isArray(newDataCopy[propertyName as keyof typeof newDataCopy])) {
-      (newDataCopy[propertyName as keyof typeof newDataCopy] as unknown as string[]).push('');
-    }
-    return newDataCopy as TableData;
-  });
-};
+    event.preventDefault();
+    setNewData(prevData => {
+      if (!prevData) return null;
 
-  const handleEdit = () => {
-    if (newData) {
+      const newDataCopy = { ...prevData };
+      if (Array.isArray(newDataCopy[propertyName as keyof typeof newDataCopy])) {
+        (newDataCopy[propertyName as keyof typeof newDataCopy] as unknown as string[]).push('');
+      }
+      return newDataCopy as TableData;
+    });
+  };
+
+  const handleEdit = async () => {
+    if (newData instanceof User) {
+      await onEditUser(newData);
+      toast.success("User created successfully");
+    } else if (newData instanceof Product) {
       onEdit(newData);
+      toast.success("Product created successfully");
+    } else if (newData instanceof Reservation) {
+      onEdit(newData);
+      toast.success("Reservation created successfully");
+    } else if (newData instanceof Activity) {
+      onEdit(newData);
+      toast.success("Activity created successfully");
     }
+    setTimeout(onCancel, 400);
   };
 
   return (
-    <StyledModal 
+    <>
+    <ToastContainer />
+    <StyledModal
       isOpen={isOpen}
       onRequestClose={onCancel}
       contentLabel="Edit Modal"
@@ -136,20 +175,20 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
           <StyledForm key={key}>
             <label>{key}</label>
             {(key === 'images' || key === 'specification') && Array.isArray(newData[key as keyof typeof newData]) ? (
-    <div>
-        {(newData[key as keyof typeof newData] as unknown as string[]).map((item: string, index: number) => (
-            <div key={index}>
-                <StyledInput
-                    type="text"
-                    name={`${key}[${index}]`}
-                    value={item}
-                    onChange={handleInputChange}
-                />
-            </div>
-        ))}
-        <Button onClick={(event) => handleAddElement(event, key)}>Add Element</Button>
-    </div>
-) : (
+              <div>
+                {(newData[key as keyof typeof newData] as unknown as string[]).map((item: string, index: number) => (
+                  <div key={index}>
+                    <StyledInput
+                      type="text"
+                      name={`${key}[${index}]`}
+                      value={item}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                ))}
+                <Button onClick={(event) => handleAddElement(event, key)}>Add Element</Button>
+              </div>
+            ) : (
               <StyledInput
                 type="text"
                 name={key}
@@ -160,9 +199,10 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
           </StyledForm>
         ) : null
       ))}
-      <Button onClick={handleEdit}>Save</Button>
-      <Button onClick={onCancel}>Cancel</Button>
+      <ButtonSave onClick={handleEdit}>Save</ButtonSave>
+      <ButtonCancel onClick={onCancel}>Cancel</ButtonCancel>
     </StyledModal>
+    </>
   );
 };
 

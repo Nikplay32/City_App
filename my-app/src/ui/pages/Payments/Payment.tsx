@@ -27,8 +27,8 @@ const Container = styled.div`
 `;
 
 const options = [
-	{ value: 'month', label: 'Monthly Subscription - 9.99 $' },
-	{ value: 'year', label: 'Yearly Subscription - 99.99 $' },
+	{ value: 'month', label: 'Monthly Subscription - 9.99 €' },
+	{ value: 'year', label: 'Yearly Subscription - 99.99 €' },
 ];
 
 const paymentMethods = [
@@ -291,7 +291,7 @@ const PaymentForm: React.FC = () => {
 							/>
 							<div style={{ display: 'flex', justifyContent: 'center' }}>
 								<Button type="submit" disabled={isPaid}>
-									{isPaid ? 'Payment Successful' : `Pay ${subscriptionPrice}`}
+									{isPaid ? 'Payment Successful' : `Pay ${subscriptionPrice}€`}
 								</Button>
 							</div>
 						</Form>

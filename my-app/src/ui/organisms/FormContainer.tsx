@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FaClock, FaMapMarkerAlt, FaTicketAlt } from 'react-icons/fa'; // Importing React Icons
+import { FaClock, FaMapMarkerAlt } from 'react-icons/fa'; // Importing React Icons
 import { IoAddCircleOutline, IoRemoveCircleOutline } from "react-icons/io5"; // Icons for increment and decrement
 import styled from 'styled-components';
 import { BsCart4 } from "react-icons/bs";
 import InputField from '../atoms/InputField';
 import { RiIdCardLine } from 'react-icons/ri';
 import { IoMdCalendar } from 'react-icons/io';
-import { MdOutlinePassword } from "react-icons/md";
 import { AiFillLock } from 'react-icons/ai';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -231,7 +230,7 @@ const FormComponent: React.FC<FormComponentProps> = ({ title, location, date, pr
 						</FormGroup>
 						<FormGroup>
 							<Label>Price per Ticket</Label>
-							<span>${price}</span>
+							<span>€{price}</span>
 							<DownloadGuide>
 								<p>You will receive your tickets as a PDF after purchase.</p>
 								<p>Please download it after puchase and save somewhere</p>
@@ -250,7 +249,7 @@ const FormComponent: React.FC<FormComponentProps> = ({ title, location, date, pr
 						</FormGroup>
 						<FormGroup>
 							<Label>Total Price</Label>
-							<Price>{totalPrice}</Price>
+							<Price>{totalPrice}€</Price>
 						</FormGroup>
 						<FormGroup>
 							<InputField

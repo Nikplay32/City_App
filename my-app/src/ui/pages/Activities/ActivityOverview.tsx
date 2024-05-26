@@ -3,61 +3,32 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, query, where, getDocs } from 'firebase/firestore';
 import styled from 'styled-components';
-import GlobalStyles from '../atoms/GlobalStyles';
-import Navbar from '../organisms/Navbar';
-import Footer from '../organisms/Footer';
-import FormContainer from '../organisms/FormContainer';
+import GlobalStyles from '../../atoms/GlobalStyles';
+import Navbar from '../../organisms/Navbar';
+import Footer from '../../organisms/Footer';
+import FormContainer from '../../organisms/FormContainer';
 import { addDoc, collection } from 'firebase/firestore';
-import { downloadActivityPDF } from '../pages/ActivityGeneration';
+import { downloadActivityPDF } from './ActivityGeneration';
 import QRCode from 'qrcode.react';
-import Map from '../organisms/ActivityMap'
+import Map from '../../organisms/ActivityMap'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { auth, db } from '../../firebase';
-
-
-const ActivityContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-const ImageContainer = styled.div`
-  width: 100%;
-  position: relative;
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 600px;
-  object-fit: cover;
-  @media screen and (max-width: 768px) {
-    height: auto;
-  }
-`;
-
-const InfoContainer = styled.div`
-  width: 80%;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`;
-
-const DescriptionContainer = styled.div`
-  flex: 2;
-  margin-right: 20px;
-`;
-
-const Description = styled.div`
-  padding: 1rem 0 0 0;
-  line-height: 1.6;
-`;
-
-const AddToCartButton = styled.button`
-  display:none;
-`;
+import { auth, db } from '../../../firebase';
+import {
+  ActivityContainer,
+  ImageContainer,
+  Image,
+  InfoContainer,
+  DescriptionContainer,
+  Description,
+  AddToCartButton,
+  TitleContainer,
+  TitleText,
+  TitleBorder,
+  HighlightsContainer,
+  Highlight,
+  Note
+} from './ActivityOverview.styles';
 
 interface Activity {
   id: string;
@@ -73,41 +44,6 @@ interface Activity {
   highlights: string[];
   coordinates: [number, number];
 }
-
-const TitleContainer = styled.div`
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const TitleText = styled.h1`
-  color: #333;
-  font-weight: normal;
-  padding: 10px 0px 20px 20px;
-`;
-
-const TitleBorder = styled.hr`
-  border: 0;
-  height: 1px;
-  background: #e3dddd;
-  width: 100%;
-`;
-
-const HighlightsContainer = styled.ul`
-  list-style-type: disc;
-  margin-left: 20px;
-`;
-
-const Highlight = styled.li`
-  margin: 0.5rem 0;
-`;
-
-const Note = styled.p`
-  color: red;
-  padding-top: 1rem;
-  font-weight: bold;
-`;
 
 const ActivityOverview: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -205,7 +141,6 @@ const ActivityOverview: React.FC = () => {
           quantity: quantity,
           totalPrice: totalPrice,
         });
-        console.log('Ticket created with ID: ', docRef.id);
         setTicketId(docRef.id);
         await downloadActivityPDF(activity, docRef.id, quantity, qrCodeRef, setQrValuePDF);
         toast.success('Payment successful. Ticket/Tickets downloaded');

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Navbar from '../organisms/Navbar';
-import GlobalStyles from '../atoms/GlobalStyles';
+import React, { useState } from 'react';
+import Navbar from '../../organisms/Navbar';
+import GlobalStyles from '../../atoms/GlobalStyles';
 import { ChangeEvent } from 'react';
-import { Container, Select, Street, Button, RouteTitle, TableHead, TableBody, TableHeader, TableRow, Sidebar, MainContent, TimeTable, TimeCell, TransportNavItem, TransportNavbar } from '../pages/Transport.styles'
+import { Container, Select, Street, Button, RouteTitle, TableHead, TableBody, TableHeader, TableRow, Sidebar, MainContent, TimeTable, TimeCell, TransportNavItem, TransportNavbar } from './Transport.styles'
 
 const initialTimes = ['05:41', '06:06', '06:36', '07:06', '07:36', '08:06', '08:33', '08:57', '09:21', '09:44', '10:08', '10:33', '10:56', '11:21', '11:46', '12:10', '12:34', '12:58', '13:22', '13:46', '14:10', '14:34', '14:58', '15:22', '15:46', '16:10', '16:34', '16:58', '17:22', '17:52', '18:23', '18:51', '19:26', '20:00', '20:28', '20:58', '21:31', '22:16', '23:01'];
 

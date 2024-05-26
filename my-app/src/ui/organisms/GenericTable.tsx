@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableRow, TableHeader, TableCell, Button } from '../pages/Dashboard.styles';
+import { Table, TableRow, TableHeader, TableCell, Button } from '../pages/Dashboard/Dashboard.styles';
 import { User } from '../atoms/User';
 import { Product } from '../atoms/Product';
 import { Reservation } from '../atoms/Reservation';

@@ -2,75 +2,22 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { db, auth } from '../../firebase';
+import { db, auth } from '../../../firebase';
 import { collection, where, getDocs, query, doc, updateDoc, addDoc } from 'firebase/firestore';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+	FormContainer,
+	FormGroup,
+	Label,
+	Input,
+	Title,
+	ReservationDate,
+	SelectedDateTime,
+	TextArea,
+	SubmitButton
+  } from './RestaurantReservation.styles';
 
-const FormContainer = styled.div`
-  margin-top: 30px;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 20px;
-`;
-
-const Label = styled.label`
-  font-size: 1rem;
-  margin-bottom: 5px;
-  display: block;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-`;
-
-const Title = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-`;
-
-const ReservationDate = styled(DatePicker)`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  cursor: pointer;
-`;
-
-const SelectedDateTime = styled.div`
-  font-size: 1rem;
-  margin-top: 10px;
-`;
-
-const TextArea = styled.textarea`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  height: 100px;
-`;
-
-const SubmitButton = styled.button`
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
 
 interface RestaurantFormProps {
 	restaurantId: string;

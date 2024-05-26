@@ -1,25 +1,21 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase';
-import { SearchBar, StyledButton, StyledTitle, StyledText, SearchBarContainer, Button, Logo, SidebarLink, MainContent, DashboardContainer, SidebarContainer, SidebarHeader, SidebarDivider, SidebarItem, SidebarSearch, SidebarSubmenu, SidebarSubmenuItem} from './Dashboard.styles';
-import Navbar from '../organisms/Navbar';
-import GlobalStyles from '../atoms/GlobalStyles';
-import { User } from '../atoms/User';
-import { Product } from '../atoms/Product';
-import { Reservation } from '../atoms/Reservation';
-import { Activity } from '../atoms/Activities';
-import GenericTable from '../organisms/GenericTable';
-import GenericPopup from '../organisms/GenericPopup';
-import { DataType, TableConfig, tableConfigs } from '../../types/tableConfigs';
-import { handleEdit, handleCreate, handleDelete } from '../../helpers/crudOperations';
-import exportTableToPDF from './Test';
+import { db } from '../../../firebase';
+import { SearchBar, AdminNote, StyledButton, StyledTitle, StyledText, SearchBarContainer, Button, Logo, SidebarLink, MainContent, DashboardContainer, SidebarContainer, SidebarHeader, SidebarDivider, SidebarItem, SidebarSearch, SidebarSubmenu, SidebarSubmenuItem} from './Dashboard.styles';
+import Navbar from '../../organisms/Navbar';
+import GlobalStyles from '../../atoms/GlobalStyles';
+import { User } from '../../atoms/User';
+import { Product } from '../../atoms/Product';
+import { Reservation } from '../../atoms/Reservation';
+import { Activity } from '../../atoms/Activities';
+import GenericTable from '../../organisms/GenericTable';
+import GenericPopup from '../../organisms/GenericPopup';
+import { DataType, TableConfig, tableConfigs } from '../../../types/tableConfigs';
+import { handleEdit, handleCreate, handleDelete } from '../../../helpers/crudOperations';
+import exportTableToPDF from '../../utils/Test';
 import styled from "styled-components";
-
-const AdminNote = styled.p`
-  color: red;
-  padding-top: 1rem;
-  font-weight: bold;
-`;
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -87,7 +83,7 @@ const Dashboard: React.FC = () => {
     if (activeTable === 'users') {
       setTableData(users);
       setTableConfig({
-        columns: Object.keys(new User('', '', false)).map(field => ({
+        columns: ['username', 'email'].map(field => ({
           title: field,
           render: (data: DataType) => (data as User)[field as keyof User],
         })),
@@ -196,6 +192,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
+    <ToastContainer />
     <DashboardContainer>
       <GlobalStyles/>
       <SidebarContainer>
@@ -255,7 +252,7 @@ const Dashboard: React.FC = () => {
             <StyledButton onClick={() => {
               setIsCreating(true);
               setSelectedData(
-                activeTable === 'users' ? new User('', '', false) :
+                activeTable === 'users' ? new User('', '', '','', false) :
                 activeTable === 'products' ? new Product('', '', '', [], 0, '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
                 activeTable === 'activities' ? new Activity('', '', ['0', '0'], '', '', [], [], '', 0, '', '') : // Add this line
@@ -263,16 +260,16 @@ const Dashboard: React.FC = () => {
               );
             }}>Create {activeTable.slice(0, -1)}</StyledButton>   
             <AdminNote>
-            ADMIN NOTE - Please when adding new product firstly fill data and then add images and specification
+            ADMIN NOTE - Please when adding new product firstly fill data and then add images and specification. <br /> Also when adding free cars dont fill subscribers_only field. Leave it empty. Thanks!
             </AdminNote>
             <GenericTable data={tableData} config={tableConfig} onDelete={handleDeleteRow} searchResults={searchResults} searchTerm={searchTerm} />
             {selectedData && <GenericPopup 
               data={isCreating ? 
-                (activeTable === 'users' ? new User('', '', false) :
+                (activeTable === 'users' ? new User('', '', '','', false) :
                 activeTable === 'products' ? new Product('', '', '', [], 0, '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
                 activeTable === 'activities' ? new Activity('', '', ['0', '0'], '', '', [], [], '', 0, '', '') :
-                new User('', '', false)) : 
+                new User('', '','','', false)) : 
                 selectedData}
               onEdit={isCreating ? 
                 (newData: DataType) => handleCreate(activeTable, newData, (newData: DataType) => {

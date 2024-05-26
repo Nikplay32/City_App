@@ -8,13 +8,31 @@ export const StyledModal = styled(Modal)`
   left: 50%;
   transform: translate(-50%, -50%);
   background: #000000;
-  padding: 60px;
+  padding: 20px; // Reduced padding for smaller screens
   color: white;
   border-radius: 4px;
   outline: none;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr; // Adjust as needed
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Adjust as needed
   gap: 20px; // Adjust as needed
+  width: 90%; // Added width to prevent overflow
+  max-height: 90vh; // 90% of the viewport height
+  overflow-y: auto; // Enable vertical scrolling if the content is too tall
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; // On small screens, make all items take up the full width
+    width: 100%; // Make the modal take the full width on small screens
+    max-height: 80vh;
+  }
+`;
+
+export const StyledInput = styled.input`
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%; // Ensure the input doesn't overflow its container
 `;
 
 export const StyledForm = styled.form`
@@ -24,14 +42,6 @@ export const StyledForm = styled.form`
   text-align: center;
 `;
 
-export const StyledInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-`;
 
 export const StyledTextarea = styled.textarea`
   width: 100%;
@@ -64,10 +74,10 @@ export const Table = styled.table`
   }
 `;
 
-export const TableCell = styled.td`
-  border: 1px solid #ddd;
-  padding: 8px;
-  word-break: break-word; // Add this line
+export const AdminNote = styled.p`
+  color: red;
+  padding-top: 1rem;
+  font-weight: bold;
 `;
 
 export const StyledTitle = styled.div`
@@ -80,7 +90,7 @@ export const StyledText = styled.div`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: white;
+  color: #ffffff;
 `;
 
 export const StyledButton = styled.a`
@@ -156,20 +166,52 @@ export const StyledButton = styled.a`
   /* Add the rest of the styles for the span elements here */
 `;
 
+export const TableCell = styled.td`
+  border: 1px solid #dddddd; /* Add border to create grey lines */
+  padding: 8px;
+  word-break: break-word; // Add this line
+`;
+
 export const TableHeader = styled.th`
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd; /* Add border to create grey lines */
   padding: 8px;
   text-align: left;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
 `;
 
 export const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f2f2f2;
-  }
+  background-color: #ffffff; /* Set the background color explicitly */
 `;
 
 export const Button = styled.button`
+  padding: 8px 16px;
+  background-color: #007bff; /* Change this to your desired button color */
+  color: #ffffff; /* Change this to your desired text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3; /* Change this to your desired button hover color */
+  }
+`;
+
+export const ButtonSave = styled.button`
+  padding: 8px 16px;
+  background-color: #007bff; /* Change this to your desired button color */
+  color: #ffffff; /* Change this to your desired text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3; /* Change this to your desired button hover color */
+  }
+`;
+
+export const ButtonCancel = styled.button`
   padding: 8px 16px;
   background-color: #007bff; /* Change this to your desired button color */
   color: #ffffff; /* Change this to your desired text color */
@@ -208,6 +250,7 @@ export const MainContent = styled.div`
   flex-grow: 1;
   padding: 20px;
   text-align: center;
+  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
   @media (max-width: 768px) {
     padding: 10px; // Reduce padding on small screens
   }

@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import Navbar from '../organisms/Navbar';
-import Hero from '../organisms/Hero';
-import Global from '../atoms/GlobalStyles';
-import AboutUs from '../organisms/AboutUs';
-import HowItWorks from '../organisms/HowSection';
-import Faq from '../organisms/FAQ';
-import Footer from '../organisms/Footer';
-import ContactSection from './Contact';
-import CityOptions from '../organisms/CityOptions';
+import Navbar from '../../organisms/Navbar';
+import Hero from '../../organisms/Hero';
+import Global from '../../atoms/GlobalStyles';
+import AboutUs from '../../organisms/AboutUs';
+import HowItWorks from '../../organisms/HowSection';
+import Faq from '../../organisms/FAQ';
+import Footer from '../../organisms/Footer';
+import ContactSection from '../Contact';
+import CityOptions from '../../organisms/CityOptions';
 const faqData = [
   {
     question: 'What benefits do I get with a Pro subscription?',

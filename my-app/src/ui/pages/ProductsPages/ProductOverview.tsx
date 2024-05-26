@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db, auth } from '../../firebase'; // adjust the path as necessary
+import { db, auth } from '../../../firebase'; // adjust the path as necessary
 import { doc, getDoc, collection, getDocs,  } from 'firebase/firestore';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
-import GlobalStyles from '../atoms/GlobalStyles';
-import Navbar from '../organisms/Navbar';
-import Footer from '../organisms/Footer';
+import GlobalStyles from '../../atoms/GlobalStyles';
+import Navbar from '../../organisms/Navbar';
+import Footer from '../../organisms/Footer';
 import Select from 'react-select';
 import { components, OptionProps } from 'react-select';
-import Map from '../organisms/Map';
+import Map from '../../organisms/Map';
 import {
   ProductContainer,
   OptionSelect,
@@ -28,13 +28,6 @@ import {
   TechDataTable,
   TechDataRow,
   TechDataCell,
-  TechDataHeader,
-  BookingOption,
-  BookingOptionTitle,
-  BookingOptionDescription,
-  PriceDetails,
-  PriceDetailsTitle,
-  PriceDetailsDescription
 } from './ProductOverview.styles';
 
 
@@ -76,12 +69,12 @@ const mileageOptions = [
     value: 'unlimited',
     label: 'Unlimited kilometers',
     description: 'All kilometers are included in the price',
-    price: '+ $3.89 / day',
+    price: '+ 3.89€ / day',
   },
   {
     value: '400_km',
     label: '400 km',
-    description: '+$0.16 / for every additional km',
+    description: '+ 0.16€ / for every additional km',
   },
   // Add more options as needed
 ];

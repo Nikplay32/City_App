@@ -71,7 +71,6 @@ const RigaMap: React.FC<MapProps> = ({ iconUrl, coordinates, location, title }) 
 			const markersCol = collection(db, 'markers');
 			const markerSnapshot = await getDocs(markersCol);
 
-			console.log("Snapshot from Firestore:", markerSnapshot); // Log snapshot from Firestore
 
 			markerSnapshot.docs.forEach((doc) => {
 				console.log("Document ID:", doc.id); // Log document ID

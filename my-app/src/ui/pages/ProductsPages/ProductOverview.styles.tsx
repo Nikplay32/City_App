@@ -26,6 +26,10 @@ export const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    max-height: 300px; // Decrease the maximum height on smaller screens
+  }
 `;
 
 export const ImageTitle = styled.h2`
@@ -36,6 +40,10 @@ export const ImageTitle = styled.h2`
   background: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 5px;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem; // Decrease the font size on smaller screens
+  }
 `;
 
 export const Image = styled.img`
@@ -43,8 +51,14 @@ export const Image = styled.img`
   height: 100vh; // 100% of the viewport height
   object-fit: cover;
   transition: transform 0.3s ease;
+
   &:hover {
     transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: 100vw; // Increase the width to 100% of the viewport width on smaller screens
+    height: 300px; // Decrease the height on smaller screens
   }
 `;
 

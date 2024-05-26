@@ -116,7 +116,6 @@ const PaymentForm: React.FC = () => {
             ...productData.data(),
             images: productData.data().images || [], // Use an empty array as a fallback
           } as Product);
-          console.log('Product data:', productData.data());
         } else {
           console.log('No such document!');
         }

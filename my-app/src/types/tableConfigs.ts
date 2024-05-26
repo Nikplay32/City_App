@@ -23,8 +23,8 @@ type TableConfig = {
 
 const tableConfigs: Record<string, TableConfigs> = {
   users: {
-    fields: ['username'],
-    createInstance: (id: string, data: any) => new User(id, data.username, data.isAdmin),
+    fields: ['username', 'email', 'password', 'isAdmin'],
+    createInstance: (id: string, data: any) => new User(id, data.username,data.email, data.password, data.isAdmin ),
   },
   products: {
     fields: ['category', 'description', 'images', 'price', 'shortDescription', 'specification', 'title', 'subscribers_only'],

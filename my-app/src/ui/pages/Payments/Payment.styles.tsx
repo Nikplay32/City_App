@@ -148,37 +148,44 @@ export const CardholderAgreementInfo = styled.div`
   text-align: right;
 `;
 
-
-
-
 export const InputContainer = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
+  margin: 0.5rem 0;
 `;
 
 export const InputIcon = styled.span`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 10px;
-  color: #333;
+  left: 15px;
+  color: #666;
+  font-size: 1.2rem;
 `;
 
 export const Input = styled.input`
-  width: 80%;
-  padding: 0.5rem 1.5rem 0.5rem 2.5rem;
-  border: none;
-  border-radius: 4px;
+  width: calc(100% - 50px); /* Adjust width considering padding and icon */
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 1rem;
   color: #333;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   transition: all 0.3s ease;
-
+  
   &:focus {
     outline: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+  }
+  
+  &::placeholder {
+    color: #aaa;
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
   }
 `;
 

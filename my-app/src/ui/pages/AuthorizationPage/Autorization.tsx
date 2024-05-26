@@ -5,155 +5,36 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 import { setDoc, doc, collection } from "firebase/firestore";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import GlobalStyles from "../atoms/GlobalStyles";
+import GlobalStyles from "../../atoms/GlobalStyles";
 import Modal from 'react-modal';
-import { toastMessages } from "../toastmessages";
+import { toastMessages } from "../../toastmessages";
 import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { getDocs } from "firebase/firestore";
 Modal.setAppElement('#root');
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const FormContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.color};
-  transition: all 0.5s ease;
-  padding: 50px;
-  box-sizing: border-box;
-  @media (max-width: 768px) {
-    flex: 1;
-    &:last-child {
-      display: none;
-    }
-  }
-`;
-
-const Title = styled.h1`
-  color: ${(props) => (props.color === "black" ? "white" : "black")};
-`;
-
-const Paragraph = styled.p`
-  color: ${(props) => (props.color === "black" ? "white" : "black")};
-  margin-bottom: 20px;
-  @media (max-width: 768px) {
-    text-align: center;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  margin-bottom: 20px;
-`;
-
-const Input = styled.input`
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 10px;
-`;
-
-const BackButton = styled(Link)`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-`;
-
-const ModalContainer = styled(Modal)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #000000;
-  padding: 50px;
-  color: white;
-  border-radius: 4px;
-  outline: none;
-`;
-
-const ModalForm = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-const ModalInput = styled.input`
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-`;
-
-const ModalButton = styled.button`
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-`;
-
-const SwitchButton = styled(Button)`
-  @media (min-width: 769px) {
-    display: none;
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: none;
-  color: white;
-  font-size: 1.5em;
-  cursor: pointer;
-`;
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(146, 139, 139, 0.5);
-`;
+import {
+  Container,
+  FormContainer,
+  Title,
+  Paragraph,
+  Form,
+  Input,
+  Button,
+  BackButton,
+  ModalContainer,
+  ModalForm,
+  ModalInput,
+  ModalButton,
+  SwitchButton,
+  CloseButton,
+  Overlay
+} from './Autorization.styles';
 
 const Authentication = () => {
   const { currentUser, loading } = useAuth();
@@ -203,9 +84,7 @@ const Authentication = () => {
           const userSnapshot = await getDocs(usersCollection);
           const isAdmin = userSnapshot.empty; // This will be true if there are no users
   
-          await setDoc(doc(usersCollection, user.uid), { uid: user.uid, username: username, isVerified: user.emailVerified, isAdmin });
-          console.log('Username:', username);
-          console.log('isAdmin', isAdmin)
+          await setDoc(doc(usersCollection, user.uid), { uid: user.uid, username: username, email: user.email, isVerified: user.emailVerified, isAdmin });
           setEmail(email);
         }
         toast.success(toastMessages.userRegistered);

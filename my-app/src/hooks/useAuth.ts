@@ -30,7 +30,6 @@ const useAuth = () => {
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
       
-        console.log(docSnap.data()); // Log the entire document snapshot
       
         if (docSnap.exists()) {
           const userData = { 
@@ -41,7 +40,6 @@ const useAuth = () => {
           setCurrentUser(userData);
       
           // Log the user data
-          console.log(userData);
         } else {
           console.log('No such document!');
         }

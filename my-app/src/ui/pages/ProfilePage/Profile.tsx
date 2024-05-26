@@ -1,146 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 import { signOut, onAuthStateChanged, sendEmailVerification, reauthenticateWithCredential, EmailAuthProvider, updateEmail, reload } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
-import Navbar from '../organisms/Navbar';
-import Footer from '../organisms/Footer';
-import GlobalStyles from '../atoms/GlobalStyles';
+import Navbar from '../../organisms/Navbar';
+import Footer from '../../organisms/Footer';
+import GlobalStyles from '../../atoms/GlobalStyles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { toastMessages } from '../toastmessages';
+import { toastMessages } from '../../toastmessages';
 import { deleteDoc, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
-`;
-
-const ProfileContainer = styled.div`
-  width: 45%; // adjust as needed
-  margin: 20px;
-  padding: 20px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  text-align: center;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-`;
-
-const Image = styled.img`
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  margin-bottom: 20px;
-`;
-
-const Subtitle = styled.h2`
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-`;
-
-const Email = styled.p`
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-`;
-
-const ModalContainer = styled(Modal)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-`;
-
-const ModalInput = styled.input`
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const ModalButton = styled.button`
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  margin: 10px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
-
-const ReservationsContainer = styled.div`
-  width: 45%; // adjust as needed
-  margin-top: 40px;
-  margin: 20px;
-  padding: 20px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  text-align: center;
-`;
-
-const Reservation = styled.div`
-  margin-bottom: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ReservationInfo = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-`;
-
-const ReservationButton = styled.button`
-  padding: 10px 20px;
-  background-color: #ff5252;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
-
-interface VerificationStatusProps {
-  isVerified: boolean;
-}
-
-const VerificationStatus = styled.span<VerificationStatusProps>`
-  color: ${props => props.isVerified ? 'green' : 'red'};
-`;
-
+import {
+  MainContainer,
+  ProfileContainer,
+  Title,
+  Image,
+  Subtitle,
+  Email,
+  ModalContainer,
+  ModalForm,
+  ModalInput,
+  ModalButton,
+  Button,
+  ReservationsContainer,
+  Reservation,
+  ReservationInfo,
+  ReservationButton,
+  PlanStatus,
+  LoyaltyPoints,
+  PlanText,
+  PlanContainer,
+  VerificationStatus
+} from './Profile.styles';
 
 const Profile = () => {
   const [email, setEmail] = useState('');
@@ -251,6 +143,9 @@ const Profile = () => {
       toast.success("Email updated successfully. Please verify your email now and relogin.");
       toast.success("Please verify your email now and relogin.");
       setIsLoading(false);
+      setTimeout(() => {
+        navigate('/authorization');
+      }, 4000); // Delay of 5 seconds
     } catch (error: any) {
       setIsLoading(false);
       console.error('Error updating email', error);
@@ -321,8 +216,11 @@ const Profile = () => {
           ) : (
             <>
               <Email>Email: {email} <VerificationStatus isVerified={isEmailVerified}>{isEmailVerified ? "(Verified)" : "(Not Verified)"}</VerificationStatus></Email>
-              <p>Plan: {planStatus}</p>
-              <p>Loyalty Points: {loyaltyPoints}</p>
+              <PlanContainer>
+                <PlanText>Plan: </PlanText>
+                <PlanStatus status={planStatus}> {planStatus}</PlanStatus>
+              </PlanContainer>
+              <LoyaltyPoints>Your Loyalty Points Balance: {loyaltyPoints}</LoyaltyPoints>
               <Button onClick={() => setIsModalOpen(true)}>Change Email</Button>
               <Button onClick={handleUpgradePlan}>Upgrade Plan</Button>
             </>
@@ -367,7 +265,7 @@ const Profile = () => {
             return (
               <Reservation key={index}>
                 <p>Product Name: {reservation.product.title}</p>
-                <img src={reservation.product.images[0]} alt="" style={{ width: '350px', height: '250px' }} />
+                <img className="reservation-image" src={reservation.product.images[0]} alt="" />
                 <p>Price: €{reservation.totalPrice}</p>
                 <p>Mileage: {reservation.mileage}</p>
                 <p>ID: {reservation.productId}</p>
