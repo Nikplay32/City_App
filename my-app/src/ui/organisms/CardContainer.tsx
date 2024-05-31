@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Expiry, VisaChip, NFCIcon, BankLogo, Form, InputContainer, InputIcon, Input, CardIssuerInfo, CardBrandLogo, CardholderAgreementInfo, CardHolder, CardNumber, CardContainer, Card, CardFace, CardChip, BankName, FrontFace, BackFace, MagneticStripe, MagneticStripeText, SecurityFeatures, SignatureStrip, CVV, CVVLabel } from '../pages/Payments/Payment.styles'
+import { Button, Expiry, VisaChip, NFCIcon, BankLogo, CardIssuerInfo, CardBrandLogo, CardholderAgreementInfo, CardHolder, CardNumber, CardContainer, Card, CardFace, CardChip, BankName, FrontFace, BackFace, MagneticStripe, MagneticStripeText, SecurityFeatures, SignatureStrip, CVV, CVVLabel } from '../pages/Payments/Payment.styles'
 
 type PaymentMethod = {
-  value: string;
-  label: string;
-  logo: string;
-  bankName: string;
+	value: string;
+	label: string;
+	logo: string;
+	bankName: string;
 };
 
 interface CardContainerProps {

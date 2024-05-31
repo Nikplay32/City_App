@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db, auth } from '../../../firebase'; // adjust the path as necessary
+import { db, auth } from '../../../firebase'; 
 import { doc, getDoc, collection, getDocs,  } from 'firebase/firestore';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
@@ -88,7 +88,7 @@ const ProductOverview: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(1);
   const navigate = useNavigate();
-  const [isSubscribed, setIsSubscribed] = useState(false); // Changed initial state to false
+  const [isSubscribed, setIsSubscribed] = useState(false); 
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -99,7 +99,7 @@ const ProductOverview: React.FC = () => {
         if (productData.exists()) {
           setProduct({
             ...productData.data(),
-            images: productData.data().images || [], // Use an empty array as a fallback
+            images: productData.data().images || [], 
           } as Product);
         } else {
           console.log('No such document!');
@@ -114,7 +114,7 @@ const ProductOverview: React.FC = () => {
     const fetchSubscriptionStatus = async () => {
       const userId = auth.currentUser?.uid;
       if (userId) {
-        const paymentsCol = collection(db, 'payments'); // Assuming you have a 'payments' collection
+        const paymentsCol = collection(db, 'payments'); 
         const paymentSnapshot = await getDocs(paymentsCol);
         const userPayment = paymentSnapshot.docs.find(doc => doc.data().userId === userId);
 

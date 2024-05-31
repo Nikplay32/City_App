@@ -78,10 +78,10 @@ export const Email = styled.p`
 
 export const ModalContainer = styled(Modal)`
   display: flex;
-  flex-direction: column; // Change the direction of the flex items
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
-  position: fixed; // Position the modal in the center of the screen
+  position: fixed; 
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -164,8 +164,8 @@ export const Reservation = styled.div`
     margin-bottom: 15px;
 
     .reservation-image {
-      width: 80%; // Decrease this value to decrease the image size on smaller screens
-      height: auto; // Set height to auto to maintain aspect ratio
+      width: 80%; 
+      height: auto; 
     }
   }
 `;

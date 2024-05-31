@@ -4,7 +4,7 @@ import Navbar from '../../organisms/Navbar';
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
 import GlobalStyles from '../../atoms/GlobalStyles';
-import { db } from '../../../firebase'; // adjust the path as necessary
+import { db } from '../../../firebase'; 
 import { collection, getDocs } from 'firebase/firestore';
 import { Marker } from 'react-leaflet';
 import { Popup } from 'react-leaflet';
@@ -19,7 +19,7 @@ import {
 
 type MarkerType = {
   position: [number, number];
-  item: any; // this can be a product or an activity
+  item: any; 
 };
 
 type ItemType = {
@@ -45,7 +45,7 @@ const FullScreenMap: React.FC = () => {
       const productSnapshot = await getDocs(productsCol);
       const products = productSnapshot.docs.map(doc => ({
         id: doc.id,
-        type: 'product', // add a type property to distinguish products from activities
+        type: 'product',
         ...doc.data()
       }));
 
@@ -53,11 +53,12 @@ const FullScreenMap: React.FC = () => {
       const activitySnapshot = await getDocs(activitiesCol);
       const activities = activitySnapshot.docs.map(doc => ({
         id: doc.id,
-        type: 'activity', // add a type property to distinguish activities from products
+        type: 'activity', 
         ...doc.data()
       }));
+      
 
-      const items = [...products, ...activities]; // combine the products and activities
+      const items = [...products, ...activities]; 
 
       const minLat = 56.90;
       const maxLat = 56.99;
@@ -74,11 +75,11 @@ const FullScreenMap: React.FC = () => {
           });
         } else { // item.type === 'activity'
           if (item.coordinates) {
-            return [{ position: item.coordinates as [number, number], item: item }]; // use coordinates from database for activities
+            return [{ position: item.coordinates as [number, number], item: item }]; 
           } else {
             const lat = Math.random() * (maxLat - minLat) + minLat;
             const lng = Math.random() * (maxLng - minLng) + minLng;
-            return [{ position: [lat, lng] as [number, number], item: item }]; // fallback to random coordinates if coordinates are not available in database
+            return [{ position: [lat, lng] as [number, number], item: item }]; 
           }
         }
       });
@@ -95,18 +96,18 @@ const FullScreenMap: React.FC = () => {
       <GlobalStyles></GlobalStyles>
       <MapContainer center={userLocation || [56.9496, 24.1052]} zoom={13} style={{ height: "100%", width: "100%" }}>
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          attribution='Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ'
         />
         {markers.map((marker, index) => {
-          let iconUrl = marker.item.type === 'product' ? marker.item.images[0] : marker.item.iconUrl;// use 'images' for products and 'url' for activities
+          let iconUrl = marker.item.type === 'product' ? marker.item.images[0] : marker.item.iconUrl;
           iconUrl = iconUrl || 'https://static-00.iconduck.com/assets.00/map-marker-icon-342x512-gd1hf1rz.png';
-          const iconSize: L.PointTuple = marker.item.type === 'product' ? [40, 30] : [30, 40];// use different sizes for products and activities
+          const iconSize: L.PointTuple = marker.item.type === 'product' ? [40, 30] : [30, 40];
           const icon = L.icon({
-            iconUrl: iconUrl, // use the first image of the item
-            iconSize: iconSize, // adjust the size as necessary
-            iconAnchor: [12, 41], // adjust the anchor as necessary
-            popupAnchor: [0, -41] // adjust the anchor as necessary
+            iconUrl: iconUrl,
+            iconSize: iconSize, 
+            iconAnchor: [12, 41], 
+            popupAnchor: [0, -41] 
           });
 
           return (

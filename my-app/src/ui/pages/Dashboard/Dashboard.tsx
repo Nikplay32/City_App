@@ -7,6 +7,7 @@ import GlobalStyles from '../../atoms/GlobalStyles';
 import { User } from '../../atoms/User';
 import { Product } from '../../atoms/Product';
 import { Reservation } from '../../atoms/Reservation';
+import { Restaurant } from '../../atoms/Restaurant';
 import { Activity } from '../../atoms/Activities';
 import GenericTable from '../../organisms/GenericTable';
 import GenericPopup from '../../organisms/GenericPopup';
@@ -16,6 +17,7 @@ import exportTableToPDF from '../../utils/Test';
 import styled from "styled-components";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Salon } from '../../atoms/Salons';
 
 const Dashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -33,6 +35,8 @@ const Dashboard: React.FC = () => {
   const [reservationCount, setReservationCount] = useState(0);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [subscribersOnly, setSubscribersOnly] = useState(false);
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [salons, setSalons] = useState<Salon[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -69,7 +73,21 @@ const Dashboard: React.FC = () => {
       const data = activitiesSnapshot.docs.map(doc => tableConfigs.activities.createInstance(doc.id, doc.data()) as Activity);
       setActivities(data);
     };
-  
+    const fetchRestaurants = async () => {
+      const restaurantsRef = collection(db, 'restaurants');
+      const restaurantsSnapshot = await getDocs(restaurantsRef);
+      const data = restaurantsSnapshot.docs.map(doc => tableConfigs.restaurants.createInstance(doc.id, doc.data()) as Restaurant);
+      setRestaurants(data);
+    };
+    const fetchSalons = async () => {
+      const salonsRef = collection(db, 'salons'); // Replace 'salons' with the actual collection name
+      const salonsSnapshot = await getDocs(salonsRef);
+      const data = salonsSnapshot.docs.map(doc => tableConfigs.salons.createInstance(doc.id, doc.data()) as Salon); // Replace 'salons' with the actual config name
+      setSalons(data); // Replace with the actual state setter function
+    };
+
+    fetchSalons();
+    fetchRestaurants();
     fetchActivities();
     fetchReservations();
     fetchUsers();
@@ -147,24 +165,65 @@ const Dashboard: React.FC = () => {
         }),
         actionTitle: 'Change data',
       });
+    } else if (activeTable === 'restaurants') {
+      setTableData(restaurants);
+      setTableConfig({
+        columns: ['name'].map(field => ({ // Adjust the fields as per your Restaurant type
+          title: field,
+          render: (data: DataType) => (data as Restaurant)[field as keyof Restaurant],
+        })),
+        onAction: setSelectedData,
+        onDelete: (data: DataType) => handleDelete(activeTable, data, (data: DataType) => {
+          if (data instanceof Restaurant) {
+            setRestaurants(restaurants.filter(restaurant => restaurant.id !== data.id));
+          }
+        }),
+        actionTitle: 'Change data',
+      });
+    } else if (activeTable === 'salons') {
+      setTableData(salons); // Replace with the actual state variable for salons
+      setTableConfig({
+        columns: ['name'].map(field => ({ // Replace 'name' and 'address' with the actual fields of your Salon type
+          title: field,
+          render: (data: DataType) => (data as Salon)[field as keyof Salon], // Replace Salon with the actual Salon type
+        })),
+        onAction: setSelectedData,
+        onDelete: (data: DataType) => handleDelete(activeTable, data, (data: DataType) => {
+          if (data instanceof Salon) { // Replace Salon with the actual Salon type
+            setSalons(salons.filter(salon => salon.id !== data.id)); // Replace with the actual state setter function and variable for salons
+          }
+        }),
+        actionTitle: 'Change data',
+      });
     }
-  }, [activeTable, users, products, activities]);
+  }, [activeTable, users, products, activities, salons]);
 
-  const handleDeleteRow = (data: DataType) => {
-    handleDelete(activeTable, data, (data: DataType) => {
+  const handleDeleteRow = async (data: DataType) => {
+    await handleDelete(activeTable, data, async (data: DataType) => {
+      let updatedData;
       if (data instanceof User) {
-        setUsers(users.filter(user => user.id !== data.id));
+        updatedData = users.filter(user => user.id !== data.id);
+        setUsers(updatedData);
       } else if (data instanceof Product) {
-        setProducts(products.filter(product => product.id !== data.id));
+        updatedData = products.filter(product => product.id !== data.id);
+        setProducts(updatedData);
       } else if (data instanceof Activity) {
-        setActivities(activities.filter(activity => activity.id !== data.id));
+        updatedData = activities.filter(activity => activity.id !== data.id);
+        setActivities(updatedData);
+      } else if (data instanceof Restaurant) {
+        updatedData = restaurants.filter(restaurant => restaurant.id !== data.id);
+        setRestaurants(updatedData);
+      } else if (data instanceof Salon) { // Replace Salon with the actual Salon type
+        updatedData = salons.filter(salon => salon.id !== data.id); // Replace with the actual state variable for salons
+        setSalons(updatedData); // Replace with the actual state setter function for salons
       }
+      // Use updatedData for your table data
     });
   };
 
   useEffect(() => {
     if (searchTerm) {
-      const allData = [...users, ...products, ...reservations, ...activities];
+      const allData = [...users, ...products, ...reservations, ...activities, ...restaurants, ...salons]; // Add salons to the allData array
       const results = allData.filter(item => 
         Object.values(item).some(value => 
           value !== undefined && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -183,12 +242,16 @@ const Dashboard: React.FC = () => {
           setActiveTable('reservations');
         } else if (firstResult instanceof Activity) {
           setActiveTable('activities');
+        } else if (firstResult instanceof Restaurant) {
+          setActiveTable('restaurants');
+        } else if (firstResult instanceof Salon) {
+          setActiveTable('salons'); 
         }
       }
     } else {
       setSearchResults([]);
     }
-  }, [searchTerm, users, products, reservations, activities]);
+  }, [searchTerm, users, products, reservations, activities, restaurants, salons]);
 
   return (
     <>
@@ -225,6 +288,12 @@ const Dashboard: React.FC = () => {
         <SidebarLink onClick={() => setActiveTable('activities')}>
           Activities
         </SidebarLink>
+        <SidebarLink onClick={() => setActiveTable('restaurants')}>
+          Restaurants
+        </SidebarLink>
+        <SidebarLink onClick={() => setActiveTable('salons')}>
+          Salons
+        </SidebarLink>
         <SidebarDivider />
         <StyledButton onClick={() => {
           const tables = [
@@ -256,6 +325,8 @@ const Dashboard: React.FC = () => {
                 activeTable === 'products' ? new Product('', '', '', [], 0, '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
                 activeTable === 'activities' ? new Activity('', '', ['0', '0'], '', '', [], [], '', 0, '', '') : // Add this line
+                activeTable === 'restaurants' ? new Restaurant('', '', '', '', []) : // Add this line
+                activeTable === 'salons' ? new Salon('', '', '', '', [], []) : 
                 null
               );
             }}>Create {activeTable.slice(0, -1)}</StyledButton>   
@@ -269,6 +340,8 @@ const Dashboard: React.FC = () => {
                 activeTable === 'products' ? new Product('', '', '', [], 0, '', [], '', '') :
                 activeTable === 'reservations' ? new Reservation('', '', '', new Date(), '', '') :
                 activeTable === 'activities' ? new Activity('', '', ['0', '0'], '', '', [], [], '', 0, '', '') :
+                activeTable === 'restaurants' ? new Restaurant('', '', '', '', []) :
+                activeTable === 'salons' ? new Salon('', '', '', '', [], []) : 
                 new User('', '','','', false)) : 
                 selectedData}
               onEdit={isCreating ? 
@@ -281,6 +354,10 @@ const Dashboard: React.FC = () => {
                     setReservations([...reservations, newData as Reservation]);
                   } else if (newData instanceof Activity) {
                     setActivities([...activities, newData as Activity]);
+                  } else if (newData instanceof Restaurant) {
+                    setRestaurants([...restaurants, newData as Restaurant]);
+                  } else if (newData instanceof Salon) {
+                    setSalons([...salons, newData as Salon]);
                   }
                   setIsCreating(false);
                 }) :
@@ -293,6 +370,10 @@ const Dashboard: React.FC = () => {
                     setReservations(reservations.map(reservation => reservation.id === newData.id ? newData : reservation));
                   } else if (newData instanceof Activity) {
                     setActivities(activities.map(activity => activity.id === newData.id ? newData : activity));
+                  } else if (newData instanceof Restaurant) { 
+                    setRestaurants(restaurants.map(restaurant => restaurant.id === newData.id ? newData : restaurant));
+                  } else if (newData instanceof Salon) { // Replace Salon with the actual Salon type
+                    setSalons(salons.map(salon => salon.id === newData.id ? newData : salon)); // Replace setSalons and salons with the actual setSalons function and salons state variable
                   }
                   setSelectedData(null);
                 })

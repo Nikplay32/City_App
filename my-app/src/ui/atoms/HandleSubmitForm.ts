@@ -1,5 +1,5 @@
 import { collection, addDoc } from "firebase/firestore";
-import { auth, db } from '../../firebase'; // import your firebase instance
+import { auth, db } from '../../firebase';
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { toast } from 'react-toastify';
 import { FormEvent } from 'react';
@@ -27,7 +27,7 @@ export const handleSubmit = async (event: FormEvent, formValues: FormValues, col
       }
   
       // Extracting year from expiry date
-      if (!expiryDate || !expiryDate.match(/^(0[1-9]|1[0-2])\/?(24)$/)) { // Ensuring year 2024
+      if (!expiryDate || !expiryDate.match(/^(0[1-9]|1[0-2])\/?(24)$/)) {
         toast.error('Invalid expiry date. Please enter in the format MM/YY');
         return;
       }
@@ -51,9 +51,7 @@ export const handleSubmit = async (event: FormEvent, formValues: FormValues, col
         return;
       }
     
-    // Check if the user is signed in and the email is not null
     if (auth.currentUser !== null && auth.currentUser.email !== null) {
-        // Validate the user's password
         const credential = EmailAuthProvider.credential(
             auth.currentUser.email,
             formValues.password

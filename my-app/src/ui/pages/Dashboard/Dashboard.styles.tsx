@@ -8,20 +8,20 @@ export const StyledModal = styled(Modal)`
   left: 50%;
   transform: translate(-50%, -50%);
   background: #000000;
-  padding: 20px; // Reduced padding for smaller screens
+  padding: 20px; 
   color: white;
   border-radius: 4px;
   outline: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Adjust as needed
-  gap: 20px; // Adjust as needed
-  width: 90%; // Added width to prevent overflow
-  max-height: 90vh; // 90% of the viewport height
-  overflow-y: auto; // Enable vertical scrolling if the content is too tall
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px; 
+  width: 90%;
+  max-height: 90vh; 
+  overflow-y: auto; 
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; // On small screens, make all items take up the full width
-    width: 100%; // Make the modal take the full width on small screens
+    grid-template-columns: 1fr; 
+    width: 100%; 
     max-height: 80vh;
   }
 `;
@@ -32,7 +32,7 @@ export const StyledInput = styled.input`
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
-  width: 100%; // Ensure the input doesn't overflow its container
+  width: 100%; 
 `;
 
 export const StyledForm = styled.form`
@@ -59,7 +59,7 @@ export const StyledSelect = styled.select`
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
-  appearance: none; /* Remove default dropdown arrow */
+  appearance: none;
 `;
 
 export const Table = styled.table`
@@ -68,9 +68,9 @@ export const Table = styled.table`
   margin-top: 20px;
 
   @media (max-width: 768px) {
-    overflow-x: auto; // Add horizontal scrolling on small screens
+    overflow-x: auto; 
     width: 50%;
-    display: block; // Make the table a block element to allow for scrolling on small screens
+    display: block; 
   }
 `;
 
@@ -163,70 +163,68 @@ export const StyledButton = styled.a`
     transition-delay: 0s;
   }
 
-  /* Add the rest of the styles for the span elements here */
 `;
 
 export const TableCell = styled.td`
-  border: 1px solid #dddddd; /* Add border to create grey lines */
+  border: 1px solid #dddddd; 
   padding: 8px;
-  word-break: break-word; // Add this line
+  word-break: break-word; 
 `;
 
 export const TableHeader = styled.th`
-  border: 1px solid #dddddd; /* Add border to create grey lines */
+  border: 1px solid #dddddd; 
   padding: 8px;
   text-align: left;
   background-color: #ffffff;
 `;
 
 export const TableRow = styled.tr`
-  background-color: #ffffff; /* Set the background color explicitly */
+  background-color: #ffffff; 
 `;
 
 export const Button = styled.button`
   padding: 8px 16px;
-  background-color: #007bff; /* Change this to your desired button color */
-  color: #ffffff; /* Change this to your desired text color */
+  background-color: #007bff; 
+  color: #ffffff; 
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3; /* Change this to your desired button hover color */
+    background-color: #0056b3; 
   }
 `;
 
 export const ButtonSave = styled.button`
   padding: 8px 16px;
-  background-color: #007bff; /* Change this to your desired button color */
-  color: #ffffff; /* Change this to your desired text color */
+  background-color: #007bff; 
+  color: #ffffff; 
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3; /* Change this to your desired button hover color */
+    background-color: #0056b3; 
   }
 `;
 
 export const ButtonCancel = styled.button`
   padding: 8px 16px;
-  background-color: #007bff; /* Change this to your desired button color */
-  color: #ffffff; /* Change this to your desired text color */
+  background-color: #007bff; 
+  color: #ffffff; 
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3; /* Change this to your desired button hover color */
+    background-color: #0056b3; 
   }
 `;
 
 export const Popup = styled.div`
-  /* Add your popup styles here */
 `;
 
 export const DashboardContainer = styled.div`
@@ -237,9 +235,9 @@ export const DashboardContainer = styled.div`
 export const SideNavbar = styled.nav`
   display: flex;
   flex-direction: column;
-  width: 200px; /* adjust as needed */
+  width: 200px; 
   @media (max-width: 768px) {
-    width: 100%; // Take up the full width on small screens
+    width: 100%; 
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -252,12 +250,11 @@ export const MainContent = styled.div`
   text-align: center;
   background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
   @media (max-width: 768px) {
-    padding: 10px; // Reduce padding on small screens
+    padding: 10px; 
   }
 `;
 
 export const NavItem = styled.div`
-  /* Add your nav item styles here */
 `;
 
 export const Logo = styled.a`
@@ -277,7 +274,7 @@ export const SearchBar = styled.input.attrs({ type: 'search' })`
     width: 100%;
     height: 100%;
     padding: 10px;
-    padding-right: 40px; /* Make room for the search icon */
+    padding-right: 40px;
     border: none;
     border-radius: 20px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);

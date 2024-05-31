@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import { db } from '../../../firebase';
@@ -45,10 +45,19 @@ const RestaurantOverview: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const reservationRef = useRef<HTMLDivElement>(null);
 
   const handleReservationClick = () => {
     setIsReservationOpen(true);
   };
+
+  useEffect(() => {
+	if (isReservationOpen) {
+	  setTimeout(() => {
+		reservationRef.current?.scrollIntoView({ behavior: 'smooth' });
+	  }, 0);
+	}
+  }, [isReservationOpen]);
 	useEffect(() => {
 		const fetchData = async () => {
 			if (id) {
@@ -106,7 +115,9 @@ const RestaurantOverview: React.FC = () => {
 					</RestaurantDescription>
 
 					<ReservationButton onClick={handleReservationClick}>Make a Reservation</ReservationButton>
-        {isReservationOpen && id && <RestaurantReservation restaurantId={id} />}
+					<div ref={reservationRef}>
+					{isReservationOpen && id && <RestaurantReservation restaurantId={id} />}
+					</div>
 				</ContentSection>
 			</Container>
 		</>

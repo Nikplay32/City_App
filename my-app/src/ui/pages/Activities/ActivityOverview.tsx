@@ -66,7 +66,7 @@ const ActivityOverview: React.FC = () => {
         if (activityData.exists()) {
           setActivity({
             ...activityData.data(),
-            images: activityData.data().images || [], // Use an empty array as a fallback
+            images: activityData.data().images || [], 
           } as Activity);
         } else {
           console.log('No such document!');
@@ -108,10 +108,8 @@ const ActivityOverview: React.FC = () => {
   }, [id]);
 
   const handleAddToCart = async (quantity: number, totalPrice: number) => {
-    // Check if the user is signed in
     setLoading(true);
     if (auth.currentUser) {
-      // User is signed in, proceed with the purchase
       if (activity) {
         const q = query(
           collection(db, 'activity_tickets'),

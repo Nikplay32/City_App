@@ -16,8 +16,6 @@ import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import useAuth from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { getDocs } from "firebase/firestore";
-Modal.setAppElement('#root');
-
 import {
   Container,
   FormContainer,
@@ -35,6 +33,7 @@ import {
   CloseButton,
   Overlay
 } from './Autorization.styles';
+Modal.setAppElement('#root');
 
 const Authentication = () => {
   const { currentUser, loading } = useAuth();
@@ -79,10 +78,9 @@ const Authentication = () => {
           await sendEmailVerification(user);
           toast.success("Verification email sent. Please check your inbox.");
   
-          // Check if there are any users in the database
           const usersCollection = collection(db, "users");
           const userSnapshot = await getDocs(usersCollection);
-          const isAdmin = userSnapshot.empty; // This will be true if there are no users
+          const isAdmin = userSnapshot.empty; 
   
           await setDoc(doc(usersCollection, user.uid), { uid: user.uid, username: username, email: user.email, isVerified: user.emailVerified, isAdmin });
           setEmail(email);

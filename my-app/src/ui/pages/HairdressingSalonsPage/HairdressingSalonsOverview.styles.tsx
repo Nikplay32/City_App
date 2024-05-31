@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   max-width: 1200px;
@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 interface HeroSectionProps {
-	backgroundImage: string;
+  backgroundImage: string;
 }
 
 export const HeroSection = styled.div<HeroSectionProps>`
@@ -27,7 +27,7 @@ export const HeroSection = styled.div<HeroSectionProps>`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.566); 
+    background: rgba(0, 0, 0, 0.8); 
     z-index: 1;
   }
 `;
@@ -37,6 +37,7 @@ export const HeroTitle = styled.h1`
   margin: 0;
   z-index: 2;
   position: relative;
+  color: #ff6b6b;
 `;
 
 export const HeroSubtitle = styled.p`
@@ -44,6 +45,7 @@ export const HeroSubtitle = styled.p`
   margin: 20px 0 0;
   z-index: 2;
   position: relative;
+  color: #ff6b6b;
 `;
 
 export const HeroOverlay = styled.div`
@@ -66,28 +68,53 @@ export const ContentSection = styled.div`
   z-index: 2;
 `;
 
-export const RestaurantImage = styled.img`
+export const SalonImage = styled.img`
   width: 100%;
   border-radius: 15px;
   margin-bottom: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 `;
 
-export const RestaurantName = styled.h2`
+export const SalonName = styled.h2`
   font-size: 2.5rem;
   color: #333;
   margin-bottom: 20px;
+  color: #ff6b6b; 
 `;
 
-export const RestaurantDescription = styled.p`
+export const SalonDescription = styled.p`
   font-size: 1.2rem;
   color: #666;
   line-height: 1.6;
+  color: #333;
+`;
+
+export const PriceTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+export const PriceRow = styled.tr`
+  &:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+`;
+
+export const PriceHeader = styled.th`
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+`;
+
+export const PriceData = styled.td`
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
 `;
 
 export const SectionTitle = styled.h3`
   font-size: 2rem;
-  color: #ff4a4a;
+  color: #ff6b6b; 
   margin-top: 40px;
   margin-bottom: 20px;
 `;
@@ -119,7 +146,7 @@ export const ReservationButton = styled.button`
   display: inline-block;
   margin-top: 30px;
   padding: 12px 25px;
-  background: linear-gradient(135deg, #ff6b6b, #ff4a4a);
+  background: linear-gradient(135deg, #ff6b6b, #ff4a4a); 
   color: #fff;
   border: none;
   border-radius: 50px;

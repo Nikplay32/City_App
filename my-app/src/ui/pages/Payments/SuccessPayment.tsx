@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { FaCar, FaGift } from 'react-icons/fa';
-import { Link } from 'react-router-dom'; // assuming you're using react-router for navigation
+import { Link } from 'react-router-dom'; 
 import GlobalStyles from '../../atoms/GlobalStyles';
 
 const Container = styled.div`

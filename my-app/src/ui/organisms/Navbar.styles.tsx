@@ -21,7 +21,7 @@ export const Logo = styled.a`
   font-weight: bold;
 
   @media (max-width: 768px) {
-    display: block; // This will hide the logo in the mobile view
+    display: block;
   }
 `;
 
@@ -57,7 +57,7 @@ export const Menu = styled.ul<MenuProps>`
 export const MenuItem = styled.li`
   margin-right: 1.5rem;
   position: relative;
-  transition: color 0.3s; /* Add transition effect for hover */
+  transition: color 0.3s; 
 
   @media (max-width: 1300px) {
     margin-right: 0;
@@ -91,7 +91,7 @@ export const MenuItem = styled.li`
   }
 
   &:hover {
-    color: #0099ff; /* Change color on hover */
+    color: #0099ff; 
   }
 `;
 

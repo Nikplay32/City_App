@@ -89,15 +89,15 @@ export const downloadActivityPDF = async (selectedActivity: any, transactionId: 
         const barcodePng = canvas.toDataURL('image/png');
 
         // Add the barcode to the PDF
-        pdf.addImage(barcodePng, 'PNG', x, y + imgHeight + 10, imgWidth, imgHeight / 2); // Adjust position and size as needed
+        pdf.addImage(barcodePng, 'PNG', x, y + imgHeight + 10, imgWidth, imgHeight / 2); 
         const pageNumber = i + 1;
         const pageNumberText = `Page ${pageNumber} of ${quantity}`;
-        const pageNumberY = pdf.internal.pageSize.getHeight() - 4; // Adjust as needed
+        const pageNumberY = pdf.internal.pageSize.getHeight() - 4; 
         pdf.setFontSize(10);
         pdf.text(pageNumberText, pdf.internal.pageSize.getWidth() / 2, pageNumberY, { align: 'center' });
-        // Add the random number to the PDF
+
         pdf.setFontSize(18);
-        pdf.setDrawColor(0, 255, 0); // Set color to green
+        pdf.setDrawColor(0, 255, 0);
         pdf.rect(x - 5, y - 5, imgWidth + 10, imgHeight + 10);
         pdf.addImage(qrCodeDataURL, 'PNG', x, y, imgWidth, imgHeight);
     }

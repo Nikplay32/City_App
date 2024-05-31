@@ -35,12 +35,12 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ restaurantId }) => {
 	}
 
 	useEffect(() => {
-		const startDate = new Date(); // start date
-		const endDate = new Date(); // end date
-		endDate.setMonth(endDate.getMonth() + 3); // for example, block dates for the next 3 months
+		const startDate = new Date(); 
+		const endDate = new Date(); 
+		endDate.setMonth(endDate.getMonth() + 3); 
 
 		const dates: Date[] = [];
-		for (let i = 0; i < 70; i++) { // for example, block 10 random dates
+		for (let i = 0; i < 70; i++) { 
 			dates.push(getRandomDate(startDate, endDate));
 		}
 
@@ -53,7 +53,7 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ restaurantId }) => {
 
 	const handleSubmit = async () => {
 		try {
-			const userId = auth.currentUser?.uid; // Get the current user ID
+			const userId = auth.currentUser?.uid; 
 			if (!userId) {
 				throw new Error('No user is currently signed in');
 			}
@@ -78,17 +78,15 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ restaurantId }) => {
 				return;
 			}
 
-			// Add the reservation data to the 'reservations' collection in Firestore
 			await addDoc(collection(db, 'restaurant_reservations'), {
 				name,
 				contactNumber,
 				comment,
 				selectedDate,
-				userId, // Add the user ID to the reservation data
-				restaurantId, // Add the restaurant ID to the reservation data
+				userId,
+				restaurantId, 
 			});
 
-			// Reset form fields after successful submission
 			setName('');
 			setContactNumber('');
 			setComment('');
@@ -130,7 +128,7 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ restaurantId }) => {
 						onChange={handleDateChange}
 						showTimeSelect
 						dateFormat="MMMM d, yyyy h:mm aa"
-						inline // Display the calendar inline by default
+						inline 
 						excludeDates={blockedDates}
 					/>
 				</FormGroup>

@@ -154,7 +154,7 @@ const FormComponent: React.FC<FormComponentProps> = ({ title, location, date, pr
 
 		handleAddToCart();
 		onAddToCart(quantity, totalPrice);
-		
+
 	};
 
 	const handleIncrement = () => {

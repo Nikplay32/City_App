@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import Navbar from '../../organisms/Navbar';
 import GlobalStyles from '../../atoms/GlobalStyles';
+import { responses } from '../../data/Agents'
 import {
 	Container,
 	AgentListContainer,
@@ -48,80 +49,14 @@ const agents = [
 		avatar: 'https://www.sports-king.com/images/nicknames/olivier-giroud.jpg',
 	},
 	{
-		id: 3,
-		name: 'Tech-Savvy Tyler',
-		description: 'Enthusiastic about technology and gadgets.',
-		persona: 'Tech-savvy',
-		avatar: 'https://www.sports-king.com/images/nicknames/cristiano-ronaldo-02.jpg',
-	},
+		"id": 3,
+		"name": "Culture Connoisseur Carl",
+		"description": "Passionate about exploring cultural landmarks and educational experiences.",
+		"persona": "Culture-focused",
+		"avatar": "https://www.sports-king.com/images/nicknames/cristiano-ronaldo-02.jpg"
+	}
 ];
 
-const responses = {
-	"agent1": {
-		"hi": "Hello! How can I assist you with your city exploration plans today?",
-		"hi!": "Hello! How can I assist you with your city exploration plans today?",
-		"hi.": "Hello! How can I assist you with your city exploration plans today?",
-		"hi?": "Hello! How can I assist you with your city exploration plans today?",
-		"hello": "Hello! How can I assist you with your city exploration plans today?",
-		"hello!": "Hello! How can I assist you with your city exploration plans today?",
-		"hello.": "Hello! How can I assist you with your city exploration plans today?",
-		"hello?": "Hello! How can I assist you with your city exploration plans today?",
-		"hey": "Hello! How can I assist you with your city exploration plans today?",
-		"hey!": "Hello! How can I assist you with your city exploration plans today?",
-		"hey.": "Hello! How can I assist you with your city exploration plans today?",
-		"hey?": "Hello! How can I assist you with your city exploration plans today?",
-		"howdy": "Howdy! How can I assist you with your city exploration plans today?",
-		"howdy!": "Howdy! How can I assist you with your city exploration plans today?",
-		"howdy.": "Howdy! How can I assist you with your city exploration plans today?",
-		"howdy?": "Howdy! How can I assist you with your city exploration plans today?",
-		"hi there": "Hello! How can I assist you with your city exploration plans today?",
-		"hi there!": "Hello! How can I assist you with your city exploration plans today?",
-		"hi there.": "Hello! How can I assist you with your city exploration plans today?",
-		"hi there?": "Hello! How can I assist you with your city exploration plans today?",
-		"hello there": "Hello! How can I assist you with your city exploration plans today?",
-		"hello there!": "Hello! How can I assist you with your city exploration plans today?",
-		"hello there.": "Hello! How can I assist you with your city exploration plans today?",
-		"hello there?": "Hello! How can I assist you with your city exploration plans today?",
-		"hey there": "Hello! How can I assist you with your city exploration plans today?",
-		"hey there!": "Hello! How can I assist you with your city exploration plans today?",
-		"hey there.": "Hello! How can I assist you with your city exploration plans today?",
-		"hey there?": "Hello! How can I assist you with your city exploration plans today?",
-		"hiya": "Hiya! How can I assist you with your city exploration plans today?",
-		"hiya!": "Hiya! How can I assist you with your city exploration plans today?",
-		"hiya.": "Hiya! How can I assist you with your city exploration plans today?",
-		"hiya?": "Hiya! How can I assist you with your city exploration plans today?",
-		"how's it going?": "I'm here and ready to help you save money on your city adventures!",
-		"how's it going?!": "I'm here and ready to help you save money on your city adventures!",
-		"how's it going?.": "I'm here and ready to help you save money on your city adventures!",
-		"how's it going??": "I'm here and ready to help you save money on your city adventures!",
-		"what's up?": "I'm here and ready to help you save money on your city adventures!",
-		"what's up?!": "I'm here and ready to help you save money on your city adventures!",
-		"what's up?.": "I'm here and ready to help you save money on your city adventures!",
-		"what's up??": "I'm here and ready to help you save money on your city adventures!",
-		"thank you": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you!": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you.": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you?": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks!": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks.": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks?": "You're welcome! If you need any further assistance, feel free to ask!",
-		"great, thanks": "You're welcome! If you need any further assistance, feel free to ask!",
-		"great, thanks!": "You're welcome! If you need any further assistance, feel free to ask!",
-		"great, thanks.": "You're welcome! If you need any further assistance, feel free to ask!",
-		"great, thanks?": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you so much": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you so much!": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you so much.": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thank you so much?": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks a lot": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks a lot!": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks a lot.": "You're welcome! If you need any further assistance, feel free to ask!",
-		"thanks a lot?": "You're welcome! If you need any further assistance, feel free to ask!"
-	  }	
-};
-
-// Mock chat data
 const chatData = {
 	agent1: [
 		{ sender: 'agent', message: 'Welcome! How can I help you with your finances today?' },
@@ -151,10 +86,10 @@ const ChatPage = () => {
 			{ sender: 'agent', message: 'Welcome! How can I help you with your finances today?' },
 		],
 		agent2: [
-			{ sender: 'agent', message: 'Hello! What movies or TV shows are you interested in?' },
+			{ sender: 'agent', message: 'Hello! What type of entertainment are you interested in?' },
 		],
 		agent3: [
-			{ sender: 'agent', message: 'Hi there! Do you have any questions about the latest technology trends?' },
+			{ sender: 'agent', message: 'Hi there! Do you have any questions about cultural landmarks or educational experiences?' },
 		],
 
 	});
@@ -163,7 +98,7 @@ const ChatPage = () => {
 	useEffect(() => {
 		if (selectedAgent) {
 			setMessages(chatData[`agent${selectedAgent}` as keyof typeof chatData]);
-			setAgentSelected(true); // Set agentSelected to true when an agent is selected
+			setAgentSelected(true); 
 		}
 	}, [selectedAgent, chatData]);
 
@@ -221,7 +156,7 @@ const ChatPage = () => {
 						<AgentCard
 							key={agent.id}
 							onClick={() => handleAgentSelect(agent.id.toString())}
-							isSelected={Number(selectedAgent) === agent.id} // Add this line
+							isSelected={Number(selectedAgent) === agent.id}
 						>
 							<AgentAvatar src={agent.avatar} alt={agent.name} />
 							<AgentName>{agent.name}</AgentName>

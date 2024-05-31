@@ -48,10 +48,9 @@ const MainPage: React.FC = () => {
 useEffect(() => {
   window.addEventListener('scroll', function() {
     var car = document.getElementById('car');
-    if (car) {  // Check if the car element exists
+    if (car) { 
       var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Check if we're scrolling down or up
       if (scrollPosition > lastScrollPosition) {
         // Scrolling down
         car.style.transform = 'translateY(' + (scrollPosition * 0.2) + 'px)';
@@ -60,13 +59,11 @@ useEffect(() => {
         car.style.transform = 'translateY(' + (scrollPosition * 0.2) + 'px) rotate(180deg)';
       }
 
-      // Check if the scroll position is at the end of the page
       if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight) {
-        // If it is, rotate the car 180 degrees
+
         car.style.transform = 'translateY(' + (scrollPosition * 0.2) + 'px) rotate(180deg)';
       }
 
-      // Update the last scroll position
       lastScrollPosition = scrollPosition;
     }
   });

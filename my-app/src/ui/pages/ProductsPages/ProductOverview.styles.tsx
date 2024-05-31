@@ -28,7 +28,7 @@ export const ImageContainer = styled.div`
   align-items: center;
 
   @media (max-width: 768px) {
-    max-height: 300px; // Decrease the maximum height on smaller screens
+    max-height: 300px; 
   }
 `;
 
@@ -42,13 +42,13 @@ export const ImageTitle = styled.h2`
   border-radius: 5px;
 
   @media (max-width: 768px) {
-    font-size: 0.8rem; // Decrease the font size on smaller screens
+    font-size: 0.8rem;
   }
 `;
 
 export const Image = styled.img`
-  width: 75vw; // 100% of the viewport width
-  height: 100vh; // 100% of the viewport height
+  width: 75vw; 
+  height: 100vh; 
   object-fit: cover;
   transition: transform 0.3s ease;
 
@@ -57,8 +57,8 @@ export const Image = styled.img`
   }
 
   @media (max-width: 768px) {
-    width: 100vw; // Increase the width to 100% of the viewport width on smaller screens
-    height: 300px; // Decrease the height on smaller screens
+    width: 100vw;
+    height: 300px; 
   }
 `;
 

@@ -48,8 +48,8 @@ const PaymentForm: React.FC = () => {
 	const [cardHolderName, setCardHolderName] = useState('');
 	const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
 	const [isSubscribed, setIsSubscribed] = useState(false);
-	const [subscriptionType, setSubscriptionType] = useState('month'); // 'month' or 'year'
-	const subscriptionPrice = subscriptionType === 'month' ? 9.99 : 99.99; // Adjust price based on subscription type
+	const [subscriptionType, setSubscriptionType] = useState('month'); 
+	const subscriptionPrice = subscriptionType === 'month' ? 9.99 : 99.99; 
 
 
 	const handleCardNumberChange = (value: string) => {
@@ -63,11 +63,10 @@ const PaymentForm: React.FC = () => {
 	};
 
 	const handleExpiryDateChange = (value: string) => {
-		// Format expiry date to add "/" after every 2 characters and ensure year 24 is included
 		const formattedValue = value
-			.replace(/\D/g, '') // Remove non-digit characters
-			.replace(/^(\d{2})(\d{0,2})$/, '$1/$2') // Add "/" after every 2 characters
-			.slice(0, 5); // Limit to MM/YY format
+			.replace(/\D/g, '')
+			.replace(/^(\d{2})(\d{0,2})$/, '$1/$2')
+			.slice(0, 5); 
 		setExpiryDate(formattedValue);
 		setExpiry(formattedValue);
 	};
@@ -75,7 +74,6 @@ const PaymentForm: React.FC = () => {
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, async (user) => {
 			if (user) {
-				// Fetch the user's payment status
 				const paymentsQuery = query(collection(db, 'payments'), where('userId', '==', user.uid));
 				const paymentsSnapshot = await getDocs(paymentsQuery);
 				paymentsSnapshot.forEach((doc) => {
@@ -94,7 +92,6 @@ const PaymentForm: React.FC = () => {
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, async (user) => {
 			if (user) {
-				// Fetch the user's payment status
 				const paymentsQuery = query(collection(db, 'payments'), where('userId', '==', user.uid));
 				const paymentsSnapshot = await getDocs(paymentsQuery);
 				paymentsSnapshot.forEach((doc) => {
@@ -103,7 +100,6 @@ const PaymentForm: React.FC = () => {
 					}
 				});
 
-				// Fetch the user's subscription status
 				const userRef = doc(db, 'users', user.uid);
 				const userSnapshot = await getDoc(userRef);
 				if (userSnapshot.exists()) {
@@ -132,7 +128,7 @@ const PaymentForm: React.FC = () => {
 		}
 
 		// Extracting year from expiry date
-		if (!expiryDate || !expiryDate.match(/^(0[1-9]|1[0-2])\/?(24)$/)) { // Ensuring year 2024
+		if (!expiryDate || !expiryDate.match(/^(0[1-9]|1[0-2])\/?(24)$/)) { 
 			toast.error('Invalid expiry date. Please enter in the format MM/YY');
 			return;
 		}
@@ -156,22 +152,17 @@ const PaymentForm: React.FC = () => {
 			return;
 		}
 
-		// Check if the user is signed in and the email is not null
 		if (auth.currentUser !== null && auth.currentUser.email !== null) {
-			// Validate the user's password
 			const credential = EmailAuthProvider.credential(
 				auth.currentUser.email,
 				password
 			);
 			reauthenticateWithCredential(auth.currentUser, credential)
 				.then(async () => {
-					// Password is correct, proceed with payment
 
-					// Simulate a payment
 					const paymentStatus = Math.random() > 0.2 ? 'success' : 'failure';
 
 					if (auth.currentUser) {
-						// Store the payment status in your database
 						const paymentsRef = collection(db, 'payments');
 						await addDoc(paymentsRef, {
 							userId: auth.currentUser.uid,
@@ -179,10 +170,9 @@ const PaymentForm: React.FC = () => {
 							status: paymentStatus,
 							price: subscriptionPrice,
 							type: subscriptionType,
-							paymentMethod: paymentMethod.value, // Store the subscription price
+							paymentMethod: paymentMethod.value,
 						});
 
-						// Show a toast notification based on the payment status
 						if (paymentStatus === 'success') {
 							if (auth.currentUser) {
 								const userRef = doc(db, 'users', auth.currentUser.uid);
@@ -203,7 +193,6 @@ const PaymentForm: React.FC = () => {
 					}
 				})
 				.catch(() => {
-					// Password is incorrect, show a toast
 					toast.error('Incorrect password. Please try again.');
 				});
 		} else {
@@ -214,7 +203,7 @@ const PaymentForm: React.FC = () => {
 	return (
 		<>
 			{isSubscribed ? (
-				navigate('/profile') // Redirect the user to some page
+				navigate('/profile') 
 			) : (
 				<><Navbar></Navbar>
 					<Container>

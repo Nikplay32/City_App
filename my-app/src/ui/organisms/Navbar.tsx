@@ -19,6 +19,7 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -72,6 +73,9 @@ const Navbar: React.FC = () => {
         </MenuItem>
         <MenuItem>
           <NavLink href="/subs">Subscription</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="/salons">Salons</NavLink>
         </MenuItem>
         {currentUser.isAdmin && (
           <MenuItem>

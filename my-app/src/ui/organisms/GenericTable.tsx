@@ -4,8 +4,10 @@ import { User } from '../atoms/User';
 import { Product } from '../atoms/Product';
 import { Reservation } from '../atoms/Reservation';
 import { Activity } from '../atoms/Activities';
+import { Restaurant } from '../atoms/Restaurant';
+import { Salon } from '../atoms/Salons';
 
-type TableData = User | Product | Reservation | Activity;
+type TableData = User | Product | Reservation | Activity | Restaurant | Salon;
 
 type TableConfig = {
   columns: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IoMdCloseCircleOutline } from 'react-icons/io'; // Use close icon for failure
-import { Link } from 'react-router-dom'; // assuming you're using react-router for navigation
+import { IoMdCloseCircleOutline } from 'react-icons/io'; 
+import { Link } from 'react-router-dom'; 
 import GlobalStyles from '../../atoms/GlobalStyles';
 
 const Container = styled.div`
@@ -25,7 +25,7 @@ const Card = styled.div`
 
 const Title = styled.h1`
   font-size: 24px;
-  color: #f44336; /* Red color for failure */
+  color: #f44336; 
   margin-bottom: 16px;
 `;
 
@@ -41,7 +41,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled(Link)`
-  background-color: #f44336; /* Red color for failure */
+  background-color: #f44336; 
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -52,7 +52,7 @@ const Button = styled(Link)`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #d32f2f; /* Darker red on hover */
+    background-color: #d32f2f; 
   }
 `;
 
@@ -76,16 +76,16 @@ const PaymentFailure: React.FC = () => {
     <Container>
       <Card>
         <IconContainer>
-          <IoMdCloseCircleOutline /> {/* Close icon for failure */}
+          <IoMdCloseCircleOutline /> 
         </IconContainer>
-        <Title>Payment Failed</Title> {/* Message updated for failure */}
+        <Title>Payment Failed</Title> 
         <Message>
           We're sorry, but your payment was not successful. Please try again or contact support for assistance.
         </Message>
         <ButtonContainer>
         <Button to="/payment">Try Again</Button>
         <Button to="/profile">To profile</Button>
-        </ButtonContainer> {/* Link to payment page for retry */}
+        </ButtonContainer> 
       </Card>
     </Container>
     </>

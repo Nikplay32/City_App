@@ -129,8 +129,8 @@ export const GuideForm = styled.form`
 const GalleryControls = styled.div`
 	position: absolute;
 	top: 50%;
-	left: 2rem; // position from the left padding
-	right: 2rem; // position from the right padding
+	left: 2rem;
+	right: 2rem;
 	transform: translateY(-50%);
 	display: flex;
 	justify-content: space-between;

@@ -79,11 +79,11 @@ export const BackFace = styled(CardFace)<{ cardtype: string }>`
 `;
 
 export const MagneticStripe = styled.div`
-  width: calc(100% + 40px); // Add the left and right padding of the BackFace component
+  width: calc(100% + 40px); 
   height: 4rem;
   background-color: #000;
-  margin-left: -20px; // Counteract the left padding of the BackFace component
-  margin-right: -20px; // Counteract the right padding of the BackFace component
+  margin-left: -20px; 
+  margin-right: -20px; 
 `;
 
 export const MagneticStripeText = styled.div`
@@ -96,7 +96,7 @@ export const SignatureStrip = styled.div`
   width: 70%;
   height: 40px;
   right: 4rem;
-  background-color: #ddd;// Add some margin to separate the stripe from the magnetic strip
+  background-color: #ddd;
 `;
 
 export const CVVLabel = styled.span`
@@ -164,7 +164,7 @@ export const InputIcon = styled.span`
 `;
 
 export const Input = styled.input`
-  width: calc(100% - 50px); /* Adjust width considering padding and icon */
+  width: calc(100% - 50px); 
   padding: 0.75rem 1rem 0.75rem 3rem;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -261,7 +261,7 @@ export const NFCIcon = styled.img`
   height: 40px;
   position: absolute;
   top: 30%;
-  left: 100px; // Adjust this value to position the NFC icon correctly
+  left: 100px; 
 `;
 
 export const Reservation = styled.div`
@@ -354,7 +354,6 @@ export const Highlight = styled.span`
   color: #009e1d;
 `;
 
-// New styles for the product description and price
 export const Description = styled.p`
   font-size: 1rem;
   color: #666;
@@ -373,23 +372,23 @@ export const Price = styled.h3`
   padding: 0 20px;
 `;
 
-// Container for the image and product details
+
 export const ProductDetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-// Container for the image
+
 export const ImageContainer = styled.div`
   width: 100%;
   max-width: 500px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  overflow: hidden; /* Hide any overflowing content */
+  overflow: hidden; 
 `;
 
-// Container for the product details
+
 export const DetailsContainer = styled.div`
   width: 100%;
   padding: 20px;

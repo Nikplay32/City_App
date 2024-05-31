@@ -1,10 +1,12 @@
 import { User } from '../ui/atoms/User';
 import { Product } from '../ui/atoms/Product';
 import { Reservation } from '../ui/atoms/Reservation';
-import { Activity } from '../ui/atoms/Activities'; // Step 1: Import the Activity class
+import { Activity } from '../ui/atoms/Activities';
+import { Restaurant } from '../ui/atoms/Restaurant'; // Step 1: Import the Activity class
 import { ReactNode } from 'react';
+import { Salon } from '../ui/atoms/Salons';
 
-type DataType = User | Product | Reservation | Activity; // Step 2: Add Activity to the DataType type definition
+type DataType = User | Product | Reservation | Activity | Restaurant | Salon; // Add Restaurant to the DataType type definition
 
 type TableConfigs = {
   fields: string[];
@@ -43,6 +45,14 @@ const tableConfigs: Record<string, TableConfigs> = {
   activities: {
     fields: ['category', 'coordinates', 'date', 'description', 'highlights', 'images', 'location', 'price', 'title', 'url'],
     createInstance: (id: string, data: any) => new Activity(id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url),
+  },
+  restaurants: {
+    fields: ['name', 'description', 'image', 'highlights'],
+    createInstance: (id: string, data: any) => new Restaurant(id, data.name, data.description, data.image, data.highlights),
+  },
+  salons: {
+    fields: ['name', 'description', 'image', 'highlights', 'priceList'],
+    createInstance: (id: string, data: any) => new Salon(id, data.name, data.description, data.image, data.highlights, data.priceList),
   },
 };
 

@@ -207,7 +207,7 @@ const Profile = () => {
       <MainContainer>
         <ProfileContainer>
           <Title>Profile</Title>
-          <Image src="https://source.unsplash.com/random" alt="Random Unsplash" />
+          <Image src="https://s.ndtvimg.com/images/entities/300/sergio-ramos-90977.png" alt="Random Unsplash" />
           <Subtitle>Contact Information</Subtitle>
           {isUserLoading ? (
             <p>Loading user data...</p>
@@ -254,10 +254,9 @@ const Profile = () => {
         <ReservationsContainer>
           <Title>Your reservations</Title>
           {reservations.map((reservation, index) => {
-            // Calculate the time difference in minutes
-            let timeDifference = Infinity; // Initialize to Infinity
+            let timeDifference = Infinity;
             if (reservation.reservationTime) {
-              const reservationTime = reservation.reservationTime.toDate(); // Convert Firestore Timestamp to JavaScript Date
+              const reservationTime = reservation.reservationTime.toDate(); 
               const currentTime = new Date();
               timeDifference = (currentTime.getTime() - reservationTime.getTime()) / (1000 * 60);
             }

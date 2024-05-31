@@ -35,6 +35,20 @@ const routeData = [
 		],
 		times: generateTimes(initialTimes)
 	},
+	{
+		transportType: 'Trolleybus',
+		route: '4Centrālā stacija - Mežaparks',
+		streets: [
+		  "Centrālā stacija",
+		  "Kr. Barona iela",
+		  "Elizabetes iela",
+		  "Dzirnavu iela",
+		  "Brīvības iela",
+		  "Mūkusalas iela",
+		  "Mežaparks",
+		],
+		times: generateTimes(initialTimes)
+	  },
 	// Add more routes as necessary
 ];
 
@@ -124,7 +138,7 @@ const Transport = () => {
 			<TransportNavbar>
 				<TransportNavItem onClick={() => handleTransportChange('Bus')}>Bus</TransportNavItem>
 				<TransportNavItem onClick={() => handleTransportChange('Tram')}>Tram</TransportNavItem>
-				<TransportNavItem onClick={() => handleTransportChange('Minibus')}>Minibus</TransportNavItem>
+				<TransportNavItem onClick={() => handleTransportChange('Trolleybus')}>Trolleybus</TransportNavItem>
 			</TransportNavbar>
 			<Container>
 				<Sidebar>

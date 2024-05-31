@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Navbar from '../../organisms/Navbar';
 import GlobalStyles from '../../atoms/GlobalStyles';
 import Footer from '../../organisms/Footer';
-import { db, auth } from '../../../firebase'; // adjust the path as necessary
+import { db, auth } from '../../../firebase'; 
 import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
@@ -162,16 +162,12 @@ const Rental: React.FC = () => {
       const userPayment = paymentSnapshot.docs.find(doc => doc.data().userId === userId);
   
       if (product?.subscribers_only === 'true' && userPayment && userPayment.data().status === 'success') {
-        // Set the selectedProduct in the local storage
         localStorage.setItem('selectedProduct', productId);
   
-        // Navigate to the payment page
         navigate('/reservation');
       } else if (product?.subscribers_only === 'false') {
-        // Set the selectedProduct in the local storage
         localStorage.setItem('selectedProduct', productId);
   
-        // Navigate to the payment page
         navigate('/reservation');
       } else {
         toast.error('Only subscribed users can rent premium class products. Please subscribe to continue.');
@@ -212,29 +208,23 @@ const Rental: React.FC = () => {
       );
     }
     if (filter === 'SubscribersOnly') {
-      // Only show products for subscribers if the user is subscribed
       if (isSubscribed === 'true') {
         filteredProducts = filteredProducts.filter(product =>
           product.subscribers_only === 'true'
         );
       } else {
-        // If the user is not subscribed, do not filter by subscription status
-        // Include all products in this case
         filteredProducts = allProducts;
       }
     } else if (filter === 'Free') {
-      // Include products that are not exclusively for subscribers
       filteredProducts = filteredProducts.filter(product =>
         product.subscribers_only === 'false'
       );
     } else if (filter !== 'All') {
-      // Include products based on selected category filter
       filteredProducts = filteredProducts.filter(product =>
         product.category === filter
       );
     }
     
-    // Apply additional search term filtering if applicable
     if (term) {
       filteredProducts = filteredProducts.filter(product =>
         product.title?.toLowerCase().includes(term.toLowerCase()) ||

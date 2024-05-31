@@ -71,18 +71,16 @@ const PaymentForm: React.FC = () => {
   const [cardHolderName, setCardHolderName] = useState('');
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
   const productId = localStorage.getItem('selectedProduct');
-  const [duration, setDuration] = useState(1); // Default duration is 1
+  const [duration, setDuration] = useState(1);
   const durationOptions = Array.from({ length: 7 }, (_, i) => ({ value: i + 1, label: `${i + 1} day(s)` }));
   const durationOptionsHours = Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: `${i + 1} hour(s)` }));
 
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [pointsToUse, setPointsToUse] = useState(0);
 
-  // Fetch the user's loyalty points in this useEffect hook
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Fetch the user's reservation status
         const reservationsQuery = query(collection(db, 'reservations'), where('userId', '==', user.uid));
         const reservationsSnapshot = await getDocs(reservationsQuery);
         reservationsSnapshot.forEach((doc) => {
@@ -91,7 +89,6 @@ const PaymentForm: React.FC = () => {
           }
         });
 
-        // Fetch the user's loyalty points
         const userDoc = doc(db, 'users', user.uid);
         const userData = await getDoc(userDoc);
         if (userData.exists()) {
@@ -114,7 +111,7 @@ const PaymentForm: React.FC = () => {
         if (productData.exists()) {
           setProduct({
             ...productData.data(),
-            images: productData.data().images || [], // Use an empty array as a fallback
+            images: productData.data().images || [], 
           } as Product);
         } else {
           console.log('No such document!');
@@ -126,21 +123,17 @@ const PaymentForm: React.FC = () => {
   }, [productId]);
 
   const handleCardNumberChange = (value: string) => {
-    // Remove all non-digit characters
     const formattedValue = value.replace(/\D/g, '');
-    // Limit the number of digits to 16
     const newValue = formattedValue.slice(0, 16);
-    // Add a space after every 4 digits
     const formattedNumber = newValue.replace(/(.{4})/g, '$1 ');
     setCardNumber(formattedNumber);
   };
 
   const handleExpiryDateChange = (value: string) => {
-    // Format expiry date to add "/" after every 2 characters and ensure year 24 is included
     const formattedValue = value
-      .replace(/\D/g, '') // Remove non-digit characters
-      .replace(/^(\d{2})(\d{0,2})$/, '$1/$2') // Add "/" after every 2 characters
-      .slice(0, 5); // Limit to MM/YY format
+      .replace(/\D/g, '') 
+      .replace(/^(\d{2})(\d{0,2})$/, '$1/$2') 
+      .slice(0, 5); 
     setExpiryDate(formattedValue);
     setExpiry(formattedValue);
   };
@@ -182,20 +175,15 @@ const PaymentForm: React.FC = () => {
       const userData = await getDoc(userDoc);
 
       if (userData.exists() && userData.data().isSubbed) {
-        // Get the current loyalty points
         const loyaltyPoints = userData.data().loyalty_points || 0;
 
-        // Calculate the new loyalty points
         let newLoyaltyPoints;
         if (pointsToUse > 0) {
-          // If the user is using points, subtract the used points and add 10
           newLoyaltyPoints = loyaltyPoints - pointsToUse + 10;
         } else {
-          // If the user is not using points, just add 10
           newLoyaltyPoints = loyaltyPoints + 10;
         }
 
-        // Update the user's loyalty points
         await updateDoc(userDoc, { loyalty_points: newLoyaltyPoints });
       }
     } else {

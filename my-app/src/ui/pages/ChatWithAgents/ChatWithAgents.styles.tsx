@@ -209,7 +209,7 @@ export const HeroSection = styled.div`
 	@media (max-width: 768px) {
     background-size: 100% auto;
 		padding: 0px;
-		height: 100px; // Adjust this value as needed
+		height: 100px;
   }
 `;
 

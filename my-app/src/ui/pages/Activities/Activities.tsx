@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../../organisms/Navbar';
 import GlobalStyles from '../../atoms/GlobalStyles';
 import Footer from '../../organisms/Footer';
-import { db } from '../../../firebase'; // adjust the path as necessary
+import { db } from '../../../firebase'; 
 import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';

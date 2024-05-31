@@ -9,18 +9,18 @@ export const FullScreenMapContainer = styled.div`
 `;
 
 export const Button = styled.button`
-  display: block; /* Add this line */
-  margin: auto; /* Add this line */
+  display: block; 
+  margin: auto; 
   padding: 8px 16px;
-  background-color: #007bff; /* Change this to your desired button color */
-  color: #ffffff; /* Change this to your desired text color */
+  background-color: #007bff; 
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3; /* Change this to your desired button hover color */
+    background-color: #0056b3; 
   }
 `;
 
@@ -28,17 +28,17 @@ export const Price = styled.h3`
   display: block;
   margin: auto;
   padding-bottom: 1rem;
-  text-align: center; // Add this line to center the text
+  text-align: center; 
 `;
 
 export const Date = styled.h3`
   display: block;
   margin: auto;
-  text-align: center; // Add this line to center the text
+  text-align: center; 
 `;
 
 export const Location = styled.h3`
   display: block;
   margin: auto;
-  text-align: center; // Add this line to center the text
+  text-align: center; 
 `;

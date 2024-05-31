@@ -24,6 +24,8 @@ import TicketForm from './ui/pages/Tickets/TicketForm';
 import Restaurants from './ui/pages/RestaurantsPages/Restaurants';
 import RestaurantsOverview from './ui/pages/RestaurantsPages/RestaurantsOverview';
 import ChatWithAgents from './ui/pages/ChatWithAgents/ChatWithAgents';
+import HairdressingSalons from './ui/pages/HairdressingSalonsPage/HairddressingSalons';
+import HairdressingSalonsOverview from './ui/pages/HairdressingSalonsPage/HairdressingSalonsOverview'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -50,6 +52,8 @@ ReactDOM.render(
         <Route path="/restaurant/:id" element={<RestaurantsOverview/>}/>
         <Route path="/sight/:id" element={<SightOverview/>} />
         <Route path="/chat" element={<ChatWithAgents/>} />
+        <Route path="/salons" element={<HairdressingSalons/>}/>
+        <Route path="/salons/:id" element={<HairdressingSalonsOverview/>}/>
         <Route path="/admin" element={
         <AdminRoute>
           <Dashboard />

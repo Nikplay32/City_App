@@ -33,23 +33,6 @@ const StyledMap = styled.div`
   }
 `;
 
-const PopupContainer = styled.div`
-  text-align: center;
-`;
-
-const PopupImage = styled.img`
-  width: 70%;
-  height: auto;
-`;
-
-const PopupTitle = styled.h2`
-  // Add your styles here...
-`;
-
-const PopupDescription = styled.p`
-  // Add your styles here...
-`;
-
 interface MapProps {
 	iconUrl: string;
 	coordinates: [number, number];
