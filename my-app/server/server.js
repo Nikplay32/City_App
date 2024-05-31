@@ -31,7 +31,6 @@ app.get("/users", async (req, res) => {
           displayName: user.displayName,
           isVerified: user.emailVerified,
         };
-        console.log("Data", userData);
         return userData;
       })
     );

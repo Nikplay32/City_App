@@ -4,8 +4,6 @@ import L from 'leaflet';
 import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
-import Footer from '../organisms/Footer';
-import { Circle } from 'react-leaflet';
 import { db } from '../../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -42,14 +40,6 @@ const PopupImage = styled.img`
   height: auto;
 `;
 
-const PopupTitle = styled.h2`
-  // Add your styles here...
-`;
-
-const PopupDescription = styled.p`
-  // Add your styles here...
-`;
-
 interface MapProps {
     iconUrl: string;
 }
@@ -69,11 +59,9 @@ const RigaMap: React.FC<MapProps> = ({ iconUrl }) => {
     const markersCol = collection(db, 'markers');
     const markerSnapshot = await getDocs(markersCol);
 
-    console.log("Snapshot from Firestore:", markerSnapshot); // Log snapshot from Firestore
-
     markerSnapshot.docs.forEach((doc) => {
-      console.log("Document ID:", doc.id); // Log document ID
-      console.log("Document data:", doc.data()); // Log document data
+      console.log("Document ID:", doc.id); 
+      console.log("Document data:", doc.data()); 
     });
   };
 
@@ -115,11 +103,9 @@ const markers: [number, number][] = Array.from({ length: numMarkers }, (): [numb
             </Popup>
           </Marker>
         ))}
-        {/* Add more markers as needed */}
         </MapContainer>
         </StyledMap>
       </StyledMapContainer>
-      <Footer/>
     </PageContainer>
   );
 }

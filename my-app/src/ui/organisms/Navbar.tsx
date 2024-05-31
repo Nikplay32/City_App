@@ -2,122 +2,90 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../atoms/Button'
 import { useNavigate } from 'react-router-dom';
-
-const NavbarContainer = styled.nav`
-  background-color: black;
-  padding: 1.5rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const Logo = styled.a`
-  text-decoration: none;
-  color: #000000;
-  background-image: -webkit-linear-gradient(0deg, #ffffff 42%, #35b48b 5%, #09d8ff 32%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 1.5rem;
-  font-weight: bold;
-`;
-
-const Menu = styled.ul`
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`;
-
-const MenuItem = styled.li`
-  margin-right: 1.5rem;
-  position: relative;
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  &::after {
-    content: "|";
-    position: absolute;
-    color: white;
-    top: 50%;
-    right: -0.75rem;
-    transform: translateY(-50%);
-  }
-
-  &:last-child::after {
-    display: none;
-  }
-`;
-
-const NavLink = styled.a`
-  text-decoration: none;
-  color: white;
-  transition: color 0.3s;
-  display: inline-block;
-  &:hover {
-    color: #0056b3;
-  }
-`;
-
-const BurgerMenuButton = styled.button`
-  display: block;
-  @media (min-width: 768px) {
-    display: none;
-  }
-`;
+import { FaTimes } from 'react-icons/fa';
+import { MdOutlineMenu } from "react-icons/md";
+import useAuth from '../../hooks/useAuth';
+import {
+  NavbarContainer,
+  Logo,
+  Menu,
+  MenuItem,
+  CloseButton,
+  NavLink,
+  BurgerMenuButton
+} from './Navbar.styles';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleGetStartedClick = () => {
-    navigate('/authorization');
+  const handleButtonClick = () => {
+    if (currentUser.user) {
+      navigate('/profile');
+    } else {
+      navigate('/authorization');
+    }
   };
+
 
   return (
     <NavbarContainer>
-      <Logo href="#">CITYSPIRIT</Logo>
+      <Logo href="/">CITYSPIRIT</Logo>
       <BurgerMenuButton onClick={toggleMenu}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          width="24"
-          height="24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          />
-        </svg>
+        <MdOutlineMenu size={24} color="black" />
       </BurgerMenuButton>
-      <Menu className={isMenuOpen ? 'open' : ''}>
+      <Menu open={isMenuOpen}>
+        <CloseButton onClick={toggleMenu}>
+          <FaTimes size={24} color="white" />
+        </CloseButton>
         <MenuItem>
           <NavLink href="/">Home</NavLink>
         </MenuItem>
+        {currentUser.user && (
+          <MenuItem>
+            <NavLink href="/products">Products</NavLink>
+          </MenuItem>
+        )}
+        {currentUser.user && (
+          <MenuItem>
+            <NavLink href="/activities">Activities</NavLink>
+          </MenuItem>
+        )}
         <MenuItem>
-          <NavLink href="/products">Products</NavLink>
+          <NavLink href="/restaurants">Restaurants</NavLink>
         </MenuItem>
         <MenuItem>
-          <NavLink href="/activities">Activities</NavLink>
+          <NavLink href="/sight">Sights</NavLink>
+        </MenuItem>
+        <MenuItem>
+          <NavLink href="/chat">Chat with agents</NavLink>
         </MenuItem>
         <MenuItem>
           <NavLink href="/Map">Map</NavLink>
         </MenuItem>
         <MenuItem>
+          <NavLink href="/transport">Timetable</NavLink>
+        </MenuItem>
+        <MenuItem>
           <NavLink href="/subs">Subscription</NavLink>
         </MenuItem>
+        <MenuItem>
+          <NavLink href="/salons">Salons</NavLink>
+        </MenuItem>
+        {currentUser.isAdmin && (
+          <MenuItem>
+            <NavLink href="/admin">Dashboard</NavLink>
+          </MenuItem>
+        )}
       </Menu>
-      <Button onClick={handleGetStartedClick}>Get Started</Button>
+      <Button onClick={handleButtonClick}>
+        {currentUser.user ? 'Profile' : 'Get Started'}
+      </Button>
     </NavbarContainer>
   );
 };
