@@ -108,7 +108,6 @@ const BackgroundImage = styled.div`
   height: 100%;
   background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
   opacity: 0.3;
-  z-index: 1;
 `;
 
 const HeroButton = styled(Button)`

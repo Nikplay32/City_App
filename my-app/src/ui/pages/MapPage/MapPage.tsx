@@ -94,7 +94,7 @@ const FullScreenMap: React.FC = () => {
     <FullScreenMapContainer>
       <Navbar></Navbar>
       <GlobalStyles></GlobalStyles>
-      <MapContainer center={userLocation || [56.9496, 24.1052]} zoom={13} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={userLocation || [56.9496, 24.1052]} zoom={13} style={{ height: "100%", width: "100%", zIndex: "-1"}}>
         <TileLayer
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
           attribution='Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ'

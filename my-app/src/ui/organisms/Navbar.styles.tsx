@@ -25,7 +25,6 @@ export const Logo = styled.a`
   }
 `;
 
-
 interface MenuProps {
   open: boolean;
 }
@@ -57,17 +56,11 @@ export const Menu = styled.ul<MenuProps>`
 export const MenuItem = styled.li`
   margin-right: 1.5rem;
   position: relative;
-  transition: color 0.3s; 
+  transition: color 0.3s;
 
   @media (max-width: 1300px) {
     margin-right: 0;
     margin-bottom: 1rem;
-    &::after{
-      content: "";
-    }
-    &:last-child::after {
-    display: block;
-  }
   }
 
   &:last-child {
@@ -91,7 +84,7 @@ export const MenuItem = styled.li`
   }
 
   &:hover {
-    color: #0099ff; 
+    color: #0099ff;
   }
 `;
 
@@ -125,5 +118,49 @@ export const BurgerMenuButton = styled.button`
   display: block;
   @media (min-width: 1300px) {
     display: none;
+  }
+`;
+
+export const DropdownMenu = styled(MenuItem)`
+  position: relative;
+  &:hover > ul {
+    display: block;
+  }
+`;
+
+export const DropdownMenuItem = styled.ul`
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0;
+  top: 100%;
+  left: 0;
+  width: 200px;
+  list-style: none;
+  z-index: 2;
+  border-radius: 4px;
+
+  li {
+    padding: 0;
+    margin: 0;
+  }
+
+  ${NavLink} {
+    display: block;
+    color: #000000;
+    padding: 0.5rem 1rem;
+
+    &::after {
+      content: "";
+    }
+    &:hover {
+      background-color: #000000;
+      color: #ffffff;
+    }
+  }
+
+  ${MenuItem}::after {
+    content: none;
   }
 `;

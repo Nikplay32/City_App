@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import Button from '../atoms/Button'
 import { useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import { MdOutlineMenu } from "react-icons/md";
 import useAuth from '../../hooks/useAuth';
+import Button from '../atoms/Button';
 import {
   NavbarContainer,
   Logo,
@@ -12,14 +11,16 @@ import {
   MenuItem,
   CloseButton,
   NavLink,
-  BurgerMenuButton
+  BurgerMenuButton,
+  DropdownMenu,
+  DropdownMenuItem
 } from './Navbar.styles';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -32,7 +33,6 @@ const Navbar: React.FC = () => {
     }
   };
 
-
   return (
     <NavbarContainer>
       <Logo href="/">CITYSPIRIT</Logo>
@@ -43,43 +43,49 @@ const Navbar: React.FC = () => {
         <CloseButton onClick={toggleMenu}>
           <FaTimes size={24} color="white" />
         </CloseButton>
+  
+        <DropdownMenu>
+          <NavLink href="#">City Guide</NavLink> {/* Renamed from "Explore" */}
+          <DropdownMenuItem>
+            <MenuItem>
+              <NavLink href="/sight">Sights & Landmarks</NavLink>
+            </MenuItem>
+            <MenuItem>
+              <NavLink href="/map">City Map</NavLink>
+            </MenuItem>
+            <MenuItem>
+              <NavLink href="/transport">Public Transport & Timetables</NavLink>
+            </MenuItem>
+          </DropdownMenuItem>
+        </DropdownMenu>
         <MenuItem>
-          <NavLink href="/">Home</NavLink>
+          <NavLink href="/chat">Live Agent Support</NavLink> {/* Renamed from "Chat with agents" */}
         </MenuItem>
-        {currentUser.user && (
-          <MenuItem>
-            <NavLink href="/products">Products</NavLink>
-          </MenuItem>
-        )}
-        {currentUser.user && (
-          <MenuItem>
-            <NavLink href="/activities">Activities</NavLink>
-          </MenuItem>
-        )}
+        <DropdownMenu>
+          <NavLink href="#">Local Services</NavLink> {/* Renamed from "Services" */}
+          <DropdownMenuItem>
+            <MenuItem>
+              <NavLink href="/products">Transport Rentals</NavLink>
+            </MenuItem>
+            <MenuItem>
+              <NavLink href="/activities">Activities & Events</NavLink>
+            </MenuItem>
+            <MenuItem>
+              <NavLink href="/restaurants">Restaurants & Cafes</NavLink>
+            </MenuItem>
+            <MenuItem>
+              <NavLink href="/salons">Beauty Salons</NavLink>
+            </MenuItem>
+          </DropdownMenuItem>
+        </DropdownMenu>
         <MenuItem>
-          <NavLink href="/restaurants">Restaurants</NavLink>
+          <NavLink href="/subs">Premium Subscription</NavLink> {/* Renamed from "Subscription" */}
         </MenuItem>
-        <MenuItem>
-          <NavLink href="/sight">Sights</NavLink>
-        </MenuItem>
-        <MenuItem>
-          <NavLink href="/chat">Chat with agents</NavLink>
-        </MenuItem>
-        <MenuItem>
-          <NavLink href="/Map">Map</NavLink>
-        </MenuItem>
-        <MenuItem>
-          <NavLink href="/transport">Timetable</NavLink>
-        </MenuItem>
-        <MenuItem>
-          <NavLink href="/subs">Subscription</NavLink>
-        </MenuItem>
-        <MenuItem>
-          <NavLink href="/salons">Salons</NavLink>
-        </MenuItem>
+
+  
         {currentUser.isAdmin && (
           <MenuItem>
-            <NavLink href="/admin">Dashboard</NavLink>
+            <NavLink href="/admin">Admin Dashboard</NavLink> {/* Renamed from "Dashboard" */}
           </MenuItem>
         )}
       </Menu>
