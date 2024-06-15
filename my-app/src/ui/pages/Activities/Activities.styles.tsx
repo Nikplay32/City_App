@@ -29,7 +29,7 @@ export const HeroSection = styled.div`
   margin-bottom: 20px;
   width: 100%;
   border-bottom: 1px solid #000;
-  background: repeating-linear-gradient(45deg, black, #00ff2a 100px);
+  background: repeating-linear-gradient(45deg, black, #0009ff 100px);
   background-size: 200% 200%;
   animation: ${movingGradient} 15s linear infinite;
 `;
@@ -59,6 +59,7 @@ export const Title = styled.h1`
     font-size: 56px;
     font-weight: 800;
     color: #ffffff;
+    font-variant: small-caps;
 `;
 
 export const NotFoundMessage = styled.h2`

@@ -18,6 +18,10 @@ import styled from "styled-components";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Salon } from '../../atoms/Salons';
+import { FaHome } from "react-icons/fa";
+import { FaCar } from "react-icons/fa";
+import { FaTreeCity } from "react-icons/fa6";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const Dashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -118,10 +122,22 @@ const Dashboard: React.FC = () => {
     } else if (activeTable === 'products') {
       setTableData(products);
       setTableConfig({
-        columns: ['title'].map(field => ({
-          title: field,
-          render: (data: DataType) => (data as Product)[field as keyof Product],
-        })),
+        columns: [
+          {
+            title: '',
+            render: (data: DataType) => {
+              const product = data as Product;
+              return product.title;
+            },
+          },
+          {
+            title: '',
+            render: (data: DataType) => {
+              const product = data as Product;
+              return <img src={product.images[0]} alt={product.title} style={{width: '220px', height: '160px'}} />;
+            },
+          },
+        ],
         onAction: setSelectedData,
         onDelete: (data: DataType) => handleDelete(activeTable, data, (data: DataType) => {
           if (data instanceof User) {
@@ -168,10 +184,20 @@ const Dashboard: React.FC = () => {
     } else if (activeTable === 'restaurants') {
       setTableData(restaurants);
       setTableConfig({
-        columns: ['name'].map(field => ({ // Adjust the fields as per your Restaurant type
-          title: field,
-          render: (data: DataType) => (data as Restaurant)[field as keyof Restaurant],
-        })),
+        columns: [
+          {
+            title: '', // Set to empty to not display the column name
+            render: (data: DataType) => {
+              const restaurant = data as Restaurant;
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span>{restaurant.name}</span>
+                  <img src={restaurant.image} alt="Restaurant" style={{ width: '270px', height: '200px' }} />
+                </div>
+              );
+            },
+          }
+        ],
         onAction: setSelectedData,
         onDelete: (data: DataType) => handleDelete(activeTable, data, (data: DataType) => {
           if (data instanceof Restaurant) {
@@ -183,9 +209,9 @@ const Dashboard: React.FC = () => {
     } else if (activeTable === 'salons') {
       setTableData(salons); // Replace with the actual state variable for salons
       setTableConfig({
-        columns: ['name'].map(field => ({ // Replace 'name' and 'address' with the actual fields of your Salon type
-          title: field,
-          render: (data: DataType) => (data as Salon)[field as keyof Salon], // Replace Salon with the actual Salon type
+        columns: ['Salons Name:'].map(field => ({ // Replace 'name' and 'address' with the actual fields of your Salon type
+          title: field, // Replace Salon with the actual Salon type
+          render: (data: DataType) => (data as Salon).name,
         })),
         onAction: setSelectedData,
         onDelete: (data: DataType) => handleDelete(activeTable, data, (data: DataType) => {
@@ -201,21 +227,31 @@ const Dashboard: React.FC = () => {
   const handleDeleteRow = async (data: DataType) => {
     await handleDelete(activeTable, data, async (data: DataType) => {
       let updatedData;
+      let entityName = ''; // To hold the name of the entity being deleted
       if (data instanceof User) {
         updatedData = users.filter(user => user.id !== data.id);
         setUsers(updatedData);
+        entityName = 'User';
       } else if (data instanceof Product) {
         updatedData = products.filter(product => product.id !== data.id);
         setProducts(updatedData);
+        entityName = 'Product';
       } else if (data instanceof Activity) {
         updatedData = activities.filter(activity => activity.id !== data.id);
         setActivities(updatedData);
+        entityName = 'Activity';
       } else if (data instanceof Restaurant) {
         updatedData = restaurants.filter(restaurant => restaurant.id !== data.id);
         setRestaurants(updatedData);
-      } else if (data instanceof Salon) { // Replace Salon with the actual Salon type
-        updatedData = salons.filter(salon => salon.id !== data.id); // Replace with the actual state variable for salons
-        setSalons(updatedData); // Replace with the actual state setter function for salons
+        entityName = 'Restaurant';
+      } else if (data instanceof Salon) {
+        updatedData = salons.filter(salon => salon.id !== data.id);
+        setSalons(updatedData);
+        entityName = 'Salon';
+      }
+      // Show success toast
+      if (updatedData) {
+        toast.success(`${entityName} deleted successfully!`);
       }
       // Use updatedData for your table data
     });
@@ -262,18 +298,11 @@ const Dashboard: React.FC = () => {
         <SidebarHeader>
         <Logo href="#">CITYSPIRIT</Logo>
         </SidebarHeader>
-        <SearchBarContainer>
-          <SearchBar 
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-        </SearchBarContainer>
         <SidebarDivider />
         <StyledText>Links</StyledText>
-        <SidebarLink href="/">Home</SidebarLink>
-        <SidebarLink href="/products">Products</SidebarLink>
-        <SidebarLink href="/activities">Activities</SidebarLink>
+        <SidebarLink href="/"><FaHome></FaHome></SidebarLink>
+        <SidebarLink href="/products"><FaCar></FaCar></SidebarLink>
+        <SidebarLink href="/activities"><FaTreeCity></FaTreeCity></SidebarLink>
         <SidebarDivider />
         <StyledText>Tables</StyledText>
         <SidebarLink onClick={() => setActiveTable('users')}>
@@ -309,15 +338,22 @@ const Dashboard: React.FC = () => {
         {/* More items */}
       </SidebarContainer>
       <MainContent>
-        <div>
+        {/* <div>
           <h2>Statistics</h2>
           <p>Number of users: {userCount}</p>
           <p>Number of products: {productCount}</p>
           <p>Number of reservations: {reservationCount}</p>
-        </div>
+        </div> */}
         {tableConfig && (
           <div>
             <StyledTitle>Table: {activeTable}</StyledTitle>
+            <SearchBarContainer>
+              <SearchBar 
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+            </SearchBarContainer>
             <StyledButton onClick={() => {
               setIsCreating(true);
               setSelectedData(
@@ -330,9 +366,9 @@ const Dashboard: React.FC = () => {
                 null
               );
             }}>Create {activeTable.slice(0, -1)}</StyledButton>   
-            <AdminNote>
+            {/* <AdminNote>
             ADMIN NOTE - Please when adding new product firstly fill data and then add images and specification. <br /> Also when adding free cars dont fill subscribers_only field. Leave it empty. Thanks!
-            </AdminNote>
+            </AdminNote> */}
             <GenericTable data={tableData} config={tableConfig} onDelete={handleDeleteRow} searchResults={searchResults} searchTerm={searchTerm} />
             {selectedData && <GenericPopup 
               data={isCreating ? 

@@ -23,7 +23,7 @@ export const PageNumber = styled.span`
   margin: 0 5px;
   cursor: pointer;
   &:hover {
-    color: #007bff;
+    color: #d7e300;
   }
 `;
 
@@ -48,7 +48,7 @@ export const HeroSection = styled.div`
   margin-bottom: 20px;
   width: 100%;
   border-bottom: 1px solid #000;
-  background: repeating-linear-gradient(45deg, black, #683af4 100px);
+  background: repeating-linear-gradient(45deg, #7f7f7f, #ffffff 100px);
   background-size: 200% 200%;
   animation: ${movingGradient} 15s linear infinite;
 `;
@@ -103,7 +103,8 @@ export const ProductList = styled.div`
 export const Title = styled.h1`
     font-size: 56px;
     font-weight: 800;
-    color: #ffffff;
+    color: #000000;
+    font-variant: small-caps;
 `;
 
 export const Specification = styled.div`
@@ -208,12 +209,11 @@ export const ProductCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  border: 4px solid #2684ff;
   width: 300px;
   height: 550px;
   padding: 10px;
   margin: 10px;
-  background: #fff;
+  background: linear-gradient(0deg, rgb(54 54 54) 1%, rgb(234 234 234) 65%);
   color: #333;
   border-radius: 20px;
   transition: all 0.3s ease;
@@ -237,7 +237,7 @@ export const TextTitle = styled.h2`
 `;
 
 export const Description = styled.p`
-  color: #666;
+  color: #ffffff;
   padding: 10px;
 `;
 
@@ -260,7 +260,7 @@ export const InfoButton = styled.button`
 export const Price = styled.p`
   font-size: 1rem;
   padding: 10px;
-  color: #333;
+  color: #ffffff;
 `;
 
 export const Button = styled.button`

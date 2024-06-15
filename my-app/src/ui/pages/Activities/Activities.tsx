@@ -160,9 +160,8 @@ const Activities: React.FC = () => {
       <Navbar />
       <Container>
         <HeroSection>
-          <Title>Welcome to Activities</Title>
-          <HeroImage src="https://freepngimg.com/save/86758-building-city-2d-game-computer-video-graphics/2067x1001" width="600px" alt="" />
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
+          <Title>Welcome to Activities & Events</Title>
+          <HeroImage src="https://assets-global.website-files.com/61cee5eb4d566d3471eca114/624581ab391c3d3936ff2734_Event-Ticket-Sales.png" width="600px" alt="" />
         </HeroSection>
         <SearchBarContainer>
           <SearchBar placeholder="Search products..." value={searchTerm} onChange={handleSearch} />

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyledInput, StyledTextarea, StyledModal, StyledForm, ButtonSave, ButtonCancel } from '../pages/Dashboard/Dashboard.styles';
+import {
+  StyledInput, StyledModal, StyledForm, ButtonSave, ButtonCancel,
+  ArrayButton, ArrayItemContainer
+} from '../pages/Dashboard/Dashboard.styles';
+import styled from 'styled-components';
 import { User } from '../atoms/User';
 import { Product } from '../atoms/Product';
 import { Reservation } from '../atoms/Reservation';
@@ -13,29 +17,26 @@ import { setDoc, doc } from "firebase/firestore";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+export const ArrayItemInput = styled(StyledInput)`
+  flex: 1;
+  margin-right: 10px;
+`;
+
+const ImagePreview = styled.img`
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
 type TableData = User | Product | Reservation | Activity | Restaurant | Salon;
 
 const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => Promise<void>; onCancel: () => void; isCreating: boolean; isOpen: boolean }> = ({ data, onEdit, onCancel, isCreating, isOpen }) => {
-  const [newData, setNewData] = useState<TableData | null>(
-    data instanceof User ? new User(data.id, data.username, data.email, data.password, data.isAdmin) :
-      data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
-        data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
-          data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
-            data instanceof Restaurant ? new Restaurant(data.id, data.name, data.description, data.image, data.highlights) :
-              data instanceof Salon ? new Salon(data.id, data.name, data.description, data.image, data.highlights, data.priceList) :
-                null
-  );
+  const [newData, setNewData] = useState<TableData | null>(null);
 
   useEffect(() => {
-    setNewData(
-      data instanceof User ? new User(data.id, data.username, data.email, data.password, data.isAdmin) :
-        data instanceof Product ? new Product(data.id, data.category, data.description, data.images, data.price, data.shortDescription, data.specification, data.title, data.subscribers_only) :
-          data instanceof Reservation ? new Reservation(data.id, data.mileage, data.productId, data.reservationTime, data.secondOption, data.userId) :
-            data instanceof Activity ? new Activity(data.id, data.category, data.coordinates, data.date, data.description, data.highlights, data.images, data.location, data.price, data.title, data.url) :
-              data instanceof Restaurant ? new Restaurant(data.id, data.name, data.description, data.image, data.highlights) :
-                data instanceof Salon ? new Salon(data.id, data.name, data.description, data.image, data.highlights, data.priceList) :
-                  null
-    );
+    setNewData(data);
   }, [data]);
 
   const onEditUser = async (newData: User) => {
@@ -54,96 +55,91 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, index?: number, fieldName?: string) => {
     const { name, value } = event.target;
-    setNewData(prevData => {
-    if (!prevData) return null;
-
-    if (name === 'images' || name === 'specification' || name === 'highlights' || name === 'priceList') {
-      const newValue = value ? value.split('\n') : [];
-      return { ...prevData, [name]: newValue };
+    let convertedValue: string | number = value; // Allow convertedValue to be either string or number
+    if (name === 'price') {
+      convertedValue = Number(value);
     }
+    setNewData(prevData => {
+      if (!prevData) return null;
 
-      switch (prevData.constructor) {
-        case User:
-          return new User(
-            prevData.id,
-            name === 'username' ? value : (prevData as User).username,
-            name === 'email' ? value : (prevData as User).email,
-            name === 'password' ? value : (prevData as User).password,
-            (prevData as User).isAdmin
-          );
-        case Product:
-          return new Product(
-            prevData.id,
-            name === 'category' ? value : (prevData as Product).category,
-            name === 'description' ? value : (prevData as Product).description,
-            name === 'images' ? value.split('\n') : (prevData as Product).images,
-            name === 'price' ? Number(value) : (prevData as Product).price,
-            name === 'shortDescription' ? value : (prevData as Product).shortDescription,
-            name === 'specification' ? value.split('\n') : (prevData as Product).specification,
-            name === 'title' ? value : (prevData as Product).title,
-            name === 'subscribers_only' ? value : (prevData as Product).subscribers_only
-          );
-        case Reservation:
-          return new Reservation(
-            prevData.id,
-            name === 'mileage' ? value : (prevData as Reservation).mileage,
-            name === 'productId' ? value : (prevData as Reservation).productId,
-            name === 'reservationTime' ? new Date(value) : (prevData as Reservation).reservationTime,
-            name === 'secondOption' ? value : (prevData as Reservation).secondOption,
-            name === 'userId' ? value : (prevData as Reservation).userId
-          );
-        case Activity:
-          return new Activity(
-            prevData.id,
-            name === 'category' ? value : (prevData as Activity).category,
-            name === 'coordinates' ? (value.match(/,/g)?.length === 1 ? [value.split(',')[0].trim(), value.split(',')[1].trim()] as [string, string] : (prevData as Activity).coordinates) : (prevData as Activity).coordinates,
-            name === 'date' ? value : (prevData as Activity).date,
-            name === 'description' ? value : (prevData as Activity).description,
-            name === 'highlights' ? value.split('\n') : (prevData as Activity).highlights,
-            name === 'images' ? value.split('\n') : (prevData as Activity).images,
-            name === 'location' ? value : (prevData as Activity).location,
-            name === 'price' ? (isNaN(parseFloat(value)) ? (prevData as Activity).price : parseFloat(value)) : (prevData as Activity).price,
-            name === 'title' ? value : (prevData as Activity).title,
-            name === 'url' ? value : (prevData as Activity).url
-          );
-        case Restaurant:
-          return new Restaurant(
-            prevData.id,
-            name === 'name' ? value : (prevData as Restaurant).name,
-            name === 'description' ? value : (prevData as Restaurant).description,
-            name === 'image' ? value : (prevData as Restaurant).image,
-            name === 'highlights' ? value.split('\n') : (prevData as Restaurant).highlights
-          );
-        case Salon:
-          return new Salon(
-            prevData.id,
-            name === 'name' ? value : (prevData as Salon).name,
-            name === 'description' ? value : (prevData as Salon).description,
-            name === 'image' ? value : (prevData as Salon).image,
-            name === 'highlights' ? value.split('\n') : (prevData as Salon).highlights,
-            name === 'priceList' ? value.split('\n') : (prevData as Salon).priceList
-          );
-        default:
-          return prevData;
+      if (fieldName) {
+        const arrayField = prevData[fieldName as keyof typeof prevData];
+        if (Array.isArray(arrayField) && typeof index === 'number') {
+          const newArray = [...arrayField];
+          newArray[index] = convertedValue;
+          return { ...prevData, [fieldName]: newArray };
+        }
+        return prevData;
       }
+
+      return { ...prevData, [name]: convertedValue };
+    });
+  };
+
+  const addArrayItem = (fieldName: string) => {
+    setNewData(prevData => {
+      if (!prevData) return null;
+      const arrayField = prevData[fieldName as keyof typeof prevData];
+      if (Array.isArray(arrayField)) {
+        const newArray = [...arrayField, ''];
+        return { ...prevData, [fieldName]: newArray };
+      }
+      return prevData;
+    });
+  };
+
+  const removeArrayItem = (fieldName: string, index: number) => {
+    setNewData(prevData => {
+      if (!prevData) return null;
+      const arrayField = prevData[fieldName as keyof typeof prevData];
+      if (Array.isArray(arrayField)) {
+        const newArray = arrayField.filter((_, i) => i !== index);
+        return { ...prevData, [fieldName]: newArray };
+      }
+      return prevData;
     });
   };
 
   const handleEdit = async () => {
     if (newData) {
-      if (newData instanceof User) {
-        await onEditUser(newData);
-        toast.success("User updated successfully");
+      let nonEmptyInputCount = 0;
+      Object.keys(newData).forEach(key => {
+        // Use type assertion to tell TypeScript that key is a valid key of newData
+        const value = newData[key as keyof typeof newData];
+        if (Array.isArray(value)) {
+          nonEmptyInputCount += value.filter(item => item.trim() !== '').length;
+        } else if (typeof value === 'string' && value.trim() !== '') {
+          nonEmptyInputCount++;
+        }
+      });
+  
+      // Check if there are more than 2 non-empty inputs
+      if (nonEmptyInputCount > 2) {
+        if (newData instanceof User) {
+          await onEditUser(newData);
+          toast.success("User updated successfully");
+        } else {
+          await onEdit(newData);
+          toast.success(`${newData.constructor.name} updated successfully`);
+        }
+        setTimeout(onCancel, 400);
       } else {
-        await onEdit(newData);
-        toast.success(`${newData.constructor.name} updated successfully`);
+        // Show error message if not enough data is provided
+        toast.error("Please fill in more than two fields to save.");
       }
-      setTimeout(onCancel, 400);
     } else {
       toast.error("No data to update");
     }
+  };
+
+  const isStringArray = (value: any): value is string[] => {
+    return Array.isArray(value) && value.every(item => typeof item === 'string');
+  };
+
+  const isImageField = (key: string): boolean => {
+    return key === 'images'; // Adjust this to match your image field name
   };
 
   return (
@@ -155,29 +151,39 @@ const GenericPopup: React.FC<{ data: TableData; onEdit: (newData: TableData) => 
         contentLabel="Edit Modal"
       >
         <h2>{isCreating ? 'Create' : 'Edit'} {newData?.constructor.name}</h2>
-        {newData && Object.keys(newData).map((key) => (
+        <ButtonSave onClick={handleEdit}>Save</ButtonSave>
+        <ButtonCancel onClick={onCancel}>Cancel</ButtonCancel>
+        {newData && Object.keys(newData).map((key) =>
           key !== 'id' || !isCreating ? (
             <StyledForm key={key}>
               <label>{key}</label>
-              {(key === 'images' || key === 'specification' || key === 'highlights' || key === 'priceList') ? (
-                <StyledTextarea
-                  name={key}
-                  value={(newData[key as keyof typeof newData] as unknown as string[]).join('\n')}
-                  onChange={handleInputChange}
-                />
+              {isStringArray(newData[key as keyof TableData]) ? (
+                <>
+                  {(newData[key as keyof TableData] as unknown as string[]).map((value, index) => (
+                    <ArrayItemContainer key={index}>
+                      {isImageField(key) && <ImagePreview src={value} alt="Image preview" />}
+                      <ArrayItemInput
+                        type="text"
+                        name={key}
+                        value={value}
+                        onChange={(e) => handleInputChange(e, index, key)}
+                      />
+                      <ArrayButton type="button" onClick={() => removeArrayItem(key, index)}>Remove</ArrayButton>
+                    </ArrayItemContainer>
+                  ))}
+                  <ArrayButton type="button" onClick={() => addArrayItem(key)}>Add</ArrayButton>
+                </>
               ) : (
                 <StyledInput
                   type="text"
                   name={key}
                   value={(newData as any)[key]}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e)}
                 />
               )}
             </StyledForm>
           ) : null
-        ))}
-        <ButtonSave onClick={handleEdit}>Save</ButtonSave>
-        <ButtonCancel onClick={onCancel}>Cancel</ButtonCancel>
+        )}
       </StyledModal>
     </>
   );

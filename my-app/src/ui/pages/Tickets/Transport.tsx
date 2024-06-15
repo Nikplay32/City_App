@@ -8,48 +8,126 @@ const initialTimes = ['05:41', '06:06', '06:36', '07:06', '07:36', '08:06', '08:
 
 
 const routeData = [
-	{
-		transportType: 'Bus',
-		route: '2Abrenes iela - Vecmīlgrāvis',
-		streets: [
-			"Abrenes iela",
-			"Centrālā stacija",
-			"13.janvāra iela",
-			"Grēcinieku iela",
-			"Nacionālā bibliotēka",
-			"A.Grīna bulvāris",
-		],
-		times: generateTimes(initialTimes)
-	},
-	{
-		transportType: 'Tram',
-		route: '3Centrālā stacija - Imanta',
-		streets: [
-			"Centrālā stacija",
-			"Kr. Barona iela",
-			"Elizabetes iela",
-			"Dzirnavu iela",
-			"Brīvības iela",
-			"Mūkusalas iela",
-			"Imanta",
-		],
-		times: generateTimes(initialTimes)
-	},
-	{
-		transportType: 'Trolleybus',
-		route: '4Centrālā stacija - Mežaparks',
-		streets: [
-		  "Centrālā stacija",
-		  "Kr. Barona iela",
-		  "Elizabetes iela",
-		  "Dzirnavu iela",
-		  "Brīvības iela",
-		  "Mūkusalas iela",
-		  "Mežaparks",
-		],
-		times: generateTimes(initialTimes)
-	  },
-	// Add more routes as necessary
+  // Existing Bus routes
+  {
+    transportType: 'Bus',
+    route: '2 - Abrenes iela - Vecmīlgrāvis',
+    streets: [
+      "Abrenes iela",
+      "Centrālā stacija",
+      "13.janvāra iela",
+      "Grēcinieku iela",
+      "Nacionālā bibliotēka",
+      "A.Grīna bulvāris",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  // New Bus routes
+  {
+    transportType: 'Bus',
+    route: '5 - Ziepniekkalns - Sarkandaugava',
+    streets: [
+      "Ziepniekkalns",
+      "Turgeņeva iela",
+      "Miera iela",
+      "Brīvības gatve",
+      "Sarkandaugava",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  {
+    transportType: 'Bus',
+    route: '7 - Pļavnieki - Ķengarags',
+    streets: [
+      "Pļavnieki",
+      "Lāčplēša iela",
+      "Centrālā stacija",
+      "Maskavas iela",
+      "Ķengarags",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  // Existing Tram routes
+  {
+    transportType: 'Tram',
+    route: '3 - Centrālā stacija - Imanta',
+    streets: [
+      "Centrālā stacija",
+      "Kr. Barona iela",
+      "Elizabetes iela",
+      "Dzirnavu iela",
+      "Brīvības iela",
+      "Mūkusalas iela",
+      "Imanta",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  // New Tram routes
+  {
+    transportType: 'Tram',
+    route: '1 - Mežaparks - Jugla',
+    streets: [
+      "Mežaparks",
+      "Čaka iela",
+      "Brīvības iela",
+      "Ganību dambis",
+      "Jugla",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  {
+    transportType: 'Tram',
+    route: '6 - Teika - Āgenskalns',
+    streets: [
+      "Teika",
+      "Biķernieku iela",
+      "Centrālā stacija",
+      "Kalnciema iela",
+      "Āgenskalns",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  // Existing Trolleybus routes
+  {
+    transportType: 'Trolleybus',
+    route: '4 - Centrālā stacija - Mežaparks',
+    streets: [
+      "Centrālā stacija",
+      "Kr. Barona iela",
+      "Elizabetes iela",
+      "Dzirnavu iela",
+      "Brīvības iela",
+      "Mūkusalas iela",
+      "Mežaparks",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  // New Trolleybus routes
+  {
+    transportType: 'Trolleybus',
+    route: '9 - Šķirotava - Zolitūde',
+    streets: [
+      "Šķirotava",
+      "Lāčplēša iela",
+      "Centrālā stacija",
+      "Imantas iela",
+      "Zolitūde",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  {
+    transportType: 'Trolleybus',
+    route: '14 - Purvciems - Āgenskalns',
+    streets: [
+      "Purvciems",
+      "Brīvības gatve",
+      "Centrālā stacija",
+      "Kalnciema iela",
+      "Āgenskalns",
+    ],
+    times: generateTimes(initialTimes)
+  },
+  // Add more routes as necessary
 ];
 
 // Function to generate times for a route

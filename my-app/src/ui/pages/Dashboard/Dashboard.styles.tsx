@@ -7,32 +7,60 @@ export const StyledModal = styled(Modal)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #000000;
-  padding: 20px; 
-  color: white;
-  border-radius: 4px;
+  background: #1e1e1e;
+  padding: 20px;
+  color: #ffffff;
+  border-radius: 8px;
   outline: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px; 
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   width: 90%;
-  max-height: 90vh; 
-  overflow-y: auto; 
+  max-height: 90vh;
+  overflow-y: auto;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; 
-    width: 100%; 
+    width: 100%;
     max-height: 80vh;
   }
 `;
 
-export const StyledInput = styled.input`
-  padding: 10px;
+export const ArrayItemContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
+`;
+
+export const ArrayButton = styled.button`
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+export const StyledInput = styled.input`
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #555555;
   border-radius: 5px;
   font-size: 16px;
-  width: 100%; 
+  width: 100%;
+  background-color: #333333;
+  color: #ffffff;
+  transition: border 0.3s ease;
+
+  &:focus {
+    border: 1px solid #007bff;
+    outline: none;
+  }
 `;
 
 export const StyledForm = styled.form`
@@ -107,61 +135,6 @@ export const StyledButton = styled.a`
   transition: 0.5s;
   overflow: hidden;
   cursor: pointer;
-
-  &:hover {
-    color: #000000;
-    border: 2px solid rgba(0, 0, 0, 0);
-    box-shadow: 0 0 0px var(--color);
-  }
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color);
-    transform: scale(0);
-    transition: 0.5s;
-  }
-
-  &::before {
-    transform-origin: top;
-  }
-
-  &::after {
-    transform-origin: bottom;
-  }
-
-  &:hover::before,
-  &:hover::after {
-    transform: scale(1);
-    transition-delay: 0.5s;
-    box-shadow: 0 0 5px var(--color),
-      0 0 7px var(--color),
-      0 0 9px var(--color);
-  }
-
-  span {
-    position: absolute;
-    background: var(--color);
-    pointer-events: none;
-    border-radius: 2px;
-    box-shadow: 0 0 5px var(--color),
-      0 0 20px var(--color),
-      0 0 30px var(--color),
-      0 0 50px var(--color),
-      0 0 100px var(--color);
-    transition: 0.5s ease-in-out;
-    transition-delay: 0.25s;
-  }
-
-  &:hover span {
-    opacity: 0;
-    transition-delay: 0s;
-  }
 
 `;
 
@@ -248,7 +221,7 @@ export const MainContent = styled.div`
   flex-grow: 1;
   padding: 20px;
   text-align: center;
-  background: url('${process.env.PUBLIC_URL}/riga.jpg') no-repeat center center/cover;
+  background: white;
   @media (max-width: 768px) {
     padding: 10px; 
   }
@@ -338,7 +311,7 @@ export const SidebarLink = styled.a`
 export const SidebarContainer = styled.div`
   height: auto;
   padding: 2rem;
-  width: 300px;
+  width: 200px;
   overflow-y: auto;
   text-align: center;
   background-color: #000000;
@@ -413,4 +386,60 @@ export const SidebarSubmenuItem = styled.h1`
   &:hover {
     background-color: #2563EB;
   }
+`;
+
+export const Data = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const Card = styled.div`
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  margin-top: 40px;
+  max-width: 400px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const CardTitle = styled.h2`
+  margin: 0;
+  margin-bottom: 10px;
+`;
+
+export const CardContent = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const ActionButton = styled.button`
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+`;
+
+export const DeleteButton = styled.button`
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
 `;

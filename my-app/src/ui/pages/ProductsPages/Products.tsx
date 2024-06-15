@@ -269,10 +269,8 @@ const Rental: React.FC = () => {
           <Navbar />
           <Container>
             <HeroSection>
-              <Title>Welcome to Our Store</Title>
+              <Title>Welcome to Our Rental</Title>
               <HeroImage src="https://listcars.com/wp-content/uploads/2022/09/List-Cars-Multiple-Cars.png" width="600px" alt="" />
-              <p>Find the best products for your needs</p>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
             </HeroSection>
             <SearchBarContainer>
               <SearchBar placeholder="Search products..." value={searchTerm} onChange={handleSearch} />
